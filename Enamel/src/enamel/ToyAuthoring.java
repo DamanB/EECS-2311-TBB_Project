@@ -4,7 +4,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 
 public class ToyAuthoring {
-
+	
 	public static void main(String[] args) {
 	    File directory = new File("C:\\Users\\User\\AppData\\Roaming\\SPB_16.6\\git\\EECS-2311-TBB_Project");
 	    JFileChooser explorer = new JFileChooser(directory); 
@@ -13,6 +13,11 @@ public class ToyAuthoring {
     	    ScenarioParser s = new ScenarioParser(true);
 	    	String path = explorer.getSelectedFile().getPath();
     	    s.setScenarioFile(path);
+    	    
+    	    if (returnedValue == 1) {
+    	    	System.out.println("Test");
+    	    }
+    	    
 	    }
 	     // s.setScenarioFile("FactoryScenarios/Scenario_" + 1 + ".txt");
 	}
