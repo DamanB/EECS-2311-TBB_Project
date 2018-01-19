@@ -1,10 +1,20 @@
 package enamel;
 
+import java.io.File;
+
+import javax.swing.JFileChooser;
+
 public class ToyAuthoring {
 
 	public static void main(String[] args) {
-		ScenarioParser s = new ScenarioParser(true);
-		s.setScenarioFile("FactoryScenarios/Scenario_" + 1 + ".txt");
-		int[] array = new int[5];
+	    File directory = new File("C:\\Users\\User\\AppData\\Roaming\\SPB_16.6\\git\\EECS-2311-TBB_Project");
+	    JFileChooser explorer = new JFileChooser(directory); 
+	    int returnedValue = explorer.showOpenDialog(null);
+	    if (returnedValue == explorer.getApproveButtonMnemonic()) {
+    	    ScenarioParser s = new ScenarioParser(true);
+	    	String path = explorer.getSelectedFile().getPath();
+    	    s.setScenarioFile(path);
+	    }
+	     // s.setScenarioFile("FactoryScenarios/Scenario_" + 1 + ".txt");
 	}
 }
