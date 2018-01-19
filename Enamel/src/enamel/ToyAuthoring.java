@@ -14,6 +14,7 @@ public class ToyAuthoring {
 	    	String path = explorer.getSelectedFile().getPath();
     	    s.setScenarioFile(path);
 	    }
+	    int[] array = {1,2,3,4,5};
 	     // s.setScenarioFile("FactoryScenarios/Scenario_" + 1 + ".txt");
 	}
 }
