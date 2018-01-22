@@ -11,7 +11,7 @@ public class ToyAuthoring {
     public static void main(String[] args) {
 
         // Initialising objects for file explorer and the ScenarioParser
-        //JButton open = new JButton();
+        JButton open = new JButton();
         JFileChooser fileChooser = new JFileChooser();
         ScenarioParser s;
 
@@ -21,19 +21,15 @@ public class ToyAuthoring {
         // Shows only text files in the file chooser
         fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
 
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-        {
+        if (fileChooser.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {
             s = new ScenarioParser(true);
 
             String fileName = fileChooser.getSelectedFile().getName();
 
             // Using regex checks if the file name has the following: ["Scenario_" + (a positive integer) + ".txt"]
-            if (fileName.matches("^Scenario_[1-9]*.txt$"))
-            {
+            if (fileName.matches("^Scenario_[1-9]*.txt$")) {
                 s.setScenarioFile(fileChooser.getSelectedFile().getAbsolutePath());
-            }
-            else
-            {
+            } else {
                 System.out.println("File Not Found Error conflict resolved");
 
             }
