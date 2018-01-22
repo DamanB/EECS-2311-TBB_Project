@@ -35,7 +35,7 @@ public class ToyAuthoring {
             else
             {
                 // exit
-                System.out.println("NO MATCH");
+                System.out.println("Not Found");
 
             }
 
