@@ -30,7 +30,7 @@ public class ToyAuthoring {
             if (fileName.matches("^Scenario_[1-9]*.txt$")) {
                 s.setScenarioFile(fileChooser.getSelectedFile().getAbsolutePath());
             } else {
-                System.out.println("File Not Found Error conflict resolved");
+                System.out.println("123");
 
             }
 
