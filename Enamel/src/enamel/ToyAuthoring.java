@@ -30,11 +30,7 @@ public class ToyAuthoring {
             if (fileName.matches("^Scenario_[1-9]*.txt$")) {
                 s.setScenarioFile(fileChooser.getSelectedFile().getAbsolutePath());
             } else {
-<<<<<<< HEAD
                 System.out.println("File has not been discoverd");
-=======
-                System.out.println("123");
->>>>>>> branch 'tester2' of https://github.com/SanjayP9/EECS-2311-TBB_Project
 
             }
 
