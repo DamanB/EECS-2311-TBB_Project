@@ -11,7 +11,7 @@ public class ToyAuthoring {
     public static void main(String[] args) {
 
         // Initialising objects for file explorer and the ScenarioParser
-        JButton open = new JButton();
+        //JButton open = new JButton();
         JFileChooser fileChooser = new JFileChooser();
         ScenarioParser s;
 
@@ -21,7 +21,7 @@ public class ToyAuthoring {
         // Shows only text files in the file chooser
         fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
 
-        if (fileChooser.showOpenDialog(open) == JFileChooser.APPROVE_OPTION)
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
         {
             s = new ScenarioParser(true);
 
@@ -35,7 +35,11 @@ public class ToyAuthoring {
             else
             {
                 // exit
+<<<<<<< HEAD
                 System.out.println("Not Found in directory");
+=======
+                System.out.println("File Does not match required format");
+>>>>>>> branch 'tester' of https://github.com/SanjayP9/EECS-2311-TBB_Project
 
             }
 
