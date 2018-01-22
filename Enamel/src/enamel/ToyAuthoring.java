@@ -34,12 +34,7 @@ public class ToyAuthoring {
             }
             else
             {
-                // exit
-<<<<<<< HEAD
                 System.out.println("Not Found in directory");
-=======
-                System.out.println("File Does not match required format");
->>>>>>> branch 'tester' of https://github.com/SanjayP9/EECS-2311-TBB_Project
 
             }
 
