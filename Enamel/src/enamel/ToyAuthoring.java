@@ -35,7 +35,7 @@ public class ToyAuthoring {
             else
             {
                 // exit
-                System.out.println("Not Found");
+                System.out.println("Not Found in directory");
 
             }
 
