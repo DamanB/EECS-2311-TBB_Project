@@ -34,7 +34,11 @@ public class ToyAuthoring {
             }
             else
             {
+<<<<<<< HEAD
                 System.out.println("File Not Found Error");
+=======
+                System.out.println("Not Found in directory. File Unavailable");
+>>>>>>> branch 'tester' of https://github.com/SanjayP9/EECS-2311-TBB_Project
 
             }
 
