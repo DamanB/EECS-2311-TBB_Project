@@ -28,17 +28,18 @@ public class ToyAuthoring {
             s = new ScenarioParser(true);
 
             // Using regex checks if the file name has the following: ["Scenario_" + (a positive integer) + ".txt"]
-            if (fileChooser.getSelectedFile().getName().matches("^Scenario_[1-9]*.txt$")) {
+            if (fileChooser.getSelectedFile().getName().matches("^Scenario_[1-9][0-9]*.txt$")) {
 
                 try {
-                    BufferedReader br = new BufferedReader(new FileReader(fileChooser.getSelectedFile().getName()));
+                    // Reads the file and records the first 2 lines
+                    BufferedReader br = new BufferedReader(new FileReader(fileChooser.getSelectedFile().getAbsolutePath()));
                     String[] lines = new String[2];
                     lines[0] = br.readLine();
                     lines[1] = br.readLine();
 
                     // Checks if first two lines if they follow the format. Cell + (positive integer) and Button + (positive integer)
-                    if (lines[0].matches("^Cell [1-9]*.txt$") &&
-                            lines[1].matches("^Button [1-9]*.txt$")) {
+                    if (lines[0].matches("^Cell [1-9][0-9]*$") &&
+                            lines[1].matches("^Button [1-9][0-9]*$")) {
                         s.setScenarioFile(fileChooser.getSelectedFile().getAbsolutePath());
                     } else {
                         // exit
@@ -48,6 +49,7 @@ public class ToyAuthoring {
 
                 } catch (IOException e) {
                     System.out.println("File error");
+                    return;
                 }
 
             } else {
