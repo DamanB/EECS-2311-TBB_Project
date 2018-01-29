@@ -88,130 +88,122 @@ public class ScenarioParser {
 
         // The following will be used to log errors to the file ERROR_LOG.txt
         File errorFile = new File("ERROR_LOG.txt");
-        Logger logger = Logger.getLogger("ErrorLog");
-        FileHandler fileHandler;
-        SimpleFormatter sf;
 
-
-        BufferedReader br;
+        FileWriter fw;
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-        // If file doesn't exist it creates it then initialises the BufferedReader
         try {
-            if (!(errorFile.exists())) {
-                errorFile.createNewFile();
+            //
+            System.out.println((errorFile.createNewFile()) ? "Created ERROR_LOG.txt" : "File ERROR_LOG.txt");
+
+            fw = new FileWriter(errorFile.getName(), true);
+
+
+            if (repeat) {
+                // Stops assuming that the text is being repeated with the
+                // /~endrepeat key phrase
+                if (fileLine.length() >= 11 && fileLine.substring(0, 11).equals("/~endrepeat")) {
+                    repeat = false;
+                } else {
+                    repeatedText.add(fileLine);
+                    speak(fileLine);
+                }
+            } else {
+                // The key phrase to indicate to play a sound file.
+                if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~sound:")) {
+                    playSound(fileLine.substring(8));
+                }
+                // The key phrase to indicate to skip to another part of the
+                // scenario.
+                else if (fileLine.length() >= 7 && fileLine.substring(0, 7).equals("/~skip:")) {
+                    skip(fileLine.substring(7));
+                }
+                // The key phrase to indicate to pause for a specified number of
+                // seconds.
+                else if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~pause:")) {
+
+                    // Checks if theres a positive integer after the pause command if not logs it then exits
+                    if (fileLine.substring(8).matches("^[1-9][0-9]*$")) {
+                        pause(fileLine.substring(8));
+                    } else {
+                        fw.append("Number of seconds for pause is not a positive integer.");
+                        System.exit(0);
+                    }
+                }
+                // The key phrase to assign a button to repeat text.
+                else if (fileLine.length() >= 16 && fileLine.substring(0, 16).equals("/~repeat-button:")) {
+                    repeatButton(fileLine.substring(16));
+                }
+                // The key phrase to signal that everything after that key phrase
+                // will be repeated.
+                else if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~repeat")) {
+                    repeatedText.clear();
+                    repeat = true;
+                }
+                // The key phrase to reset the action listeners of all of the
+                // JButtons.
+                else if (fileLine.length() >= 15 && fileLine.substring(0, 15).equals("/~reset-buttons")) {
+                    resetButtons();
+                }
+                // The key phrase to assign a button to skip to another part of the
+                // scenario.
+                else if (fileLine.length() >= 14 && fileLine.substring(0, 14).equals("/~skip-button:")) {
+                    skipButton(fileLine.substring(14));
+                }
+                // The key phrase to clear the display of all of the braille cells.
+                else if (fileLine.length() >= 15 && fileLine.substring(0, 15).equals("/~disp-clearAll")) {
+                    player.clearAllCells();
+                }
+                // The key phrase to set a Braille cell to a string.
+                else if (fileLine.length() >= 17 && fileLine.substring(0, 17).equals("/~disp-cell-pins:")) {
+                    dispCellPins(fileLine.substring(17));
+                }
+                // The key phrase to represent a string in Braille.
+                else if (fileLine.length() >= 14 && fileLine.substring(0, 14).equals("/~disp-string:")) {
+
+                    // Checks if the string is composed of letters then displays it. If not logs it and exits
+                    if (fileLine.substring(14).matches("^[a-zA-Z]+$")) {
+                        player.displayString(fileLine.substring(14));
+                    } else {
+                        fw.append("Invalid String for disp-string.");
+                        System.exit(0);
+                    }
+                }
+                // The key phrase to change the cell to represent a character in
+                // Braille.
+                else if (fileLine.length() >= 17 && fileLine.substring(0, 17).equals("/~disp-cell-char:")) {
+                    dispCellChar(fileLine.substring(17));
+                }
+                // The key phrase to raise a pin of the specified Braille cell.
+                else if (fileLine.length() >= 18 && fileLine.substring(0, 18).equals("/~disp-cell-raise:")) {
+                    dispCellRaise(fileLine.substring(18));
+                }
+                // The key phrase to lower a pin of the specified Braille cell.
+                else if (fileLine.length() >= 18 && fileLine.substring(0, 18).equals("/~disp-cell-lower:")) {
+                    dispCellLower(fileLine.substring(18));
+                }
+                // The key phrase to clear a Braille cell.
+                else if (fileLine.length() >= 18 && fileLine.substring(0, 18).equals("/~disp-cell-clear:")) {
+                    dispCellClear(fileLine.substring(18));
+                } else if (fileLine.length() >= 21 && fileLine.substring(0, 21).equals("/~disp-cell-lowerPins")) {
+                    dispCellRaise("0");
+                }
+                // The key phrase to wait for the program to receive a user's input.
+                else if (fileLine.length() >= 12 && fileLine.substring(0, 12).equals("/~user-input")) {
+                    userInput = true;
+                }
+                // Anything other than the specified commands above, is to be
+                // interpreted as text that
+                // will be spoken for the user to hear.
+                else {
+                    speak(fileLine);
+                }
             }
 
-            fileHandler = new FileHandler("ERROR_LOG.txt");
-            logger.addHandler(fileHandler);
-
-
-            //br = new BufferedReader(new FileReader(errorFile.getAbsolutePath()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-        if (repeat) {
-            // Stops assuming that the text is being repeated with the
-            // /~endrepeat key phrase
-            if (fileLine.length() >= 11 && fileLine.substring(0, 11).equals("/~endrepeat")) {
-                repeat = false;
-            } else {
-                repeatedText.add(fileLine);
-                speak(fileLine);
-            }
-        } else {
-            // The key phrase to indicate to play a sound file.
-            if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~sound:")) {
-                playSound(fileLine.substring(8));
-            }
-            // The key phrase to indicate to skip to another part of the
-            // scenario.
-            else if (fileLine.length() >= 7 && fileLine.substring(0, 7).equals("/~skip:")) {
-                skip(fileLine.substring(7));
-            }
-            // The key phrase to indicate to pause for a specified number of
-            // seconds.
-            else if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~pause:")) {
-
-                // Checks if theres a positive integer after the pause command if not logs it then exits
-                if (fileLine.substring(8).matches("^[1-9][0-9]*$")) {
-                    pause(fileLine.substring(8));
-                } else {
-                    logger.info("Number of seconds for pause is not a positive integer.");
-                    System.exit(0);
-                }
-            }
-            // The key phrase to assign a button to repeat text.
-            else if (fileLine.length() >= 16 && fileLine.substring(0, 16).equals("/~repeat-button:")) {
-                repeatButton(fileLine.substring(16));
-            }
-            // The key phrase to signal that everything after that key phrase
-            // will be repeated.
-            else if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~repeat")) {
-                repeatedText.clear();
-                repeat = true;
-            }
-            // The key phrase to reset the action listeners of all of the
-            // JButtons.
-            else if (fileLine.length() >= 15 && fileLine.substring(0, 15).equals("/~reset-buttons")) {
-                resetButtons();
-            }
-            // The key phrase to assign a button to skip to another part of the
-            // scenario.
-            else if (fileLine.length() >= 14 && fileLine.substring(0, 14).equals("/~skip-button:")) {
-                skipButton(fileLine.substring(14));
-            }
-            // The key phrase to clear the display of all of the braille cells.
-            else if (fileLine.length() >= 15 && fileLine.substring(0, 15).equals("/~disp-clearAll")) {
-                player.clearAllCells();
-            }
-            // The key phrase to set a Braille cell to a string.
-            else if (fileLine.length() >= 17 && fileLine.substring(0, 17).equals("/~disp-cell-pins:")) {
-                dispCellPins(fileLine.substring(17));
-            }
-            // The key phrase to represent a string in Braille.
-            else if (fileLine.length() >= 14 && fileLine.substring(0, 14).equals("/~disp-string:")) {
-
-                // Checks if the string is composed of letters then displays it. If not logs it and exits
-                if (fileLine.substring(14).matches("^[a-zA-Z]+$")) {
-                    player.displayString(fileLine.substring(14));
-                } else {
-                    logger.info("Invalid String for disp-string.");
-                    System.exit(0);
-                }
-            }
-            // The key phrase to change the cell to represent a character in
-            // Braille.
-            else if (fileLine.length() >= 17 && fileLine.substring(0, 17).equals("/~disp-cell-char:")) {
-                dispCellChar(fileLine.substring(17));
-            }
-            // The key phrase to raise a pin of the specified Braille cell.
-            else if (fileLine.length() >= 18 && fileLine.substring(0, 18).equals("/~disp-cell-raise:")) {
-                dispCellRaise(fileLine.substring(18));
-            }
-            // The key phrase to lower a pin of the specified Braille cell.
-            else if (fileLine.length() >= 18 && fileLine.substring(0, 18).equals("/~disp-cell-lower:")) {
-                dispCellLower(fileLine.substring(18));
-            }
-            // The key phrase to clear a Braille cell.
-            else if (fileLine.length() >= 18 && fileLine.substring(0, 18).equals("/~disp-cell-clear:")) {
-                dispCellClear(fileLine.substring(18));
-            } else if (fileLine.length() >= 21 && fileLine.substring(0, 21).equals("/~disp-cell-lowerPins")) {
-                dispCellRaise("0");
-            }
-            // The key phrase to wait for the program to receive a user's input.
-            else if (fileLine.length() >= 12 && fileLine.substring(0, 12).equals("/~user-input")) {
-                userInput = true;
-            }
-            // Anything other than the specified commands above, is to be
-            // interpreted as text that
-            // will be spoken for the user to hear.
-            else {
-                speak(fileLine);
-            }
-        }
     }
 
     /*
