@@ -28,10 +28,11 @@ public class VisualSetting {
 		public final static int AUDIOTEXT = 4;
 		public final static int SOUND = 5;
 		public final static int SKIPBUTTON = 6;
-		public final static int SKIP = 7;
-		public final static int RESETBUTTON = 8;
-		public final static int PAUSE = 9;
-		public final static int USERINPUT = 10;
+		public final static int SKIPKEY = 7;
+		public final static int SKIP = 8;
+		public final static int RESETBUTTON = 9;
+		public final static int PAUSE = 10;
+		public final static int USERINPUT = 11;
 
 		private String text;
 
@@ -78,6 +79,10 @@ public class VisualSetting {
 
 		public final static Step skipButton(int button, String flag) {
 			return new Step("/~skip-button:" + button + " " + flag);
+		}
+
+		public final static Step skipKey(int key, String flag) {
+			return new Step("/~skip-button:" + key + " " + flag);
 		}
 
 		public final static Step skip(String flag) {
@@ -127,7 +132,8 @@ public class VisualSetting {
 	 *            cell number
 	 */
 	public void setCells(int cells) {
-		this.cells = cells;
+		if (cells >= 0)
+			this.cells = cells;
 	}
 
 	/**
@@ -146,7 +152,8 @@ public class VisualSetting {
 	 *            button number
 	 */
 	public void setButtons(int buttons) {
-		this.buttons = buttons;
+		if (this.buttons >= 0)
+			this.buttons = buttons;
 	}
 
 	/**
