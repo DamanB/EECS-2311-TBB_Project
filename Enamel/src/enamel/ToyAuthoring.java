@@ -45,7 +45,6 @@ public class ToyAuthoring {
 					} else {
 						// exit
 						System.out.println("Error: Invalid file format. Cell and Button numbers not found");
-						return;
 					}
 				} catch (IOException e) {
 					System.out.println("File error");

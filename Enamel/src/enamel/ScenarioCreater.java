@@ -3,20 +3,22 @@ package enamel;
 import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class MainFrame {
+public class ScenarioCreater {
+
 	private JFrame frame;
-
 	private JPanel panel;
-	private JButton open;
-	private JButton create;
+	private JButton addCell;
+	private JButton addButton;
+	private JButton next;
 
-	public MainFrame() {
+	ScenarioCreater() {
 		frame = new JFrame();
-		frame.setTitle("Main");
+		frame.setTitle("Scenario Creater");
 		frame.setBounds(100, 100, 627, 459);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout());
@@ -24,36 +26,46 @@ public class MainFrame {
 		panel = new JPanel();
 		panel.setSize(200, 50);
 
-		open = new JButton("Open");
-		open.addMouseListener(new Click());
-		panel.add(this.open);
+		addCell = new JButton("Add Cell");
+		addCell.addMouseListener(new AddComponent());
+		panel.add(this.addCell);
 
-		create = new JButton("Create");
-		create.addMouseListener(new Click());
-		this.panel.add(this.create);
+		addButton = new JButton("Add Button");
+		addButton.addMouseListener(new AddComponent());
+		this.panel.add(this.addButton);
+
+		next = new JButton("Next");
+		next.addMouseListener(new AddComponent());
+		this.panel.add(this.next);
 
 		frame.add(panel);
 		frame.repaint();
 		frame.setVisible(true);
 	}
 
-	class Click implements MouseListener {
-		private void open() {
-			// here should be file chooser
+	class AddComponent implements MouseListener {
+
+		void addCell() {
+			// please complex it
 		}
 
-		private void create() {
-			ScenarioCreater c = new ScenarioCreater();
-			frame.setVisible(false);
+		void addButton() {
+			// please complex it
+		}
+
+		void next() {
+			// please complex it
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				if (e.getSource().equals(open))
-					open();
-				if (e.getSource().equals(create))
-					create();
+				if (e.getSource().equals(addCell))
+					addCell();
+				if (e.getSource().equals(addButton))
+					addButton();
+				if (e.getSource().equals(next))
+					next();
 			}
 		}
 
@@ -72,5 +84,6 @@ public class MainFrame {
 		@Override
 		public void mouseExited(MouseEvent e) {
 		}
+
 	}
 }
