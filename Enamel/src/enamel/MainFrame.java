@@ -48,7 +48,7 @@ public class MainFrame {
 		}
 
 		private void create() {
-			// here should open a new UI
+			// here should open a new UI to create the file
 		}
 
 		@Override

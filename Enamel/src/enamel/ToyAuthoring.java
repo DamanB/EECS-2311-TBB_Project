@@ -13,7 +13,7 @@ public class ToyAuthoring {
 	// this this the origin version
 
 	public static void main(String[] args) {
-		// MainFrame main = new MainFrame();
+		MainFrame main = new MainFrame();
 		// Initialising objects for file explorer and the ScenarioParser
 		JButton openfile = new JButton();
 		JFileChooser fileChooser = new JFileChooser();
