@@ -28,7 +28,7 @@ public class VisualSetting {
 		public final static int AUDIOTEXT = 4;
 		public final static int SOUND = 5;
 		public final static int SKIPBUTTON = 6;
-		public final static int SKIPKEY = 7;
+		//public final static int SKIPKEY = 7;
 		public final static int SKIP = 8;
 		public final static int RESETBUTTON = 9;
 		public final static int PAUSE = 10;
