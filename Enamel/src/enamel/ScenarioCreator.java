@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class ScenarioCreater {
+public class ScenarioCreator {
 
 	private JFrame frame;
 	private JPanel panel;
@@ -16,9 +16,9 @@ public class ScenarioCreater {
 	private JButton addButton;
 	private JButton next;
 
-	ScenarioCreater() {
+	ScenarioCreator() {
 		frame = new JFrame();
-		frame.setTitle("Scenario Creater");
+		frame.setTitle("Scenario Creator");
 		frame.setBounds(100, 100, 627, 459);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout());

@@ -88,13 +88,20 @@ public class ScenarioParser {
 
         // The following will be used to log errors to the file ERROR_LOG.txt
         File errorFile = new File("ERROR_LOG.txt");
-
         FileWriter fw;
+
+        // Used to record time of the error
+        Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         try {
-            //
-            System.out.println((errorFile.createNewFile()) ? "Created ERROR_LOG.txt" : "File ERROR_LOG.txt");
+            // Checks if the error log exists. if not it creates it
+            if (errorFile.exists()) {
+                System.out.println("ERROR_LOG.txt already in directory");
+            } else {
+                errorFile.createNewFile();
+                System.out.println("ERROR_LOG.txt created");
+            }
 
             fw = new FileWriter(errorFile.getName(), true);
 
@@ -126,7 +133,7 @@ public class ScenarioParser {
                     if (fileLine.substring(8).matches("^[1-9][0-9]*$")) {
                         pause(fileLine.substring(8));
                     } else {
-                        fw.append("Number of seconds for pause is not a positive integer.");
+                        fw.append(dateFormat.format(date) + ": Number of seconds for pause is not a positive integer.");
                         System.exit(0);
                     }
                 }
@@ -165,7 +172,7 @@ public class ScenarioParser {
                     if (fileLine.substring(14).matches("^[a-zA-Z]+$")) {
                         player.displayString(fileLine.substring(14));
                     } else {
-                        fw.append("Invalid String for disp-string.");
+                        fw.append(dateFormat.format(date) + ": Invalid String for disp-string.");
                         System.exit(0);
                     }
                 }
