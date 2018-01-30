@@ -61,6 +61,10 @@ public class MainFrame {
 
             if (fileChooser.showOpenDialog(openfile) == JFileChooser.APPROVE_OPTION) {
                 s = new ScenarioParser(true);
+                // TESTING
+                System.out.println("***Parser Created***");
+                // TESTING
+
                 // Using regex checks if the file name has the following: ["Scenario_" + (a positive integer) + ".txt"]
                 if (fileChooser.getSelectedFile().getName().matches("^Scenario_[1-9][0-9]*.txt$")) {
                     try {

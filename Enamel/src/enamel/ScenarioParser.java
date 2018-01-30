@@ -86,6 +86,10 @@ public class ScenarioParser {
         // has, then everything
         // after the key phrase is assumed to be text to be repeated.
 
+        // TESTING
+        System.out.println(fileLine);
+        // TESTING
+
         // The following will be used to log errors to the file ERROR_LOG.txt
         File errorFile = new File("ERROR_LOG.txt");
         FileWriter fw;
