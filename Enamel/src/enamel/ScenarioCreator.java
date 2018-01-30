@@ -1,11 +1,14 @@
 package enamel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.LinkedList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,6 +21,11 @@ public class ScenarioCreator {
 	private JButton addCell;
 	private JButton addButton;
 	private JButton next;
+
+	JPanel southPanel = new JPanel();
+	JPanel centerPanel = new JPanel();
+	LinkedList<JPanel> panelList = new LinkedList<JPanel>();
+	LinkedList<JButton> buttonList = new LinkedList<JButton>();
 
 	ScenarioCreator(JFrame parent) {
 		this.parent = parent;
@@ -52,7 +60,14 @@ public class ScenarioCreator {
 	class AddComponent implements MouseListener {
 
 		void addCell() {
-			// please complex it
+			PinCells pinCells = new PinCells();
+			pinCells.panel.setVisible(true);
+			pinCells.panel.setSize(50, 50);
+			pinCells.panel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+			panelList.add(pinCells.panel);
+			centerPanel.add(pinCells.panel);
+			frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
 		}
 
 		void addButton() {
