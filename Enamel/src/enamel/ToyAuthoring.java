@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ToyAuthoring {
 
+<<<<<<< Updated upstream
 	// this this the origin version
 
 	public static void main(String[] args) {
@@ -60,4 +61,11 @@ public class ToyAuthoring {
 			}
 		}
 	}
+=======
+    // this this the origin version
+
+    public static void main(String[] args) {
+        MainFrame main = new MainFrame();
+    }
+>>>>>>> Stashed changes
 }
