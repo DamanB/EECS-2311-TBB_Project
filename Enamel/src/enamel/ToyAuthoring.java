@@ -14,9 +14,9 @@ public class ToyAuthoring {
 
 	public static void main(String[] args) {
 		MainFrame main = new MainFrame();
-	//}
+		// }
 
-	//public static void open() {
+		// public static void open() {
 		// Initialising objects for file explorer and the ScenarioParser
 		JButton openfile = new JButton();
 		JFileChooser fileChooser = new JFileChooser();
