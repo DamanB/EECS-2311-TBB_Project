@@ -21,10 +21,13 @@ public class ScenarioCreator {
 	private JFrame frame;
 	private JPanel panel;
 	private JButton addCell;
+	private JButton removeCell;
 	private JButton addButton;
+	private JButton removeButton;
 	private JButton next;
 
 	private int buttonNumber;
+	private int cellNumber;
 
 	JPanel southPanel = new JPanel();
 	JPanel centerPanel = new JPanel();
@@ -49,9 +52,17 @@ public class ScenarioCreator {
 		addCell.addMouseListener(new AddComponent());
 		panel.add(this.addCell);
 
+		removeCell = new JButton("Remove Cell");
+		removeCell.addMouseListener(new AddComponent());
+		panel.add(this.removeCell);
+
 		addButton = new JButton("Add Button");
 		addButton.addMouseListener(new AddComponent());
 		this.panel.add(this.addButton);
+
+		removeButton = new JButton("Remove Button");
+		removeButton.addMouseListener(new AddComponent());
+		panel.add(this.removeButton);
 
 		next = new JButton("Next");
 		next.addMouseListener(new AddComponent());
@@ -62,14 +73,15 @@ public class ScenarioCreator {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.addWindowListener(new Close());
-
+		frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
+		frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
 		buttonNumber = 0;
+		cellNumber = 0;
 	}
 
 	class AddComponent implements MouseListener {
 
 		void addCell() {
-			System.out.println("add cell");
 			JPanel panel = new JPanel(cellGrid);
 			for (int j = 0; j < 8; j++) {
 				JRadioButton radioButton = new JRadioButton();
@@ -85,19 +97,36 @@ public class ScenarioCreator {
 			panel.setSize(50, 50);
 			panel.setBorder(BorderFactory.createLineBorder(Color.black));
 			centerPanel.add(panel);
-			frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
 			frame.repaint();
 			frame.setVisible(true);
+			cellNumber++;
+		}
+
+		void removeCell() {
+			if (cellNumber > 0) {
+				centerPanel.remove(--cellNumber);
+				panelList.removeLast();
+				frame.repaint();
+				frame.setVisible(true);
+			}
 		}
 
 		void addButton() {
 			JButton button = new JButton(Integer.toString((buttonNumber + 1)));
 			buttonList.add(button);
 			southPanel.add(button);
-			frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
 			frame.repaint();
 			frame.setVisible(true);
 			buttonNumber++;
+		}
+
+		void removeButton() {
+			if (buttonNumber > 0) {
+				southPanel.remove(--buttonNumber);
+				buttonList.removeLast();
+				frame.repaint();
+				frame.setVisible(true);
+			}
 		}
 
 		void next() {
@@ -109,8 +138,12 @@ public class ScenarioCreator {
 			if (e.getButton() == MouseEvent.BUTTON1) {
 				if (e.getSource().equals(addCell))
 					addCell();
+				if (e.getSource().equals(removeCell))
+					removeCell();
 				if (e.getSource().equals(addButton))
 					addButton();
+				if (e.getSource().equals(removeButton))
+					removeButton();
 				if (e.getSource().equals(next))
 					next();
 			}
