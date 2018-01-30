@@ -20,6 +20,7 @@ public class ScenarioCreator {
 	private JFrame parent;
 	private JFrame frame;
 	private JPanel panel;
+
 	private JButton addCell;
 	private JButton removeCell;
 	private JButton addButton;
