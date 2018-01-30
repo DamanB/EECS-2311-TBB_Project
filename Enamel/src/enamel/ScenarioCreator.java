@@ -2,6 +2,7 @@ package enamel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -12,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 public class ScenarioCreator {
 
@@ -26,6 +28,9 @@ public class ScenarioCreator {
 	JPanel centerPanel = new JPanel();
 	LinkedList<JPanel> panelList = new LinkedList<JPanel>();
 	LinkedList<JButton> buttonList = new LinkedList<JButton>();
+	private GridLayout cellGrid = new GridLayout(4, 2);
+	JRadioButton[] pins = new JRadioButton[8];
+	int[] pinIndex = { 0, 2, 4, 1, 3, 5, 6, 7 };
 
 	ScenarioCreator(JFrame parent) {
 		this.parent = parent;
@@ -61,15 +66,26 @@ public class ScenarioCreator {
 
 		void addCell() {
 			System.out.println("add cell");
-			PinCells pinCells = new PinCells();
-			pinCells.panel.setVisible(true);
-			pinCells.panel.setSize(50, 50);
-			pinCells.panel.setBorder(BorderFactory.createLineBorder(Color.black));
+			JPanel panel = new JPanel(cellGrid);
+			for (int j = 0; j < 8; j++) {
+				JRadioButton radioButton = new JRadioButton();
+				radioButton.setEnabled(false);
+				radioButton.setSize(25, 25);
+				radioButton.getAccessibleContext().setAccessibleName("Cell " + (j + 1));
 
-			panelList.add(pinCells.panel);
-			centerPanel.add(pinCells.panel);
+				pins[j] = radioButton;
+
+				panel.add(radioButton);
+				panel.repaint();
+			}
+
+			panel.setVisible(true);
+
+			panelList.add(panel);
+			panel.setSize(50, 50);
+			panel.setBorder(BorderFactory.createLineBorder(Color.black));
+			centerPanel.add(panel);
 			frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
-			frame.repaint();
 		}
 
 		void addButton() {

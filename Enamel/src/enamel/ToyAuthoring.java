@@ -10,14 +10,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ToyAuthoring {
 
-    // this this the origin version
+	// this this the origin version
 
-    public static void main(String[] args) {
-        MainFrame main = new MainFrame();
-    }
+	public static void main(String[] args) {
+		MainFrame main = new MainFrame();
+	//}
 
-    public static void open() {
-        /*// Initialising objects for file explorer and the ScenarioParser
+	//public static void open() {
+		// Initialising objects for file explorer and the ScenarioParser
 		JButton openfile = new JButton();
 		JFileChooser fileChooser = new JFileChooser();
 		ScenarioParser s;
@@ -58,6 +58,6 @@ public class ToyAuthoring {
 				System.out.println("Error: Invalid file name");
 				return;
 			}
-		}*/
-    }
+		}
+	}
 }

@@ -83,13 +83,25 @@ public class VisualPlayer extends Player {
 
 				for (int i = 0; i < brailleCellNumber; i++) {
 					
-					PinCells pinCells = new PinCells(cellGrid);
-					pinCells.panel.setVisible(true);
-					pinCells.panel.setSize(50, 50);
-					pinCells.panel.setBorder(BorderFactory.createLineBorder(Color.black));
+					JPanel panel = new JPanel(cellGrid);
+					for (int j = 0; j < 8; j++) {
+						JRadioButton radioButton = new JRadioButton();
+						radioButton.setEnabled(false);
+						radioButton.setSize(25, 25);
+						radioButton.getAccessibleContext().setAccessibleName("Cell " + (j + 1));
 
-					panelList.add(pinCells.panel);
-					centerPanel.add(pinCells.panel);
+						pins[j] = radioButton;
+
+						panel.add(radioButton);
+						panel.repaint();
+					}
+					
+					panel.setVisible(true);
+
+					panelList.add(panel);
+					panel.setSize(50, 50);
+					panel.setBorder(BorderFactory.createLineBorder(Color.black));
+					centerPanel.add(panel);
 
 					if (i == (brailleCellNumber - 1))
 						frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
