@@ -21,9 +21,7 @@ public class PinCells {
 			radioButton.setEnabled(false);
 			radioButton.setSize(25, 25);
 			radioButton.getAccessibleContext().setAccessibleName("Cell " + (j + 1));
-
 			pins[j] = radioButton;
-
 			panel.add(radioButton);
 			panel.repaint();
 		}
