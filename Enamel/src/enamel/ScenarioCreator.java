@@ -3,6 +3,8 @@ package enamel;
 import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,13 +12,15 @@ import javax.swing.JPanel;
 
 public class ScenarioCreator {
 
+	private JFrame parent;
 	private JFrame frame;
 	private JPanel panel;
 	private JButton addCell;
 	private JButton addButton;
 	private JButton next;
 
-	ScenarioCreator() {
+	ScenarioCreator(JFrame parent) {
+		this.parent = parent;
 		frame = new JFrame();
 		frame.setTitle("Scenario Creator");
 		frame.setBounds(100, 100, 627, 459);
@@ -41,6 +45,8 @@ public class ScenarioCreator {
 		frame.add(panel);
 		frame.repaint();
 		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.addWindowListener(new Close());
 	}
 
 	class AddComponent implements MouseListener {
@@ -84,6 +90,36 @@ public class ScenarioCreator {
 		@Override
 		public void mouseExited(MouseEvent e) {
 		}
+	}
 
+	class Close implements WindowListener {
+		@Override
+		public void windowOpened(WindowEvent e) {
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			parent.setVisible(true);
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+		}
+
+		@Override
+		public void windowActivated(WindowEvent e) {
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+		}
 	}
 }
