@@ -50,7 +50,7 @@ public class ScenarioCreator {
 		next.addMouseListener(new AddComponent());
 		this.panel.add(this.next);
 
-		frame.add(panel);
+		frame.getContentPane().add(panel, BorderLayout.NORTH);
 		frame.repaint();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -60,6 +60,7 @@ public class ScenarioCreator {
 	class AddComponent implements MouseListener {
 
 		void addCell() {
+			System.out.println("add cell");
 			PinCells pinCells = new PinCells();
 			pinCells.panel.setVisible(true);
 			pinCells.panel.setSize(50, 50);
@@ -68,6 +69,7 @@ public class ScenarioCreator {
 			panelList.add(pinCells.panel);
 			centerPanel.add(pinCells.panel);
 			frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
+			frame.repaint();
 		}
 
 		void addButton() {
