@@ -24,6 +24,8 @@ public class ScenarioCreator {
 	private JButton addButton;
 	private JButton next;
 
+	private int buttonNumber;
+
 	JPanel southPanel = new JPanel();
 	JPanel centerPanel = new JPanel();
 	LinkedList<JPanel> panelList = new LinkedList<JPanel>();
@@ -60,6 +62,8 @@ public class ScenarioCreator {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.addWindowListener(new Close());
+
+		buttonNumber = 0;
 	}
 
 	class AddComponent implements MouseListener {
@@ -72,24 +76,28 @@ public class ScenarioCreator {
 				radioButton.setEnabled(false);
 				radioButton.setSize(25, 25);
 				radioButton.getAccessibleContext().setAccessibleName("Cell " + (j + 1));
-
 				pins[j] = radioButton;
-
 				panel.add(radioButton);
 				panel.repaint();
 			}
-
 			panel.setVisible(true);
-
 			panelList.add(panel);
 			panel.setSize(50, 50);
 			panel.setBorder(BorderFactory.createLineBorder(Color.black));
 			centerPanel.add(panel);
 			frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
+			frame.repaint();
+			frame.setVisible(true);
 		}
 
 		void addButton() {
-			// please complex it
+			JButton button = new JButton(Integer.toString((buttonNumber + 1)));
+			buttonList.add(button);
+			southPanel.add(button);
+			frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
+			frame.repaint();
+			frame.setVisible(true);
+			buttonNumber++;
 		}
 
 		void next() {
