@@ -1,55 +1,107 @@
 package enamel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainFrame {
 	private JFrame frame;
+	private int sizeX = 1280;
+	private int sizeY = 720;
 
 	private JPanel panel;
-	private JButton open;
-	private JButton create;
+	private JButton player;
+	private JButton editor;
+	private JLabel title;
+	private Color primaryColor;
+	private ImageIcon logoImage;
+	private JLabel logo;
+	private JLabel instruction;
 
 	public MainFrame() {
 		frame = new JFrame();
-		frame.setTitle("Main");
-		frame.setBounds(100, 100, 627, 459);
+		frame.setTitle("Main Menu");
+		//frame.setBounds(100, 100, 627, 459);
+		frame.setSize(sizeX,sizeY);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout());
-
+		//frame.getContentPane().setLayout(new BorderLayout());		
+		frame.setLayout(null);
+		frame.setResizable(false);
+		
+		primaryColor = new Color(153,197, 217);
+		
 		panel = new JPanel();
-		panel.setSize(200, 50);
+		panel.setLayout(null);
+		panel.setSize(sizeX, sizeY);
+		
+		logoImage = new ImageIcon("Images/CompanyLogo.png");
+		logo = new JLabel(logoImage);
+		logo.setLayout(null);
+		logo.setSize(300,100);
+		logo.setLocation(10, 10);
+				
+		player = new JButton("Player");
+		player.setLocation(sizeX-(sizeX/4), sizeY/3);
+		customizeButton(player);		
+		
+		editor = new JButton("Editor");
+		editor.setLocation(sizeX-(sizeX/4), sizeY/2);
+		customizeButton(editor);
 
-		open = new JButton("Open");
-		open.addMouseListener(new Click());
-		panel.add(this.open);
-
-		create = new JButton("Create");
-		create.addMouseListener(new Click());
-		this.panel.add(this.create);
-
-		frame.add(panel);
+		title = new JLabel("Treasure Box Braille");
+		title.setLayout(null);
+		title.setSize(sizeX,sizeY/3);
+		title.setLocation(sizeX/20,sizeY/4);
+		title.setFont(new Font("calibri", Font.PLAIN, 50));
+		title.setForeground(Color.black);
+		
+		instruction = new JLabel("Choose whether to open the Scenario Editor or the Scenario Player");
+		instruction.setLayout(null);
+		instruction.setSize(sizeX,sizeY/3);
+		instruction.setLocation(sizeX/20,sizeY/3);
+		instruction.setFont(new Font("calibri", Font.ITALIC, 30));
+		instruction.setForeground(Color.black);
+		
+		panel.setBackground(primaryColor);
+		panel.add(this.player);
+		panel.add(this.editor);
+		panel.add(title);
+		panel.add(instruction);
+		panel.add(logo);
+		
+		frame.add(panel);		
 		frame.repaint();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-
-	public JButton getCreate() {
-		return create;
+	
+	private void customizeButton(JButton button) {
+		button.setLayout(null);
+		button.addMouseListener(new Click());
+		button.setSize(200,60);
+		button.setFont(new Font("calibri", Font.PLAIN, 22));
+		button.setBackground(Color.white);
+		button.setForeground(Color.black);
 	}
 
-	public JButton getOpen() {
-		return open;
+	public JButton getEditor() {
+		return editor;
+	}
+
+	public JButton getPlayer() {
+		return player;
 	}
 
 	class Click implements MouseListener {
-		private void open() {
+		private void player() {
 			// Initialising objects for file explorer and the ScenarioParser
 			JButton openfile = new JButton();
 			JFileChooser fileChooser = new JFileChooser();
@@ -96,7 +148,7 @@ public class MainFrame {
 			}
 		}
 
-		private void create() {
+		private void editor() {
 			ScenarioCreator c = new ScenarioCreator(frame);
 			frame.setVisible(false);
 		}
@@ -104,10 +156,10 @@ public class MainFrame {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				if (e.getSource().equals(open)) {
-					open();
-				} else if (e.getSource().equals(create)) {
-					create();
+				if (e.getSource().equals(player)) {
+					player();
+				} else if (e.getSource().equals(editor)) {
+					editor();
 				}
 			}
 		}
