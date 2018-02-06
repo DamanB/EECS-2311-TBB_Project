@@ -28,7 +28,7 @@ public class VisualSetting {
 		public final static int AUDIOTEXT = 4;
 		public final static int SOUND = 5;
 		public final static int SKIPBUTTON = 6;
-		//public final static int SKIPKEY = 7;
+		// public final static int SKIPKEY = 7;
 		public final static int SKIP = 8;
 		public final static int RESETBUTTON = 9;
 		public final static int PAUSE = 10;
@@ -110,10 +110,39 @@ public class VisualSetting {
 	private int buttons;
 	private List<Step> steps;
 
+	/**
+	 * create an empty visual setting
+	 */
 	public VisualSetting() {
-		this.cells = 0;
-		this.buttons = 0;
-		this.steps = new ArrayList<Step>();
+		this(0, 0, new ArrayList<Step>());
+	}
+
+	/**
+	 * create a visual setting with given cells and buttons number
+	 * 
+	 * @param cells
+	 *            cell number
+	 * @param buttons
+	 *            button number
+	 */
+	public VisualSetting(int cells, int buttons) {
+		this(cells, buttons, new ArrayList<Step>());
+	}
+
+	/**
+	 * create a visual setting with given information
+	 * 
+	 * @param cells
+	 *            cell number
+	 * @param buttons
+	 *            button number
+	 * @param steps
+	 *            detail steps
+	 */
+	public VisualSetting(int cells, int buttons, List<Step> steps) {
+		this.cells = cells;
+		this.buttons = buttons;
+		this.steps = steps;
 	}
 
 	/**
@@ -173,6 +202,27 @@ public class VisualSetting {
 	 */
 	public void setSteps(List<Step> steps) {
 		this.steps = steps;
+	}
+
+	/**
+	 * add a single step to the step list
+	 * 
+	 * @param step
+	 *            the single step to add
+	 */
+	public void addStep(Step step) {
+		this.steps.add(step);
+	}
+
+	/**
+	 * remove the last step from the step list
+	 * 
+	 * @return null if the step list is empty, otherwise the last step
+	 */
+	public Step removeStep() {
+		if (this.steps.isEmpty())
+			return null;
+		return this.steps.remove(this.steps.size() - 1);
 	}
 
 	/**
