@@ -8,14 +8,11 @@ public class MainFrame {
 
 	private static JFrame frame;
 	private static JPanel mainPanel;
-	private int sizeX = 1280;
-	private int sizeY = 720;
-	
-	
-	
-	public MainFrame() {
-		
-		Dimension d = new Dimension(sizeX,sizeY);
+	private static int sizeX = 1280;
+	private static int sizeY = 720;	
+	public static Dimension d = new Dimension(sizeX,sizeY);
+
+	public MainFrame() {		
 		
 		frame = new JFrame("SDP-16 Treasure Box Braille");		
 		frame.setSize(d);
@@ -31,6 +28,8 @@ public class MainFrame {
 		frame.add(mainPanel);
 		frame.setVisible(true);
 		frame.repaint();
+		
+		changeScreen(MainMenu.instance.getScreen());
 	}
 	
 	public static void changeScreen(JPanel screen) {

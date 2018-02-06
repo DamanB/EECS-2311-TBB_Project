@@ -14,8 +14,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainMenu {
 	//private JFrame frame;
-	private int sizeX = 1280;
-	private int sizeY = 720;
+	private int sizeX;
+	private int sizeY;
 
 	private JPanel panel;
 	private JButton player;
@@ -25,24 +25,18 @@ public class MainMenu {
 	private ImageIcon logoImage;
 	private JLabel logo;
 	private JLabel instruction;
+	
+	public static MainMenu instance = new MainMenu();
 
-	public MainMenu() {
-		/*--------------------------------------------
-		frame = new JFrame();
-		frame.setTitle("Main Menu");
-		//frame.setBounds(100, 100, 627, 459);
-		frame.setSize(sizeX,sizeY);
-		frame.setPreferredSize(new Dimension(sizeX, sizeY));
-		//frame.getContentPane().setLayout(new BorderLayout());		
-		frame.setLayout(null);
-		frame.setResizable(false);
-		-----------------------------------------------*/
-		
+	private MainMenu() {
+	
 		primaryColor = new Color(153,197, 217);
+		sizeX = MainFrame.d.width;
+		sizeY = MainFrame.d.height;
 		
 		panel = new JPanel();
 		panel.setLayout(null);
-		panel.setSize(sizeX, sizeY);
+		panel.setSize(MainFrame.d);
 		
 		logoImage = new ImageIcon("Images/CompanyLogo.png");
 		logo = new JLabel(logoImage);
@@ -86,6 +80,8 @@ public class MainMenu {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		*/
 	}
+	
+	public JPanel getScreen() {return this.panel;}
 	
 	private void customizeButton(JButton button) {
 		button.setLayout(null);
@@ -153,8 +149,9 @@ public class MainMenu {
 		}
 
 		private void editor() {
-			ScenarioCreator c = new ScenarioCreator(frame);
-			frame.setVisible(false);
+			//ScenarioCreator c = new ScenarioCreator(main);
+			//frame.setVisible(false);
+			MainFrame.changeScreen(ScenarioCreator.instance.getScreen());
 		}
 
 		@Override

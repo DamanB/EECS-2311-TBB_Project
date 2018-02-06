@@ -17,8 +17,9 @@ import javax.swing.JRadioButton;
 
 public class ScenarioCreator {
 
-	private JFrame parent;
-	private JFrame frame;
+	//private JFrame parent;
+	//private JFrame frame;
+	private JPanel frame;
 	private JPanel panel;
 
 	private JButton addCell;
@@ -38,13 +39,18 @@ public class ScenarioCreator {
 	JRadioButton[] pins = new JRadioButton[8];
 	int[] pinIndex = { 0, 2, 4, 1, 3, 5, 6, 7 };
 
-	ScenarioCreator(JFrame parent) {
-		this.parent = parent;
-		frame = new JFrame();
+	public static ScenarioCreator instance = new ScenarioCreator();
+	
+	private ScenarioCreator() {
+		//this.parent = parent;
+		frame = new JPanel();
+		frame.setSize(MainFrame.d);
+		/*frame = new JFrame();
 		frame.setTitle("Scenario Creator");
 		frame.setBounds(100, 100, 627, 459);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout());
+		*/
+		frame.setLayout(new BorderLayout());
 
 		panel = new JPanel();
 		panel.setSize(200, 50);
@@ -69,16 +75,21 @@ public class ScenarioCreator {
 		next.addMouseListener(new AddComponent());
 		this.panel.add(this.next);
 
-		frame.getContentPane().add(panel, BorderLayout.NORTH);
-		frame.repaint();
-		frame.setVisible(true);
+		
+		frame.add(panel, BorderLayout.NORTH);
+		/*
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.addWindowListener(new Close());
-		frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
-		frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
+		*/
+		frame.add(centerPanel, BorderLayout.CENTER);
+		frame.add(southPanel, BorderLayout.SOUTH);
+		frame.repaint();
+		frame.setVisible(true);
 		buttonNumber = 0;
 		cellNumber = 0;
 	}
+	
+	public static JPanel getScreen() {return instance.frame;}
 
 	class AddComponent implements MouseListener {
 
@@ -178,7 +189,7 @@ public class ScenarioCreator {
 
 		@Override
 		public void windowClosed(WindowEvent e) {
-			parent.setVisible(true);
+			//parent.setVisible(true);
 		}
 
 		@Override
