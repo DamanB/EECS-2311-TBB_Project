@@ -13,6 +13,6 @@ public class ToyAuthoring {
 	// this this the origin version
 
 	public static void main(String[] args) {
-		MainFrame main = new MainFrame();
+		MainMenu main = new MainMenu();
 	}
 }
