@@ -87,11 +87,6 @@ public class ScenarioParser {
         // has, then everything
         // after the key phrase is assumed to be text to be repeated.
 
-        // TESTING
-        System.out.println(fileLine);
-        // TESTING
-
-
         if (repeat) {
             // Stops assuming that the text is being repeated with the
             // /~endrepeat key phrase

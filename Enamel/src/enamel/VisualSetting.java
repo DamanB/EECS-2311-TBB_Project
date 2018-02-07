@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * the setting for VisualPlayer
- * 
+ *
  * @author guopy96
  *
  */
@@ -16,7 +16,7 @@ public class VisualSetting {
 
 	/**
 	 * option for VisualPlayer
-	 * 
+	 *
 	 * @author guopy96
 	 *
 	 */
@@ -119,7 +119,7 @@ public class VisualSetting {
 
 	/**
 	 * create a visual setting with given cells and buttons number
-	 * 
+	 *
 	 * @param cells
 	 *            cell number
 	 * @param buttons
@@ -131,7 +131,7 @@ public class VisualSetting {
 
 	/**
 	 * create a visual setting with given information
-	 * 
+	 *
 	 * @param cells
 	 *            cell number
 	 * @param buttons
@@ -147,7 +147,7 @@ public class VisualSetting {
 
 	/**
 	 * get cell number
-	 * 
+	 *
 	 * @return cell number
 	 */
 	public int getCells() {
@@ -156,7 +156,7 @@ public class VisualSetting {
 
 	/**
 	 * set cell number
-	 * 
+	 *
 	 * @param cells
 	 *            cell number
 	 */
@@ -167,7 +167,7 @@ public class VisualSetting {
 
 	/**
 	 * get button number
-	 * 
+	 *
 	 * @return button number
 	 */
 	public int getButtons() {
@@ -176,7 +176,7 @@ public class VisualSetting {
 
 	/**
 	 * set button number
-	 * 
+	 *
 	 * @param buttons
 	 *            button number
 	 */
@@ -187,7 +187,7 @@ public class VisualSetting {
 
 	/**
 	 * get action steps
-	 * 
+	 *
 	 * @return a list of steps
 	 */
 	public List<Step> getSteps() {
@@ -196,7 +196,7 @@ public class VisualSetting {
 
 	/**
 	 * set action steps
-	 * 
+	 *
 	 * @param steps
 	 *            a list of steps
 	 */
@@ -206,7 +206,7 @@ public class VisualSetting {
 
 	/**
 	 * add a single step to the step list
-	 * 
+	 *
 	 * @param step
 	 *            the single step to add
 	 */
@@ -216,7 +216,7 @@ public class VisualSetting {
 
 	/**
 	 * remove the last step from the step list
-	 * 
+	 *
 	 * @return null if the step list is empty, otherwise the last step
 	 */
 	public Step removeStep() {
@@ -228,7 +228,7 @@ public class VisualSetting {
 	/**
 	 * Create a new setting file with this setting, if the file exists, overwrite
 	 * it;
-	 * 
+	 *
 	 * @param fileName
 	 *            output file name.
 	 * @return true create and write setting successfully; false the filename is a
@@ -241,7 +241,7 @@ public class VisualSetting {
 	/**
 	 * Create a new setting file with a given setting, if the file exists, overwrite
 	 * it;
-	 * 
+	 *
 	 * @param fileName
 	 *            output file name.
 	 * @param setting
