@@ -44,7 +44,7 @@ public class ScenarioCreator {
 	private ScenarioCreator() {
 		//this.parent = parent;
 		frame = new JPanel();
-		frame.setSize(MainFrame.d);
+		frame.setSize(MainFrame.dimension);
 		/*frame = new JFrame();
 		frame.setTitle("Scenario Creator");
 		frame.setBounds(100, 100, 627, 459);

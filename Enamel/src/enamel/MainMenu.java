@@ -17,7 +17,7 @@ public class MainMenu {
 	private int sizeX;
 	private int sizeY;
 
-	private JPanel panel;
+	private static JPanel panel;
 	private JButton player;
 	private JButton editor;
 	private JLabel title;
@@ -25,29 +25,29 @@ public class MainMenu {
 	private ImageIcon logoImage;
 	private JLabel logo;
 	private JLabel instruction;
-	
-	public static MainMenu instance = new MainMenu();
+
+	public static MainMenu instance;
 
 	private MainMenu() {
-	
-		primaryColor = new Color(153,197, 217);
-		sizeX = MainFrame.d.width;
-		sizeY = MainFrame.d.height;
-		
+
+		primaryColor = MainFrame.primColor;
+		sizeX = MainFrame.dimension.width;
+		sizeY = MainFrame.dimension.height;
+
 		panel = new JPanel();
 		panel.setLayout(null);
-		panel.setSize(MainFrame.d);
-		
+		panel.setSize(MainFrame.dimension);
+
 		logoImage = new ImageIcon("Images/CompanyLogo.png");
 		logo = new JLabel(logoImage);
 		logo.setLayout(null);
 		logo.setSize(300,100);
 		logo.setLocation(10, 10);
-				
+
 		player = new JButton("Player");
 		player.setLocation(sizeX-(sizeX/4), sizeY/3);
 		customizeButton(player);		
-		
+
 		editor = new JButton("Editor");
 		editor.setLocation(sizeX-(sizeX/4), sizeY/2);
 		customizeButton(editor);
@@ -58,31 +58,34 @@ public class MainMenu {
 		title.setLocation(sizeX/20,sizeY/4);
 		title.setFont(new Font("calibri", Font.PLAIN, 50));
 		title.setForeground(Color.black);
-		
-		
+
+
 		instruction = new JLabel("Choose whether to open the Scenario Editor or the Scenario Player");
 		instruction.setLayout(null);
 		instruction.setSize(sizeX,sizeY/3);
 		instruction.setLocation(sizeX/20,sizeY/3);
 		instruction.setFont(new Font("calibri", Font.ITALIC, 30));
 		instruction.setForeground(Color.black);
-		
+
 		panel.setBackground(primaryColor);
 		panel.add(this.player);
 		panel.add(this.editor);
 		panel.add(title);
 		panel.add(instruction);
 		panel.add(logo);
-		
+
 		/*frame.add(panel);		
 		frame.repaint();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		*/
+		 */
 	}
-	
-	public JPanel getScreen() {return this.panel;}
-	
+
+	public static JPanel getScreen() {
+		instance = new MainMenu();
+		return panel;
+	}
+
 	private void customizeButton(JButton button) {
 		button.setLayout(null);
 		button.addMouseListener(new Click());
@@ -151,7 +154,7 @@ public class MainMenu {
 		private void editor() {
 			//ScenarioCreator c = new ScenarioCreator(main);
 			//frame.setVisible(false);
-			MainFrame.changeScreen(ScenarioCreator.instance.getScreen());
+			MainFrame.changeScreen(ScenarioEditorMenu.instance.getScreen());
 		}
 
 		@Override

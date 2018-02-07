@@ -8,7 +8,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.util.logging.*;
 
-import com.sun.media.sound.InvalidFormatException;
+//import com.sun.media.sound.InvalidFormatException;
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 
