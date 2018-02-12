@@ -17,6 +17,8 @@ public class ScenarioCreatorManager {
     // Used to record the cell number, button number, a list of questions and the file to read/write to
     private int cellNum;
     private int buttonNum;
+    private static int numCells;
+    private static int numButtons;
     private List<Question> questions;
     private File scenarioFile;
 
@@ -214,4 +216,20 @@ public class ScenarioCreatorManager {
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
+
+	public static int getNumButtons() {
+		return numButtons;
+	}
+
+	public static void setNumButtons(int numButtons) {
+		ScenarioCreatorManager.numButtons = numButtons;
+	}
+
+	public static int getNumCells() {
+		return numCells;
+	}
+
+	public static void setNumCells(int numCells) {
+		ScenarioCreatorManager.numCells = numCells;
+	}
 }
