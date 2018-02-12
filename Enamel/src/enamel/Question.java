@@ -7,7 +7,8 @@ public class Question {
 	private String question;
 	private String correctAnswerResponse;
 	private String incorrectAnswerResponse;
-	private List<Integer> cells = new ArrayList<Integer>();	
+	private List<Integer> cells = new ArrayList<Integer>();
+	private List<Command> commands;
 	
 
 	

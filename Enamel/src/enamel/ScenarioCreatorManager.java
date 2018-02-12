@@ -47,7 +47,11 @@ public class ScenarioCreatorManager {
     }
 
     // Will parse an existing scenario file and create a list of questions from it and the cell/button numbers
-    /*public void parseFile(File lines.get(i)) {
+    // TODO if Illegal Argument Exception is thrown return that the file has errors
+    // TODO At the end check for skip buttons and repeat connecting to end repeat
+    // TODO Check to see if only command and input is on the line if not throw error. Check input length?
+    // TODO Check to see is user input is done after skip button and repeat button
+    public void parseFile() {
         List<String> lines = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(this.scenarioFile))) {
@@ -72,17 +76,13 @@ public class ScenarioCreatorManager {
 
         int questionIndex = 0;
         boolean repeat = false, textReached = false;
+        List<String> repeatedText = new ArrayList<>();
 
-        for (int i = 2; i < lines.size(); i++) {
-            if (!textReached)
-            {
+        /*for (int i = 2; i < lines.size(); i++) {
+            if (!textReached) {
                 textReached = (!(lines.get(i).equals("")));
             }
-            else {
-
-
-
-
+            if (!lines.get(i).equals("")) {
                 if (repeat) {
                     // Stops assuming that the text is being repeated with the
                     // /~endrepeat key phrase
@@ -90,7 +90,6 @@ public class ScenarioCreatorManager {
                         repeat = false;
                     } else {
                         repeatedText.add(lines.get(i));
-                        speak(lines.get(i));
                     }
                 } else {
                     // The key phrase to indicate to play a sound file.
@@ -180,12 +179,14 @@ public class ScenarioCreatorManager {
                     // interpreted as text that
                     // will be spoken for the user to hear.
                     else {
-                        speak(lines.get(i));
+                        repeatedText(lines.get(i));
                     }
                 }
+            } else {
+                questionIndex++;
             }
-        }
-    }*/
+        }*/
+    }
 
 
     // Getters and Setters for private variables
