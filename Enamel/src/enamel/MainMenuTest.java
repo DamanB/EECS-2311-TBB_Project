@@ -1,6 +1,5 @@
 package enamel;
 
-<<<<<<< HEAD
 import static javax.imageio.ImageIO.getCacheDirectory;
 
 import static org.junit.Assert.*;
@@ -9,17 +8,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Random;
 
 class MainMenuTest {
 
 	Random rand;
-	@Test
-	void test() {
+
+	@Before
+	void start() {
 		rand = new Random();
 	}
 
-	@Test (expected = Exception.class)
+	@Test(expected = Exception.class)
 	public void testRandomFileName() {
 		String testString = "";
 		int index = rand.nextInt(10) + 1;
@@ -33,31 +35,36 @@ class MainMenuTest {
 			testFile.createNewFile();
 		} catch (Exception e) {
 			System.out.println(e.toString());
-		}		
+		}
 		fail("Exception not thrown");
-=======
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-class MainMenuTest {
-
-	MainMenu m;
-
-	@BeforeEach
-	void setUp() throws Exception {
-		MainMenu.getScreen();
-		m = MainMenu.instance;
 	}
 
-	@Test
-	void testPlay() {
-		m.getPlayer().doClick();
-	}
-
-	@Test
-	void testEdit() {
-		m.getEditor().doClick();
->>>>>>> develop
+	@Test(expected = Exception.class)
+	public void testInvalidHeader() {
+		String testString = "Scenario_100.txt";
+		File testFile = new File(getCacheDirectory(), "FactoryScenarios/" + testString);
+		try {
+			testFile.createNewFile();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		try {
+			PrintWriter writer = new PrintWriter(testFile);
+			writer.print("");
+			writer.close();
+		} catch (FileNotFoundException e) {
+			System.out.println(e.toString());
+		}
+		
+		try {
+			PrintWriter writer = new PrintWriter(testFile);
+			writer.print("Cell -1");
+			writer.print("Button -1");
+			writer.close();
+		} catch (FileNotFoundException e) {
+			System.out.println(e.toString());
+		}
+		fail("Exception not thrown");
 	}
 
 }
