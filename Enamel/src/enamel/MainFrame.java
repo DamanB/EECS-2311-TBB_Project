@@ -22,6 +22,7 @@ public class MainFrame {
 		frame.setPreferredSize(dimension);
 		frame.setLayout(null);
 		frame.setResizable(false);
+		frame.setMinimumSize(dimension);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		mainPanel = new JPanel();
@@ -42,6 +43,13 @@ public class MainFrame {
 		mainPanel.validate();
 		frame.repaint();		
 	}
+	
+	public static JPanel getMainPanel() {
+		return mainPanel;
+	}
+	
+	public static int getSizeX() {return sizeX;}
+	public static int getSizeY() {return sizeY;}
 	
 	
 }

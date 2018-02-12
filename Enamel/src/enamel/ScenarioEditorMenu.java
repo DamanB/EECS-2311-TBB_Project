@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class ScenarioEditorMenu implements MouseListener {
@@ -22,8 +23,7 @@ public class ScenarioEditorMenu implements MouseListener {
 	private static JButton create,modify,back;
 
 	private static int sizeX;
-	private static int sizeY;;
-
+	private static int sizeY;
 
 	private ScenarioEditorMenu() {
 
@@ -72,6 +72,11 @@ public class ScenarioEditorMenu implements MouseListener {
 		pane.add(buttonsPane);
 
 		back = new JButton("Back");
+		modifyButtonSettings(back);
+		JPanel lowerPanel = new JPanel(flow);
+		lowerPanel.add(back);
+		lowerPanel.setBackground(MainFrame.primColor);
+		pane.add(lowerPanel);
 
 	}
 
@@ -82,15 +87,44 @@ public class ScenarioEditorMenu implements MouseListener {
 		button.setSize(size);
 		button.setPreferredSize(size);
 		button.addMouseListener(this);
-		button.setFont(new Font("Calibri", Font.BOLD, 30));
+		button.setFont(new Font("Calibri", Font.PLAIN, 30));
 		button.setBackground(Color.white);
 		button.setForeground(Color.black);
 		button.setVerticalAlignment(JButton.CENTER);
 	}
 
+
+	public static int getNumCells() { 
+
+		while(true) {
+			String numCells = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Enter The Number of Cells You Wish To Use: ");
+			if (numCells.matches("^[1-9][0-9]*$")) {
+				return Integer.parseInt(numCells);
+			}else {
+				JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again");
+			}
+		}
+	}
+	
+	public static int getNumButtons() { 
+
+		while(true) {
+			String numButton = JOptionPane.showInputDialog(MainFrame.getMainPanel(),"Please Enter The Number of Response Buttons You Wish To Use: ");
+			if (numButton.matches("^[1-9][0-9]*$")) {
+				return Integer.parseInt(numButton);
+			}else {
+				JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again");
+			}
+		}
+	}
+
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseClicked(MouseEvent e) {
+
+		if (e.getSource().equals(create)) {			
+		}
+
+
 
 	}
 
