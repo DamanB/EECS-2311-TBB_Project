@@ -39,8 +39,8 @@ public class ScenarioCreator {
 	JRadioButton[] pins = new JRadioButton[8];
 	int[] pinIndex = { 0, 2, 4, 1, 3, 5, 6, 7 };
 
-	public static ScenarioCreator instance = new ScenarioCreator();
-	
+	public static ScenarioCreator instance;
+
 	private ScenarioCreator() {
 		//this.parent = parent;
 		frame = new JPanel();
@@ -49,11 +49,11 @@ public class ScenarioCreator {
 		frame.setTitle("Scenario Creator");
 		frame.setBounds(100, 100, 627, 459);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		*/
+		 */
 		frame.setLayout(new BorderLayout());
 
 		panel = new JPanel();
-		panel.setSize(200, 50);
+		panel.setSize(MainFrame.getSizeX(), MainFrame.getSizeY()/3);
 
 		addCell = new JButton("Add Cell");
 		addCell.addMouseListener(new AddComponent());
@@ -75,21 +75,30 @@ public class ScenarioCreator {
 		next.addMouseListener(new AddComponent());
 		this.panel.add(this.next);
 
+
+		centerPanel.setSize(MainFrame.getSizeX(), MainFrame.getSizeY()/3);
+		southPanel.setSize(MainFrame.getSizeX(), MainFrame.getSizeY()/3);
+		
 		
 		frame.add(panel, BorderLayout.NORTH);
 		/*
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.addWindowListener(new Close());
-		*/
+		 */
 		frame.add(centerPanel, BorderLayout.CENTER);
 		frame.add(southPanel, BorderLayout.SOUTH);
+		
+		
 		frame.repaint();
 		frame.setVisible(true);
 		buttonNumber = 0;
 		cellNumber = 0;
 	}
-	
-	public static JPanel getScreen() {return instance.frame;}
+
+	public static JPanel getScreen() {
+		instance = new ScenarioCreator();
+		return instance.frame;
+	}
 
 	class AddComponent implements MouseListener {
 

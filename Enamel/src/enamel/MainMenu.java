@@ -3,6 +3,7 @@ package enamel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -33,17 +34,40 @@ public class MainMenu {
 		primaryColor = MainFrame.primColor;
 		sizeX = MainFrame.dimension.width;
 		sizeY = MainFrame.dimension.height;
+		
+		System.out.println(sizeX + " " + sizeY);
 
-		panel = new JPanel();
-		panel.setLayout(null);
+		panel = new JPanel(null);	
 		panel.setSize(MainFrame.dimension);
+		panel.setBackground(primaryColor);
+
 
 		logoImage = new ImageIcon("Images/CompanyLogo.png");
 		logo = new JLabel(logoImage);
-		logo.setLayout(null);
-		logo.setSize(300,100);
-		logo.setLocation(10, 10);
+		Dimension dLogo = new Dimension(sizeX/4,sizeY/7);
+		logo.setSize(dLogo);
+		logo.setPreferredSize(dLogo);
+		logo.setLocation((int)(sizeX*0.01),(int)(sizeY*0.01));
+		
 
+
+		title = new JLabel("Treasure Box Braille");
+		Dimension dTitle = new Dimension(sizeX,sizeY/7);
+		title.setSize(dTitle);
+		title.setPreferredSize(dTitle);
+		title.setFont(new Font("calibri", Font.PLAIN, 50));
+		title.setForeground(Color.black);
+		title.setLocation((int)(sizeX*0.05),(int)(sizeY*0.3));
+
+		instruction = new JLabel("Choose whether to open the Scenario Editor or the Scenario Player");
+		Dimension dInstruc = new Dimension(sizeX,sizeY/7);
+		instruction.setSize(dInstruc);
+		instruction.setPreferredSize(dInstruc);
+		instruction.setFont(new Font("calibri", Font.ITALIC, 30));
+		instruction.setForeground(Color.black);
+		instruction.setLocation((int)(sizeX*0.05),(int)(sizeY*0.4));
+
+		
 		player = new JButton("Player");
 		player.setLocation(sizeX-(sizeX/4), sizeY/3);
 		customizeButton(player);		
@@ -51,34 +75,12 @@ public class MainMenu {
 		editor = new JButton("Editor");
 		editor.setLocation(sizeX-(sizeX/4), sizeY/2);
 		customizeButton(editor);
-
-		title = new JLabel("Treasure Box Braille");
-		title.setLayout(null);
-		title.setSize(sizeX,sizeY/3);
-		title.setLocation(sizeX/20,sizeY/4);
-		title.setFont(new Font("calibri", Font.PLAIN, 50));
-		title.setForeground(Color.black);
-
-
-		instruction = new JLabel("Choose whether to open the Scenario Editor or the Scenario Player");
-		instruction.setLayout(null);
-		instruction.setSize(sizeX,sizeY/3);
-		instruction.setLocation(sizeX/20,sizeY/3);
-		instruction.setFont(new Font("calibri", Font.ITALIC, 30));
-		instruction.setForeground(Color.black);
-
-		panel.setBackground(primaryColor);
-		panel.add(this.player);
-		panel.add(this.editor);
+		
+		panel.add(logo);
 		panel.add(title);
 		panel.add(instruction);
-		panel.add(logo);
-
-		/*frame.add(panel);		
-		frame.repaint();
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		 */
+		panel.add(this.player);
+		panel.add(this.editor);
 	}
 
 	public static JPanel getScreen() {
@@ -87,9 +89,10 @@ public class MainMenu {
 	}
 
 	private void customizeButton(JButton button) {
-		button.setLayout(null);
+		Dimension d = new Dimension(sizeX/6,sizeY/12);		
 		button.addMouseListener(new Click());
-		button.setSize(200,60);
+		button.setSize(d);
+		button.setPreferredSize(d);
 		button.setFont(new Font("calibri", Font.PLAIN, 22));
 		button.setBackground(Color.white);
 		button.setForeground(Color.black);
