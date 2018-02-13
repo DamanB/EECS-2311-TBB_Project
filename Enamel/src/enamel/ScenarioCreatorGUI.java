@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -80,19 +81,32 @@ public class ScenarioCreatorGUI {
 		private int sizeX;
 		private int sizeY;
 		
+		//QUESTION TITLE
 		private JPanel questionTitle;
 		private JLabel questionIndex;
 		
+		//QUESTION
 		private JPanel questionPanel;
 		private JLabel questionLabel;
 		private JTextField questionText;
 		
+		//CELL CONFIGURATIONS
 		private JPanel cellConfig;
 		private JLabel cellLabel;
 		private JComboBox cellComboBox;
 		private String[] cellList;		
 		private List<JBrailleCell> jCells;
 		private JPanel jCellDisplayed;
+		
+		//CORRECT ANSWER
+		private JPanel responseButtonConfig;
+		private JLabel responseButtonLabel;
+		private JComboBox responseButtonComboBox;
+		private String[] responseButtonList;		
+		private List<JCheckBox> jResponseButtons;
+		private Dimension responseButtonSize = new Dimension(300,25);
+		private boolean[] answer;
+		private JPanel jResponseButtonDisplayed;
 		
 		private JScrollPane vScroller;
 		
@@ -112,6 +126,7 @@ public class ScenarioCreatorGUI {
 			FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
 			layout.setHgap((int)(sizeY*0.03));
 			
+			//QUESTION HEADER
 			questionTitle = new JPanel(layout);
 			questionTitle.setBackground(MainFrame.primColor);
 			questionIndex = new JLabel("Question 1");
@@ -119,6 +134,7 @@ public class ScenarioCreatorGUI {
 			questionTitle.add(questionIndex);
 			questionEditor.add(questionTitle);
 			
+			//QUESTION TEXT
 			questionPanel = new JPanel(layout);
 		    questionLabel = new JLabel("QUESTION: ");
 		    questionText = new JTextField(sizeY/10);
@@ -126,15 +142,16 @@ public class ScenarioCreatorGUI {
 		    questionPanel.add(questionText);	
 			questionEditor.add(questionPanel);
 			
+			//CELL CONFIGURARTION
 			cellConfig = new JPanel(layout);
-			cellLabel = new JLabel("Edit Cell # ");
+			cellLabel = new JLabel("Edit Cell: ");
 			cellList = new String[ScenarioCreatorManager.getNumCells()];			
 			jCells = new ArrayList<JBrailleCell>();
 			jCellDisplayed = new JPanel(null);
-			jCellDisplayed.setSize(50,100);
+			jCellDisplayed.setSize(JBrailleCell.getSizeX(), JBrailleCell.getSizeY());
 			jCellDisplayed.setPreferredSize(jCellDisplayed.getSize());			
 			for (int i = 0; i<cellList.length; i++) {
-				cellList[i] = String.valueOf(i+1);
+				cellList[i] = "Cell: " + String.valueOf(i+1);
 				jCells.add(new JBrailleCell());
 			}			
 			cellComboBox = new JComboBox<String>(cellList); 
@@ -144,6 +161,27 @@ public class ScenarioCreatorGUI {
 			cellConfig.add(jCellDisplayed);
 			questionEditor.add(cellConfig);	
 			
+			//ANSWER CONFIGURATION
+			responseButtonConfig = new JPanel(layout);
+			responseButtonLabel = new JLabel("Select Correct Answer(s): ");
+			responseButtonList = new String[ScenarioCreatorManager.getNumButtons()];			
+			jResponseButtons = new ArrayList<JCheckBox>();
+			jResponseButtonDisplayed = new JPanel(null);
+			jResponseButtonDisplayed.setSize(responseButtonSize);
+			jResponseButtonDisplayed.setPreferredSize(responseButtonSize);			
+			for (int i = 0; i<responseButtonList.length; i++) {
+				responseButtonList[i] = "Button: " + String.valueOf(i+1);
+				JCheckBox _button = new JCheckBox("Button: " + (i+1) + " is an answer?");
+				_button.setSize(responseButtonSize);
+				_button.setPreferredSize(responseButtonSize);
+				jResponseButtons.add(_button);
+			}			
+			responseButtonComboBox = new JComboBox<String>(responseButtonList); 
+			responseButtonComboBox.addActionListener(this);
+			responseButtonConfig.add(responseButtonLabel);
+			responseButtonConfig.add(responseButtonComboBox);
+			responseButtonConfig.add(jResponseButtonDisplayed);
+			questionEditor.add(responseButtonConfig);				
 			
 		}
 		
@@ -158,6 +196,13 @@ public class ScenarioCreatorGUI {
 				jCellDisplayed.validate();
 				jCellDisplayed.repaint();
 				}
+			else if (e.getSource() == responseButtonComboBox) {
+				int index = (responseButtonComboBox.getSelectedIndex());	
+				jResponseButtonDisplayed.removeAll();
+				jResponseButtonDisplayed.add(jResponseButtons.get(index));
+				jResponseButtonDisplayed.validate();
+				jResponseButtonDisplayed.repaint();
+			}
 				
 				
 			}

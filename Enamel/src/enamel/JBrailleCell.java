@@ -14,8 +14,8 @@ public class JBrailleCell{
 	private JPanel cell;
 	private List<JRadioButton> pins;
 	
-	private int sizeX = 50;
-	private int sizeY = 100;
+	private static int sizeX = 50;
+	private static int sizeY = 100;
 	
 	public JBrailleCell() {			
 		cell = new JPanel(new GridLayout(4,2));
@@ -46,10 +46,10 @@ public class JBrailleCell{
 	public JPanel getJBrailleCell() {
 		return this.cell;
 	}		
-	public int getSizeX() {
+	public static int getSizeX() {
 		return sizeX;
 	}
-	public int getSizeY() {
+	public static int getSizeY() {
 		return sizeY;
 	}
 	
