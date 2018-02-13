@@ -10,8 +10,6 @@ public class Question {
 	private List<Integer> cells = new ArrayList<Integer>();
 	private List<Command> commands;
 	
-
-	
 	public void setQuestion(String question) {
 		this.question = question;
 	}

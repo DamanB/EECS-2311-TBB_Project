@@ -1,6 +1,6 @@
 package enamel;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+//import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -17,8 +17,8 @@ public class ScenarioCreatorManager {
     // Used to record the cell number, button number, a list of questions and the file to read/write to
     private int cellNum;
     private int buttonNum;
-    private static int numCells;
-    private static int numButtons;
+    private static int numCells = 3;
+    private static int numButtons = 4;
     private List<Question> questions;
     private File scenarioFile;
 
