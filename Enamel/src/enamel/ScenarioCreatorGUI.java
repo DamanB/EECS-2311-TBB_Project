@@ -6,15 +6,22 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 public class ScenarioCreatorGUI {
 
@@ -59,7 +66,7 @@ public class ScenarioCreatorGUI {
 		mainPanel.add(questionEditor,layout.CENTER);
 		mainPanel.add(leftBorder, layout.WEST);
 		
-		QuestionEditor editor = new QuestionEditor();
+		QuestionGUI editor = new QuestionGUI();
 		
 	}
 	
@@ -68,26 +75,28 @@ public class ScenarioCreatorGUI {
 		return instance.mainPanel;
 	}
 	
-	private static class QuestionEditor {
+	private class QuestionGUI implements ActionListener{
 		
-		private static int sizeX;
-		private static int sizeY;
+		private int sizeX;
+		private int sizeY;
 		
-		private static JPanel questionTitle;
-		private static JLabel questionIndex;
+		private JPanel questionTitle;
+		private JLabel questionIndex;
 		
-		private static JPanel questionPanel;
-		private static JLabel questionLabel;
-		private static JTextField questionText;
+		private JPanel questionPanel;
+		private JLabel questionLabel;
+		private JTextField questionText;
 		
-		private static JPanel cellConfig;
-		private static JLabel cellLabel;
-		private static JComboBox cellComboBox;
-		private static String[] cellList;		
+		private JPanel cellConfig;
+		private JLabel cellLabel;
+		private JComboBox cellComboBox;
+		private String[] cellList;		
+		private List<JBrailleCell> jCells;
+		private JPanel jCellDisplayed;
 		
-		private static JScrollPane vScroller;
+		private JScrollPane vScroller;
 		
-		private QuestionEditor() {
+		private QuestionGUI() {
 			
 			sizeX = (int)(MainFrame.getSizeX()*0.9);
 			sizeY = (int)(MainFrame.getSizeY() * 0.80);
@@ -100,56 +109,60 @@ public class ScenarioCreatorGUI {
 			controls.add(vScroller);
 			*/
 			
-			questionTitle = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
+			layout.setHgap((int)(sizeY*0.03));
+			
+			questionTitle = new JPanel(layout);
 			questionTitle.setBackground(MainFrame.primColor);
 			questionIndex = new JLabel("Question 1");
 			questionIndex.setFont(new Font("calibri",Font.BOLD,25));
 			questionTitle.add(questionIndex);
 			questionEditor.add(questionTitle);
 			
-			questionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			questionPanel = new JPanel(layout);
 		    questionLabel = new JLabel("QUESTION: ");
 		    questionText = new JTextField(sizeY/10);
 		    questionPanel.add(questionLabel);
 		    questionPanel.add(questionText);	
 			questionEditor.add(questionPanel);
 			
-			cellConfig = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			cellLabel = new JLabel("Edit Cell ");
+			cellConfig = new JPanel(layout);
+			cellLabel = new JLabel("Edit Cell # ");
 			cellList = new String[ScenarioCreatorManager.getNumCells()];			
+			jCells = new ArrayList<JBrailleCell>();
+			jCellDisplayed = new JPanel(null);
+			jCellDisplayed.setSize(50,100);
+			jCellDisplayed.setPreferredSize(jCellDisplayed.getSize());			
 			for (int i = 0; i<cellList.length; i++) {
-				cellList[i] = "Cell: " + String.valueOf(i+1);
+				cellList[i] = String.valueOf(i+1);
+				jCells.add(new JBrailleCell());
 			}			
-			cellComboBox = new JComboBox<String>(cellList); 			
+			cellComboBox = new JComboBox<String>(cellList); 
+			cellComboBox.addActionListener(this);
 			cellConfig.add(cellLabel);
 			cellConfig.add(cellComboBox);
-			questionEditor.add(cellConfig);
-			
-			
+			cellConfig.add(jCellDisplayed);
+			questionEditor.add(cellConfig);	
 			
 			
 		}
 		
-		private static void repaintEditor() { questionEditor.repaint();	}
-		
-		
-	}
-	
-	private class JBrailleCell extends JComponent{
-		
-		private JPanel cell;
-		
-		public JBrailleCell() {
-			
-			cell = new JPanel(new GridLayout(4,2));
-			
-		}
-		
-		
-		
-	}
+		private void repaintEditor() { questionEditor.repaint();}
 
-	
+		public void actionPerformed(ActionEvent e) {
+			
+			if (e.getSource() == cellComboBox) {				
+				int index = (cellComboBox.getSelectedIndex());				
+				jCellDisplayed.removeAll();
+				jCellDisplayed.add(jCells.get(index).getJBrailleCell());
+				jCellDisplayed.validate();
+				jCellDisplayed.repaint();
+				}
+				
+				
+			}
+			
+		}
 	
 	
 }
