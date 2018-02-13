@@ -2,8 +2,11 @@ package enamel;
 
 import java.awt.Color;
 import java.awt.Dimension;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 public class MainFrame {
 
@@ -50,6 +53,12 @@ public class MainFrame {
 	
 	public static int getSizeX() {return sizeX;}
 	public static int getSizeY() {return sizeY;}
+	
+	public static void editJButton(JButton button) {		
+		button.setBackground(Color.WHITE);
+		button.setBorder(new LineBorder(Color.BLACK));
+		button.setForeground(Color.BLACK);		
+	}
 	
 	
 }

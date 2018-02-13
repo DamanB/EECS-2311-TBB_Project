@@ -8,10 +8,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -28,46 +31,58 @@ public class ScenarioCreatorGUI {
 
 	private static JPanel mainPanel;
 	private static JPanel leftBorder;
-	private static JPanel questions;
+	private static JPanel questionListPanel;
 	private static JPanel questionEditor;
 	private static JPanel controls;
 	
+	private static List<Question> questionList = new ArrayList<Question>();
+	private static List<QuestionGUI> jQuestionList = new ArrayList<>();
+	
 	private static ScenarioCreatorGUI instance;
 	
+	
 	private ScenarioCreatorGUI() {
-		
+				
 		BorderLayout layout = new BorderLayout();
 		mainPanel = new JPanel(layout);
-		questions = new JPanel();
+		
+		FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
+		flow.setVgap(40);
+		flow.setHgap(40);
+		questionListPanel = new JPanel(flow);
 		questionEditor = new JPanel();
 		controls = new JPanel();
 		leftBorder = new JPanel();
 		
 		mainPanel.setBackground(MainFrame.primColor);
-		questions.setBackground(MainFrame.primColor);
+		questionListPanel.setBackground(MainFrame.primColor);
 		questionEditor.setBackground(MainFrame.primColor);
 		controls.setBackground(MainFrame.primColor);
 		leftBorder.setBackground(MainFrame.primColor);
 
-		questions.setSize((int)(MainFrame.getSizeX()*0.9),(int)(MainFrame.getSizeY() * 0.2));
+		questionListPanel.setSize((int)(MainFrame.getSizeX()*0.9),(int)(MainFrame.getSizeY() * 0.2));
 		questionEditor.setSize((int)(MainFrame.getSizeX()*0.9), (int)(MainFrame.getSizeY() * 0.80));
 		controls.setSize((int)(MainFrame.getSizeX() * 0.12),(int)(MainFrame.getSizeY() * 0.80));
 		leftBorder.setSize((int)(MainFrame.getSizeX() * 0.02),(int)(MainFrame.getSizeY() * 0.80));
 		
-		questions.setPreferredSize(new Dimension(questions.getSize()));
-		questionEditor.setPreferredSize(new Dimension(questionEditor.getSize()));
-		controls.setPreferredSize(new Dimension(controls.getSize()));
+		questionListPanel.setPreferredSize(questionListPanel.getSize());
+		questionEditor.setPreferredSize(questionEditor.getSize());
+		controls.setPreferredSize(controls.getSize());
 		leftBorder.setPreferredSize(new Dimension(leftBorder.getSize()));
 		
 		questionEditor.setLayout(new BoxLayout(questionEditor,BoxLayout.Y_AXIS));
 		
 		mainPanel.setSize(MainFrame.dimension);
-		mainPanel.add(questions,layout.SOUTH);
+		mainPanel.add(questionListPanel,layout.SOUTH);
 		mainPanel.add(controls,layout.EAST);
 		mainPanel.add(questionEditor,layout.CENTER);
 		mainPanel.add(leftBorder, layout.WEST);
 		
-		QuestionGUI editor = new QuestionGUI();
+		QuestionGUI question1 = new QuestionGUI();
+		QuestionListGUI qList = new QuestionListGUI();
+
+		
+		
 		
 	}
 	
@@ -76,14 +91,56 @@ public class ScenarioCreatorGUI {
 		return instance.mainPanel;
 	}
 	
+	private static class QuestionListGUI implements ActionListener{
+		
+		private static JButton addQuestion;
+		private static JComboBox questionComboBox;
+		
+		private QuestionListGUI() {
+			addQuestion = new JButton("New Question");
+			addQuestion.addActionListener(this);
+			addQuestion.setSize((int)(questionListPanel.getSize().height * 0.8), (int)(questionListPanel.getSize().height * 0.8));
+			addQuestion.setPreferredSize(addQuestion.getPreferredSize());		
+			MainFrame.editJButton(addQuestion);
+			
+			questionComboBox = new JComboBox<QuestionGUI>();
+			questionComboBox.addActionListener(this);
+			questionComboBox.setBackground(Color.WHITE);
+			
+			questionListPanel.add(addQuestion);
+			questionListPanel.add(questionComboBox);
+		}
+		
+		
+		public void actionPerformed(ActionEvent e) {
+			
+			if (e.getSource().equals(addQuestion)) {
+				Question newQuestion = new Question();
+				questionList.add(newQuestion);
+				QuestionGUI newGUI = instance.new QuestionGUI();
+				jQuestionList.add(newGUI);
+				newGUI.setQuestionIndex();
+				questionComboBox.addItem(newGUI);
+			}
+			else if (e.getSource().equals(questionComboBox)) {
+				QuestionGUI selected = (QuestionGUI)questionComboBox.getSelectedItem();
+				selected.addToFrame();				
+			}
+			
+		}
+	
+	}
+	
 	private class QuestionGUI implements ActionListener{
 		
 		private int sizeX;
 		private int sizeY;
 		
+		private int questionIndex;
+		
 		//QUESTION TITLE
 		private JPanel questionTitle;
-		private JLabel questionIndex;
+		private JLabel questionName;
 		
 		//QUESTION
 		private JPanel questionPanel;
@@ -111,9 +168,10 @@ public class ScenarioCreatorGUI {
 		private JScrollPane vScroller;
 		
 		private QuestionGUI() {
-			
+						
 			sizeX = (int)(MainFrame.getSizeX()*0.9);
 			sizeY = (int)(MainFrame.getSizeY() * 0.80);
+			questionIndex = 0;
 			
 			/*
 			vScroller = new JScrollPane(questionEditor);
@@ -128,11 +186,9 @@ public class ScenarioCreatorGUI {
 			
 			//QUESTION HEADER
 			questionTitle = new JPanel(layout);
-			questionTitle.setBackground(MainFrame.primColor);
-			questionIndex = new JLabel("Question 1");
-			questionIndex.setFont(new Font("calibri",Font.BOLD,25));
-			questionTitle.add(questionIndex);
-			questionEditor.add(questionTitle);
+			questionName = new JLabel("Question 1");
+			questionName.setFont(new Font("calibri",Font.BOLD,25));
+			questionTitle.add(questionName);
 			
 			//QUESTION TEXT
 			questionPanel = new JPanel(layout);
@@ -140,7 +196,6 @@ public class ScenarioCreatorGUI {
 		    questionText = new JTextField(sizeY/10);
 		    questionPanel.add(questionLabel);
 		    questionPanel.add(questionText);	
-			questionEditor.add(questionPanel);
 			
 			//CELL CONFIGURARTION
 			cellConfig = new JPanel(layout);
@@ -159,7 +214,6 @@ public class ScenarioCreatorGUI {
 			cellConfig.add(cellLabel);
 			cellConfig.add(cellComboBox);
 			cellConfig.add(jCellDisplayed);
-			questionEditor.add(cellConfig);	
 			
 			//ANSWER CONFIGURATION
 			responseButtonConfig = new JPanel(layout);
@@ -181,14 +235,24 @@ public class ScenarioCreatorGUI {
 			responseButtonConfig.add(responseButtonLabel);
 			responseButtonConfig.add(responseButtonComboBox);
 			responseButtonConfig.add(jResponseButtonDisplayed);
-			questionEditor.add(responseButtonConfig);				
 			
 		}
 		
 		private void repaintEditor() { questionEditor.repaint();}
+		
+		private void addToFrame() {
+			questionEditor.removeAll();
+			questionEditor.add(questionTitle);
+			questionEditor.add(questionPanel);
+			questionEditor.add(cellConfig);	
+			questionEditor.add(responseButtonConfig);
+			questionEditor.validate();
+			repaintEditor();	
+			
+		}
 
 		public void actionPerformed(ActionEvent e) {
-			
+						
 			if (e.getSource() == cellComboBox) {				
 				int index = (cellComboBox.getSelectedIndex());				
 				jCellDisplayed.removeAll();
@@ -206,8 +270,17 @@ public class ScenarioCreatorGUI {
 				
 				
 			}
-			
+	
+		public String toString() {
+			return "Question "+ questionIndex;
 		}
-	
-	
+		
+		public void setQuestionIndex() {
+			questionIndex = (jQuestionList.indexOf(this)+1);
+			questionName.setText("Question " + questionIndex);
+		}
+		
+		}
+		
 }
+
