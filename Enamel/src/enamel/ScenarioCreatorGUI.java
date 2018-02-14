@@ -35,24 +35,28 @@ public class ScenarioCreatorGUI {
 	private static JPanel questionEditor;
 	private static JPanel controls;
 	
-	private static List<Question> questionList = new ArrayList<Question>();
-	private static List<QuestionGUI> jQuestionList = new ArrayList<>();
+	private static List<Question> questionList;
+	private static List<QuestionGUI> jQuestionList;
 	
 	private static ScenarioCreatorGUI instance;
 	
 	
 	private ScenarioCreatorGUI() {
+		
+		questionList =  new ArrayList<Question>();
+		jQuestionList = new ArrayList<>();
 				
 		BorderLayout layout = new BorderLayout();
-		mainPanel = new JPanel(layout);
-		
+		mainPanel = new JPanel(layout);		
 		FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
 		flow.setVgap(40);
-		flow.setHgap(40);
+		flow.setHgap(30);
 		questionListPanel = new JPanel(flow);
-		questionEditor = new JPanel();
+		questionEditor = new JPanel();	
+		
 		controls = new JPanel();
 		leftBorder = new JPanel();
+
 		
 		mainPanel.setBackground(MainFrame.primColor);
 		questionListPanel.setBackground(MainFrame.primColor);
@@ -78,11 +82,8 @@ public class ScenarioCreatorGUI {
 		mainPanel.add(questionEditor,layout.CENTER);
 		mainPanel.add(leftBorder, layout.WEST);
 		
-		QuestionGUI question1 = new QuestionGUI();
 		QuestionListGUI qList = new QuestionListGUI();
-
-		
-		
+		controlGUI control = new controlGUI();
 		
 	}
 	
@@ -91,9 +92,58 @@ public class ScenarioCreatorGUI {
 		return instance.mainPanel;
 	}
 	
+	private static class controlGUI implements ActionListener{
+
+		private static JLabel optionsTitle;
+		private static JButton backButton;
+		private static JButton buildButton;
+		
+		private controlGUI(){
+			
+			optionsTitle = new JLabel("Options",JLabel.CENTER);
+			optionsTitle.setFont(new Font("calibri", Font.ITALIC, 25));
+			
+			backButton = new JButton("Back to Menu");
+			backButton.setSize(controls.getSize().width-30, controls.getSize().height/10);
+			backButton.setPreferredSize(backButton.getSize());
+			
+			buildButton = new JButton("Build Project!");
+			buildButton.setSize(controls.getSize().width-30, controls.getSize().height/10);
+			buildButton.setPreferredSize(backButton.getSize());
+			
+			Font buttonFont = new Font("cailibri", Font.ITALIC, 15);
+			backButton.setFont(buttonFont);
+			buildButton.setFont(buttonFont);
+			backButton.addActionListener(this);
+			buildButton.addActionListener(this);
+			
+			MainFrame.editJButton(backButton);
+			MainFrame.editJButton(buildButton);
+			
+			controls.add(optionsTitle);
+			controls.add(backButton);
+			controls.add(buildButton);
+
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			
+			if (e.getSource().equals(backButton)) {				
+				MainFrame.changeScreen(ScenarioEditorMenu.getScreen());
+			}else if (e.getSource().equals(buildButton)) {
+				build();
+			}
+			
+		}
+		
+		private void build() {} //TODO: IMPLEMENT
+		
+	}
+	
 	private static class QuestionListGUI implements ActionListener{
 		
 		private static JButton addQuestion;
+		private static JLabel activeQ;
 		private static JComboBox questionComboBox;
 		
 		private QuestionListGUI() {
@@ -103,11 +153,14 @@ public class ScenarioCreatorGUI {
 			addQuestion.setPreferredSize(addQuestion.getPreferredSize());		
 			MainFrame.editJButton(addQuestion);
 			
+			activeQ = new JLabel("CURRENTLY EDITING: ", JLabel.RIGHT);
+			
 			questionComboBox = new JComboBox<QuestionGUI>();
 			questionComboBox.addActionListener(this);
 			questionComboBox.setBackground(Color.WHITE);
 			
 			questionListPanel.add(addQuestion);
+			questionListPanel.add(activeQ);
 			questionListPanel.add(questionComboBox);
 		}
 		
@@ -121,12 +174,21 @@ public class ScenarioCreatorGUI {
 				jQuestionList.add(newGUI);
 				newGUI.setQuestionIndex();
 				questionComboBox.addItem(newGUI);
+				
+				for (QuestionGUI question : jQuestionList) {
+					question.updateDropBoxes();
+				}
+				
 			}
 			else if (e.getSource().equals(questionComboBox)) {
 				QuestionGUI selected = (QuestionGUI)questionComboBox.getSelectedItem();
 				selected.addToFrame();				
 			}
 			
+		}
+		
+		public static List<QuestionGUI> getQuestionList() {
+			return jQuestionList;
 		}
 	
 	}
@@ -141,6 +203,7 @@ public class ScenarioCreatorGUI {
 		//QUESTION TITLE
 		private JPanel questionTitle;
 		private JLabel questionName;
+		private JTextField questionDesc;
 		
 		//QUESTION
 		private JPanel questionPanel;
@@ -155,7 +218,7 @@ public class ScenarioCreatorGUI {
 		private List<JBrailleCell> jCells;
 		private JPanel jCellDisplayed;
 		
-		//CORRECT ANSWER
+		//WHAT IS THE CORRECT ANSWER
 		private JPanel responseButtonConfig;
 		private JLabel responseButtonLabel;
 		private JComboBox responseButtonComboBox;
@@ -165,6 +228,22 @@ public class ScenarioCreatorGUI {
 		private boolean[] answer;
 		private JPanel jResponseButtonDisplayed;
 		
+		//USER RESPONSE CORRECT
+		private JPanel crConfig;
+		private JLabel crTitle;
+		private JTextField crResponse;
+		private JLabel crThenGoTo;
+		private JComboBox crListOfQuestions;
+		
+		//USER RESPONSE CORRECT
+		private JPanel irConfig;
+		private JLabel irTitle;
+		private JTextField irResponse;
+		private JLabel irThenGoTo;
+		private JComboBox irListOfQuestions;
+		
+		
+		//Scroll Bar
 		private JScrollPane vScroller;
 		
 		private QuestionGUI() {
@@ -185,15 +264,19 @@ public class ScenarioCreatorGUI {
 			layout.setHgap((int)(sizeY*0.03));
 			
 			//QUESTION HEADER
+			Font title = new Font("calibri",Font.BOLD,20);
 			questionTitle = new JPanel(layout);
-			questionName = new JLabel("Question 1");
-			questionName.setFont(new Font("calibri",Font.BOLD,25));
+			questionName = new JLabel();
+			questionName.setFont(title);
+			questionDesc = new JTextField(sizeX/35);	
+			questionDesc.setFont(title);
 			questionTitle.add(questionName);
+			questionTitle.add(questionDesc);
 			
 			//QUESTION TEXT
 			questionPanel = new JPanel(layout);
-		    questionLabel = new JLabel("QUESTION: ");
-		    questionText = new JTextField(sizeY/10);
+		    questionLabel = new JLabel("Enter the Question: ");
+		    questionText = new JTextField(sizeX/25);
 		    questionPanel.add(questionLabel);
 		    questionPanel.add(questionText);	
 			
@@ -236,6 +319,40 @@ public class ScenarioCreatorGUI {
 			responseButtonConfig.add(responseButtonComboBox);
 			responseButtonConfig.add(jResponseButtonDisplayed);
 			
+			//CORRECT ANSWER RESPONSE
+			crConfig = new JPanel(layout);
+			crTitle = new JLabel("When The User Inputs The Correct Answer:      Say: ");
+			crResponse = new JTextField(sizeX/35);
+			crThenGoTo = new JLabel(" Then Go To ");
+			crListOfQuestions = new JComboBox<List<QuestionGUI>>();			
+			irListOfQuestions = new JComboBox<List<QuestionGUI>>();		
+			updateDropBoxes();
+			crConfig.add(crTitle);
+			crConfig.add(crResponse);
+			crConfig.add(crThenGoTo);
+			crConfig.add(crListOfQuestions);
+			
+			//INCORRECT ANSWER RESPONSE
+			irConfig = new JPanel(layout);
+			irTitle = new JLabel("When The User Inputs An Incorrect Answer:      Say: ");
+			irResponse = new JTextField(sizeX/35);
+			irThenGoTo = new JLabel(" Then Go To ");
+			irConfig.add(irTitle);
+			irConfig.add(irResponse);
+			irConfig.add(irThenGoTo);
+			irConfig.add(irListOfQuestions);
+			
+
+			
+		}
+		
+		private void updateDropBoxes() {
+			crListOfQuestions.removeAllItems();
+			irListOfQuestions.removeAllItems();
+			for (QuestionGUI el : QuestionListGUI.getQuestionList()) {
+				crListOfQuestions.addItem(el);
+				irListOfQuestions.addItem(el);
+			}
 		}
 		
 		private void repaintEditor() { questionEditor.repaint();}
@@ -246,6 +363,8 @@ public class ScenarioCreatorGUI {
 			questionEditor.add(questionPanel);
 			questionEditor.add(cellConfig);	
 			questionEditor.add(responseButtonConfig);
+			questionEditor.add(crConfig);
+			questionEditor.add(irConfig);
 			questionEditor.validate();
 			repaintEditor();	
 			
@@ -277,10 +396,12 @@ public class ScenarioCreatorGUI {
 		
 		public void setQuestionIndex() {
 			questionIndex = (jQuestionList.indexOf(this)+1);
-			questionName.setText("Question " + questionIndex);
+			questionName.setText("Question " + questionIndex + " - Title: ");
 		}
 		
 		}
-		
+
+
+	
 }
 

@@ -15,7 +15,7 @@ public class MainFrame {
 	private static int sizeX = 1280;
 	private static int sizeY = 720;	
 	public static Dimension dimension = new Dimension(sizeX,sizeY);
-	public static Color primColor = new Color(153,197, 217);
+	public static Color primColor = new Color(153,197,217);
 
 
 	public MainFrame() {		
@@ -56,8 +56,8 @@ public class MainFrame {
 	
 	public static void editJButton(JButton button) {		
 		button.setBackground(Color.WHITE);
+		button.setForeground(Color.BLACK);	
 		button.setBorder(new LineBorder(Color.BLACK));
-		button.setForeground(Color.BLACK);		
 	}
 	
 	

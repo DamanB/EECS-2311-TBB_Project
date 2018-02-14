@@ -88,8 +88,7 @@ public class ScenarioEditorMenu implements MouseListener {
 		button.setPreferredSize(size);
 		button.addMouseListener(this);
 		button.setFont(new Font("Calibri", Font.PLAIN, 30));
-		button.setBackground(Color.white);
-		button.setForeground(Color.black);
+		MainFrame.editJButton(button);
 		button.setVerticalAlignment(JButton.CENTER);
 	}
 
@@ -132,12 +131,13 @@ public class ScenarioEditorMenu implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		if (e.getSource().equals(create)) {		
-
+		if (e.getSource().equals(create)) {
 			MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
 			//getEditorInfo(); ------------------------------------UNCOMMENT---------------------------------------------
-
-
+		}else if (e.getSource().equals(modify)) {
+			JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Sorry this is still under construction", "Sorry", JOptionPane.PLAIN_MESSAGE, null);
+		}else if (e.getSource().equals(back)) {
+			MainFrame.changeScreen(MainMenu.getScreen());
 		}
 
 
