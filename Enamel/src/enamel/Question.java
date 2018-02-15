@@ -4,15 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
-	private String question;
-	private String correctAnswerResponse;
-	private String incorrectAnswerResponse;
-	private List<Integer> cells = new ArrayList<Integer>();
-	private List<Command> commands;
-	
+    private List<Command> commands;
 
-	
-	public void setQuestion(String question) {
+    public Question(List<Command> commands) {
+        this.commands = commands;
+    }
+
+    public List<Command> getCommands() {
+        return commands;
+    }
+
+    public void setCommands(List<Command> commands) {
+        this.commands = commands;
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+
+        for (Command i : this.commands) {
+            result += i.toString();
+        }
+        return result;
+    }
+
+    /*public void setQuestion(String question) {
 		this.question = question;
 	}
 	
@@ -40,7 +56,7 @@ public class Question {
 		this.correctAnswerResponse = correctAnswerResponse;
 	}
 	
-	public String getCorrectAnswerResponse() {return correctAnswerResponse;}
+	public String getCorrectAnswerResponse() {return correctAnswerResponse;}*/
 
 
 }

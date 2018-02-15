@@ -19,6 +19,26 @@ public class ScenarioCreatorManager {
     private int buttonNum;
     private List<Question> questions;
     private File scenarioFile;
+    private String errorMessage;
+
+    // Shows list of all commands. Stores as <Tag-Name>|<Command-Name>
+    public static String[] commandList = {
+            "End Repeat|/~endrepeat",
+            "Sound|/~sound",
+            "Skip|/~skip",
+            "Pause|/~pause",
+            "Repeat Button|/~repeat-button",
+            "Repeat/~repeat",
+            "Reset Buttons|/~reset-buttons",
+            "Skip Button|/~skip-button",
+            "Display Clear All|/~disp-clearAll",
+            "Display Cell Pins|/~disp-cell-pins:",
+            "Display String|/~disp-string:",
+            "Display Cell Character|/~disp-cell-char:",
+            "Display Cell Clear|/~disp-cell-clear:",
+            "Display Cell Lower Pins|/~disp-cell-lowerPins:",
+            "User Input|/~user-input"
+    };
 
 
     public ScenarioCreatorManager(File scenarioFile) {
@@ -53,6 +73,7 @@ public class ScenarioCreatorManager {
     // TODO Check to see is user input is done after skip button and repeat button
     public void parseFile() {
         List<String> lines = new ArrayList<>();
+        this.errorMessage = "";
 
         try (BufferedReader br = new BufferedReader(new FileReader(this.scenarioFile))) {
             String line;
@@ -78,7 +99,7 @@ public class ScenarioCreatorManager {
         boolean repeat = false, textReached = false;
         List<String> repeatedText = new ArrayList<>();
 
-        /*for (int i = 2; i < lines.size(); i++) {
+        for (int i = 2; i < lines.size(); i++) {
             if (!textReached) {
                 textReached = (!(lines.get(i).equals("")));
             }
@@ -94,72 +115,160 @@ public class ScenarioCreatorManager {
                 } else {
                     // The key phrase to indicate to play a sound file.
                     if (lines.get(i).length() >= 8 && lines.get(i).substring(0, 8).equals("/~sound:")) {
-                        playSound(lines.get(i).substring(8));
+
+                        Command temp;
+
+                        try {
+                            temp = new Sound(lines.get(i).substring(0, 8), lines.get(i).substring(8));
+                        } catch (IllegalArgumentException e) {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
                     }
                     // The key phrase to indicate to skip to another part of the
                     // scenario.
                     else if (lines.get(i).length() >= 7 && lines.get(i).substring(0, 7).equals("/~skip:")) {
-                        skip(lines.get(i).substring(7));
+                        Command temp;
+
+                        try {
+                            temp = new Skip(lines.get(i).substring(0, 7), lines.get(i).substring(7));
+                        } catch (IllegalArgumentException e) {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
+                        //skip(lines.get(i).substring(7));
                     }
                     // The key phrase to indicate to pause for a specified number of
                     // seconds.
                     else if (lines.get(i).length() >= 8 && lines.get(i).substring(0, 8).equals("/~pause:")) {
 
+                        Command temp;
+
+                        try {
+                            temp = new Pause(lines.get(i).substring(0, 8), lines.get(i).substring(8));
+                        } catch (IllegalArgumentException e) {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
+
                         // Checks if there is a positive integer after the pause command if not logs it then exits
-                        if (lines.get(i).substring(8).matches("^[1-9][0-9]*$")) {
+                        /*if (lines.get(i).substring(8).matches("^[1-9][0-9]*$")) {
                             pause(lines.get(i).substring(8));
                         } else {
                             errorLog(IllegalArgumentException.class.toString(), "Number of seconds for pause is not a positive integer.");
                             System.exit(0);
-                        }
+                        }*/
                     }
                     // The key phrase to assign a button to repeat text.
                     else if (lines.get(i).length() >= 16 && lines.get(i).substring(0, 16).equals("/~repeat-button:")) {
-                        repeatButton(lines.get(i).substring(16));
+                        Command temp;
+
+                        try {
+                            // TODO figure out how to pass through button number from GUI
+                            temp = new RepeatButton(lines.get(i).substring(0, 8), lines.get(i).substring(8), -1);
+                        } catch (IllegalArgumentException e) {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
+                        //repeatButton(lines.get(i).substring(16));
                     }
                     // The key phrase to signal that everything after that key phrase
                     // will be repeated.
                     else if (lines.get(i).length() >= 8 && lines.get(i).substring(0, 8).equals("/~repeat")) {
+                        this.questions.get(questionIndex).getCommands().add(new Repeat(lines.get(i).substring(0, 8), lines.get(i).substring(8)));
+
                         repeatedText.clear();
                         repeat = true;
                     }
                     // The key phrase to reset the action listeners of all of the
                     // JButtons.
                     else if (lines.get(i).length() >= 15 && lines.get(i).substring(0, 15).equals("/~reset-buttons")) {
-                        resetButtons();
+                        this.questions.get(questionIndex).getCommands().add(new ResetButtons(lines.get(i).substring(0, 15), lines.get(i).substring(15)));
+                        //resetButtons();
                     }
                     // The key phrase to assign a button to skip to another part of the
                     // scenario.
                     else if (lines.get(i).length() >= 14 && lines.get(i).substring(0, 14).equals("/~skip-button:")) {
-                        skipButton(lines.get(i).substring(14));
+                        Command temp;
+
+                        try {
+                            temp = new SkipButton(lines.get(i).substring(0, 14), lines.get(i).substring(14));
+                        } catch (IllegalArgumentException e) {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
+                        //skipButton(lines.get(i).substring(14));
                     }
                     // The key phrase to clear the display of all of the braille cells.
                     else if (lines.get(i).length() >= 15 && lines.get(i).substring(0, 15).equals("/~disp-clearAll")) {
-                        player.clearAllCells();
+                        this.questions.get(questionIndex).getCommands().add(new DispClearAll(lines.get(i).substring(0, 15), lines.get(i).substring(15)));
+
+                        //player.clearAllCells();
                     }
                     // The key phrase to set a Braille cell to a string.
                     else if (lines.get(i).length() >= 17 && lines.get(i).substring(0, 17).equals("/~disp-cell-pins:")) {
-                        dispCellPins(lines.get(i).substring(17));
+                        Command temp;
+
+                        try {
+                            temp = new DispCellPins(lines.get(i).substring(0, 17), lines.get(i).substring(17));
+                        } catch (IllegalArgumentException e) {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
+
+                        //dispCellPins(lines.get(i).substring(17));
                     }
                     // The key phrase to represent a string in Braille.
                     else if (lines.get(i).length() >= 14 && lines.get(i).substring(0, 14).equals("/~disp-string:")) {
+                        Command temp;
+
+                        try {
+                            temp = new DispString(lines.get(i).substring(0, 14), lines.get(i).substring(14));
+                        } catch (IllegalArgumentException e) {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
 
                         // Checks if the string is composed of letters then displays it. If not logs it and exits
-                        if (lines.get(i).substring(14).matches("^[a-zA-Z]+$")) {
+                        /*if (lines.get(i).substring(14).matches("^[a-zA-Z]+$")) {
                             player.displayString(lines.get(i).substring(14));
                         } else {
                             errorLog(IllegalArgumentException.class.toString(), "Invalid String for disp-string.");
                             System.exit(0);
-                        }
+                        }*/
                     }
                     // The key phrase to change the cell to represent a character in
                     // Braille.
                     else if (lines.get(i).length() >= 17 && lines.get(i).substring(0, 17).equals("/~disp-cell-char:")) {
-                        dispCellChar(lines.get(i).substring(17));
+                        Command temp;
+
+                        try {
+                            temp = new DispCellChar(lines.get(i).substring(0, 17), lines.get(i).substring(17));
+                        } catch (IllegalArgumentException e) {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
+                        //dispCellChar(lines.get(i).substring(17));
                     }
                     // The key phrase to raise a pin of the specified Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-raise:")) {
-                        dispCellRaise(lines.get(i).substring(18));
+                        //dispCellRaise(lines.get(i).substring(18));
                     }
                     // The key phrase to lower a pin of the specified Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-lower:")) {
@@ -179,13 +288,14 @@ public class ScenarioCreatorManager {
                     // interpreted as text that
                     // will be spoken for the user to hear.
                     else {
-                        repeatedText(lines.get(i));
+                        this.questions.get(questionIndex).getCommands().add(new Text(lines.get(i)));
+                        //repeatedText(lines.get(i));
                     }
                 }
             } else {
                 questionIndex++;
             }
-        }*/
+        }
     }
 
 

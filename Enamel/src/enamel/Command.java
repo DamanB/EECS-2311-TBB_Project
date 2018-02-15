@@ -10,11 +10,12 @@ import java.util.List;
  * which correlates to one line in the Scenario file. This class is used to keep track of the editing of Scenario
  * Files and checks if each command has a valid input. If not it will throw an exception.
  */
+//TODO Regex may error for overridden setInputs
 
 public abstract class Command {
     protected String command;
     protected String input;
-    protected String regexPattern = "";
+    protected String regexPattern = "^$";
 
     protected Command(String command, String input) {
         this.command = command;
@@ -53,28 +54,14 @@ public abstract class Command {
 
 class Text extends Command {
 
-    private List<String> textLines;
-
-    public Text(String command, List<String> textLines) {
-        super(command, "");
-        this.textLines = textLines;
-    }
-
-    public List<String> getTextLines() {
-        return textLines;
-    }
-
-    public void setTextLines(List<String> textLines) {
-        this.textLines = textLines;
+    public Text(String input) {
+        super("", input);
+        this.regexPattern = ".*?";
     }
 
     @Override
     public String toString() {
-        String result = "";
-        for (String i : this.textLines) {
-            result += i;
-        }
-        return result;
+        return this.input;
     }
 }
 
@@ -176,6 +163,7 @@ class DispCellChar extends Command {
     public DispCellChar(String command, String input) {
         super(command, input);
         this.regexPattern = "^[1-9][0-9]*\\s[a-zA-Z]$";
+        // TODO figure out how to pass through braille cell size
     }
 
     public void setInput(String command, Integer brailleCellSize) {
