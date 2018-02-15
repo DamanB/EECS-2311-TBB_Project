@@ -1,16 +1,15 @@
 package enamel;
 
 import static javax.imageio.ImageIO.getCacheDirectory;
-
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Random;
+
+import org.junit.Before;
+import org.junit.Test;
 
 class MainMenuTest {
 
@@ -46,7 +45,7 @@ class MainMenuTest {
 		try {
 			testFile.createNewFile();
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			System.out.println(e.toString());  
 		}
 		try {
 			PrintWriter writer = new PrintWriter(testFile);

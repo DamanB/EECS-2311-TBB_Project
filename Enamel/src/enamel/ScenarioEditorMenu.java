@@ -88,40 +88,56 @@ public class ScenarioEditorMenu implements MouseListener {
 		button.setPreferredSize(size);
 		button.addMouseListener(this);
 		button.setFont(new Font("Calibri", Font.PLAIN, 30));
-		button.setBackground(Color.white);
-		button.setForeground(Color.black);
+		MainFrame.editJButton(button);
 		button.setVerticalAlignment(JButton.CENTER);
 	}
 
-
-	public static int getNumCells() { 
-
-		while(true) {
-			String numCells = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Enter The Number of Cells You Wish To Use: ");
-			if (numCells.matches("^[1-9][0-9]*$")) {
-				return Integer.parseInt(numCells);
-			}else {
-				JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again");
-			}
-		}
-	}
+	public static void getEditorInfo() {
 	
-	public static int getNumButtons() { 
+		boolean asking = true;
+		
+		while(asking) {
+			String numCells = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Enter The Number of Cells You Wish To Use: ");
+			if (numCells == null) {
+				MainFrame.changeScreen(getScreen());
+				break;
+			}
+			else if (numCells.matches("^[1-9][0-9]*$")) {
+				ScenarioCreatorManager.setNumCells(Integer.parseInt(numCells));
 
-		while(true) {
-			String numButton = JOptionPane.showInputDialog(MainFrame.getMainPanel(),"Please Enter The Number of Response Buttons You Wish To Use: ");
-			if (numButton.matches("^[1-9][0-9]*$")) {
-				return Integer.parseInt(numButton);
+				while(true) {
+					String numButton = JOptionPane.showInputDialog(MainFrame.getMainPanel(),"Please Enter The Number of Response Buttons You Wish To Use: ");
+					if (numButton == null) {
+						break;
+					}
+					if (numButton.matches("^[1-9][0-9]*$")) {
+						ScenarioCreatorManager.setNumButtons(Integer.parseInt(numButton));
+						asking = false;
+						break;
+					}else {
+						JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again");
+					}
+				}	
 			}else {
 				JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again");
 			}
+
 		}
 	}
+
+
+
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		if (e.getSource().equals(create)) {			
+		if (e.getSource().equals(create)) {
+			MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
+			//getEditorInfo(); ------------------------------------UNCOMMENT---------------------------------------------
+		}else if (e.getSource().equals(modify)) {
+			JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Sorry this is still under construction", "Sorry", JOptionPane.PLAIN_MESSAGE, null);
+		}else if (e.getSource().equals(back)) {
+			MainFrame.changeScreen(MainMenu.getScreen());
 		}
 
 

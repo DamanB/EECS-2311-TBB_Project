@@ -35,8 +35,6 @@ public class MainMenu {
 		sizeX = MainFrame.dimension.width;
 		sizeY = MainFrame.dimension.height;
 		
-		System.out.println(sizeX + " " + sizeY);
-
 		panel = new JPanel(null);	
 		panel.setSize(MainFrame.dimension);
 		panel.setBackground(primaryColor);
@@ -94,8 +92,7 @@ public class MainMenu {
 		button.setSize(d);
 		button.setPreferredSize(d);
 		button.setFont(new Font("calibri", Font.PLAIN, 22));
-		button.setBackground(Color.white);
-		button.setForeground(Color.black);
+		MainFrame.editJButton(button);
 	}
 
 	public JButton getEditor() {
