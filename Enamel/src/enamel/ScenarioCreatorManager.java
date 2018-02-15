@@ -274,17 +274,17 @@ public class ScenarioCreatorManager {
                     }
                     // The key phrase to lower a pin of the specified Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-lower:")) {
-                        dispCellLower(lines.get(i).substring(18));
+                        /////dispCellLower(lines.get(i).substring(18));
                     }
                     // The key phrase to clear a Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-clear:")) {
-                        dispCellClear(lines.get(i).substring(18));
+                        /////dispCellClear(lines.get(i).substring(18));
                     } else if (lines.get(i).length() >= 21 && lines.get(i).substring(0, 21).equals("/~disp-cell-lowerPins")) {
-                        dispCellRaise("0");
+                        /////dispCellRaise("0");
                     }
                     // The key phrase to wait for the program to receive a user's input.
                     else if (lines.get(i).length() >= 12 && lines.get(i).substring(0, 12).equals("/~user-input")) {
-                        userInput = true;
+                        /////userInput = true;
                     }
                     // Anything other than the specified commands above, is to be
                     // interpreted as text that
