@@ -133,9 +133,9 @@ public class ScenarioEditorMenu implements MouseListener {
 
 		if (e.getSource().equals(create)) {
 			MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
-			//getEditorInfo(); ------------------------------------UNCOMMENT---------------------------------------------
+			//getEditorInfo();----------------------------------------------------------------------------------------------------------
 		}else if (e.getSource().equals(modify)) {
-			JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Sorry this is still under construction", "Sorry", JOptionPane.PLAIN_MESSAGE, null);
+			JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Sorry This Is Under Construction", "Sorry", JOptionPane.PLAIN_MESSAGE, null);
 		}else if (e.getSource().equals(back)) {
 			MainFrame.changeScreen(MainMenu.getScreen());
 		}

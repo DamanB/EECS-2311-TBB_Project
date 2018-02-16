@@ -41,6 +41,27 @@ public class ScenarioCreatorManager {
             "Display Cell Lower Pins|/~disp-cell-lowerPins:",
             "User Input|/~user-input"
     };
+    
+    public static String[] userCommandList = {
+    		
+            "End Repeat",
+            "Sound",
+            "Skip",
+            "Pause",
+            "Repeat Button",
+            "Repeat",
+            "Reset Buttons",
+            "Skip Button",
+            "Display Clear All",
+            "Display Cell Pins",
+            "Display String",
+            "Display Cell Character",
+            "Display Cell Clear",
+            "Display Cell Lower Pins",
+            "User Input"
+    		
+    		
+    };
 
 
     public ScenarioCreatorManager(File scenarioFile) {
