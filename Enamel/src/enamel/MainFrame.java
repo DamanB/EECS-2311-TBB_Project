@@ -43,9 +43,9 @@ public class MainFrame {
 	}
 	
 	public static void changeScreen(JPanel screen) {
+		mainPanel.removeAll();
 		LoadingScreen.loadingScreen.showLoadingScreen(true);
 		frame.repaint();
-		mainPanel.removeAll();
 		mainPanel.add(screen);
 		mainPanel.validate();
 		LoadingScreen.loadingScreen.showLoadingScreen(false);

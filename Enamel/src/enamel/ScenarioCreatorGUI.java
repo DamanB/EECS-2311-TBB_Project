@@ -38,6 +38,8 @@ public class ScenarioCreatorGUI {
 	private static JPanel eventEditor;
 	private static JPanel controls;
 
+	public static JPanel actionOptions;
+
 	private static List<EventGUI> eventsList;
 	private static EventGUI activeEvent;
 	private static ScenarioCreatorGUI instance;
@@ -76,6 +78,9 @@ public class ScenarioCreatorGUI {
 		eventEditor.setPreferredSize(eventEditor.getSize());
 		controls.setPreferredSize(controls.getSize());
 		leftBorder.setPreferredSize(new Dimension(leftBorder.getSize()));
+
+		actionOptions = new JPanel();
+		actionOptions.setBorder(new LineBorder(MainFrame.primColor,1));
 
 		mainPanel.setSize(MainFrame.dimension);
 		mainPanel.add(eventListPanel,BorderLayout.SOUTH);
@@ -193,14 +198,14 @@ public class ScenarioCreatorGUI {
 					newEvent.addToFrame();
 				}
 			}else if (e.getSource().equals(eventComboBox)) {
-				
+
 				activeEvent = (EventGUI) eventComboBox.getSelectedItem();
 				activeEvent.addToFrame();
 			}
 		}
 	}
 
-	private class EventGUI implements ActionListener{
+	public class EventGUI implements ActionListener{
 
 		FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
 		LinkedList actionList = new LinkedList();
@@ -210,7 +215,6 @@ public class ScenarioCreatorGUI {
 		private String eventName;
 
 		private JPanel listedActions;
-		private JPanel actionOptions;
 		private JLabel jEventName;
 
 		private EventGUI(String eventName) {
@@ -219,28 +223,26 @@ public class ScenarioCreatorGUI {
 			this.eventName = eventName;
 			sizeX = eventEditor.getWidth();
 			sizeY = eventEditor.getHeight();
-			
+
 			flow.setHgap(10);
 			listedActions = new JPanel(flow);	
 			listedActions.setSize(sizeX,(int)(sizeY * 0.75));
 			listedActions.setPreferredSize(listedActions.getSize());
 
-			actionOptions = new JPanel();
-			actionOptions.setLayout(flow);
+			jEventName = new JLabel("Event Name: " + eventName);
+
 			actionOptions.setSize(sizeX,(int)(sizeY * 0.25));
 			actionOptions.setPreferredSize(actionOptions.getSize());
 
-			jEventName = new JLabel("Event Name: " + eventName);
-			
 			JActionNode newNode = new JActionNode();
 			actionList.add(newNode);
 			listedActions.add(jEventName);
 			listedActions.add(newNode);
-			
+
 			//---------------ACTION OPTIONS--------------------\\
-			
-			
-			
+
+
+
 		}
 
 		private String getEventName() {
@@ -268,7 +270,12 @@ public class ScenarioCreatorGUI {
 		}
 
 		private void removeAction(JActionNode nodeToRemove) {			
-			actionList.remove(nodeToRemove.getIndex());			
+			actionList.remove(nodeToRemove.getIndex());		
+			if (actionList.isEmpty()) {
+				JActionNode newNode = new JActionNode();
+				actionList.add(newNode);
+				listedActions.add(newNode);
+			}			
 			repaintGUI();			
 		}
 
@@ -277,6 +284,7 @@ public class ScenarioCreatorGUI {
 			listedActions.removeAll();			
 			Iterator<JActionNode> it = actionList.iterator();
 			int index = 0;
+			listedActions.add(jEventName);
 			while (it.hasNext()) {
 				JActionNode node = it.next();
 				listedActions.add(node);
@@ -325,28 +333,30 @@ public class ScenarioCreatorGUI {
 			private int sizeX;
 			private int sizeY;
 
+			public JPanel actionConfigure;
+
 			private JActionNode(){
 
 				sizeX = MainFrame.getSizeX()/7;
 				sizeY = MainFrame.getSizeY()/7;
 
 				buttons = new JPanel();
-				actionList = new JComboBox(ScenarioCreatorManager.userCommandList);
+				actionList = new JComboBox<String>(ScenarioCreatorManager.userCommandList);
 				addAction = new JButton("+");
 				removeAction = new JButton("-");
-				edit = new JButton("Edit");
-				arrow = new JLabel("THEN: ");
+				edit = new JButton("Select");
+				arrow = new JLabel((this.index+1) + ". ");
 
+				this.add(arrow);
 				this.add(actionList);
 				this.add(buttons);
 				buttons.add(edit);
 				buttons.add(removeAction);	
 				buttons.add(addAction);
-				
-				this.add(arrow);
 
 				addAction.addActionListener(this);
 				removeAction.addActionListener(this);
+				edit.addActionListener(this);
 
 				this.setSize(sizeX, sizeY);				
 			}
@@ -370,6 +380,7 @@ public class ScenarioCreatorGUI {
 
 			public void setIndex(int i) {
 				index = i;
+				arrow.setText((this.index+1) + ". ");
 			}
 
 			public void actionPerformed(ActionEvent e) {
@@ -378,8 +389,16 @@ public class ScenarioCreatorGUI {
 					activeEvent.addAction(this.index+1);
 				}else if (e.getSource().equals(removeAction)) {
 					activeEvent.removeAction(this);
-				}
+				}else if (e.getSource().equals(edit)) {
+					if (edit.getText().equals("Select")) {					
+						this.actionList.setEnabled(false);
+						actionConfigure = new JActionConfigure(actionList.getSelectedIndex());
+						edit.setText("Configure");
+					}else if (edit.getText().equals("Configure")){
+						ScenarioCreatorGUI.changeActionOptions(this.actionConfigure);
+					}
 
+				}
 			}
 
 
@@ -389,6 +408,13 @@ public class ScenarioCreatorGUI {
 
 	private static EventGUI createNewEvent(String eventName) {		
 		return instance.new EventGUI(eventName);		
+	}
+	
+	private static void changeActionOptions(JPanel newPanel) {	
+		actionOptions.removeAll();
+		actionOptions.add(newPanel);
+		actionOptions.validate();
+		actionOptions.repaint();		
 	}
 
 }
