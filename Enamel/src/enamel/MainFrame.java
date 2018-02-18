@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
@@ -34,6 +35,7 @@ public class MainFrame {
 		mainPanel.setLayout(null);
 		
 		frame.add(mainPanel);
+		frame.add(LoadingScreen.loadingScreen);
 		frame.setVisible(true);
 		frame.repaint();
 		
@@ -41,9 +43,12 @@ public class MainFrame {
 	}
 	
 	public static void changeScreen(JPanel screen) {
+		LoadingScreen.loadingScreen.showLoadingScreen(true);
+		frame.repaint();
 		mainPanel.removeAll();
 		mainPanel.add(screen);
 		mainPanel.validate();
+		LoadingScreen.loadingScreen.showLoadingScreen(false);
 		frame.repaint();		
 	}
 	
@@ -58,6 +63,28 @@ public class MainFrame {
 		button.setBackground(Color.WHITE);
 		button.setForeground(Color.BLACK);	
 		button.setBorder(new LineBorder(Color.BLACK));
+	}
+	
+	private static class LoadingScreen extends JPanel{
+		
+		private static JLabel loading;
+		private static LoadingScreen loadingScreen = new LoadingScreen();
+		
+		public LoadingScreen() {
+			this.setSize(MainFrame.getSizeX(),MainFrame.getSizeY());
+			this.setPreferredSize(this.getSize());
+			this.setBackground(MainFrame.primColor);
+			loading = new JLabel("Loading...");		
+			this.add(loading);
+			this.setVisible(false);		
+		}
+		
+		private void showLoadingScreen(boolean show) {
+			this.setVisible(show);
+		}
+			
+		
+		
 	}
 	
 	

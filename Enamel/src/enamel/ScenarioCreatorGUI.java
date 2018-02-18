@@ -21,6 +21,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
@@ -40,7 +41,7 @@ public class ScenarioCreatorGUI {
 	private static List<EventGUI> eventsList;
 	private static EventGUI activeEvent;
 	private static ScenarioCreatorGUI instance;
-	
+
 
 	private ScenarioCreatorGUI() {
 
@@ -48,15 +49,15 @@ public class ScenarioCreatorGUI {
 
 		BorderLayout layout = new BorderLayout();
 		mainPanel = new JPanel(layout);	
-		
+
 		FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
 		flow.setHgap(15);
 		eventListPanel = new JPanel(flow);
-		
+
 		eventEditor = new JPanel(new BorderLayout());
-		
+
 		controls = new JPanel();
-		
+
 		leftBorder = new JPanel();
 
 
@@ -143,8 +144,10 @@ public class ScenarioCreatorGUI {
 	private static class EventsListGUI implements ActionListener{
 
 		private static JButton addEvent;
-		private static JLabel activeEvent;
+		private static JLabel currentlyEditing;
 		private static JComboBox<EventGUI> eventComboBox;
+		private static JLabel eventNameLabel;
+		private static JTextField eventNameField;
 
 		private EventsListGUI() {
 			addEvent = new JButton("New Event");
@@ -153,89 +156,103 @@ public class ScenarioCreatorGUI {
 			addEvent.setPreferredSize(addEvent.getPreferredSize());		
 			MainFrame.editJButton(addEvent);
 
-			activeEvent = new JLabel("CURRENTLY EDITING: ");
+			eventNameLabel = new JLabel("Event Name: ");
+			eventNameField = new JTextField();
+			eventNameField.setSize((int)(eventListPanel.getSize().width*0.2), (int)(eventListPanel.getSize().height*0.25));
+			eventNameField.setPreferredSize(eventNameField.getSize());
+
+			currentlyEditing = new JLabel("Currently Editing: ");
 
 			eventComboBox = new JComboBox<EventGUI>();
 			eventComboBox.addActionListener(this);
 			eventComboBox.setBackground(Color.WHITE);
 
 			eventListPanel.add(addEvent);
-			eventListPanel.add(activeEvent);
+			eventListPanel.add(eventNameLabel);
+			eventListPanel.add(eventNameField);
+			eventListPanel.add(currentlyEditing);
 			eventListPanel.add(eventComboBox);
 		}
 
-		
-		
-
 		public void actionPerformed(ActionEvent e) {
-
 			if (e.getSource() == addEvent) {				
-				EventGUI newEvent =	ScenarioCreatorGUI.createNewEvent();
-				eventsList.add(newEvent);
-				eventComboBox.addItem(newEvent);
-				newEvent.addToFrame();
+				String name = this.eventNameField.getText();
+				boolean create = true;
+				for (EventGUI el : eventsList) {
+					if (el.getEventName().equals(name)) {
+						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Please Enter a Non Duplicate Name", "Error Duplicate Name", JOptionPane.INFORMATION_MESSAGE);
+						create = false;
+						break;
+					}					
+				}
+				if (create) {
+					EventGUI newEvent =	ScenarioCreatorGUI.createNewEvent(this.eventNameField.getText());
+					eventsList.add(newEvent);
+					eventComboBox.addItem(newEvent);
+					eventComboBox.setSelectedItem(newEvent);
+					newEvent.addToFrame();
+				}
+			}else if (e.getSource().equals(eventComboBox)) {
+				
+				activeEvent = (EventGUI) eventComboBox.getSelectedItem();
+				activeEvent.addToFrame();
 			}
-
-
 		}
-
-
-
 	}
 
 	private class EventGUI implements ActionListener{
 
 		FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
-		
 		LinkedList actionList = new LinkedList();
 
 		private int sizeX;
 		private int sizeY;
+		private String eventName;
 
 		private JPanel listedActions;
 		private JPanel actionOptions;
-		
-		private JButton addAction;
-		
+		private JLabel jEventName;
 
+		private EventGUI(String eventName) {
 
-
-		private EventGUI() {
-			
+			//------------LISTED ACTIONS-------------------\\
+			this.eventName = eventName;
 			sizeX = eventEditor.getWidth();
 			sizeY = eventEditor.getHeight();
 			
 			flow.setHgap(10);
 			listedActions = new JPanel(flow);	
-			listedActions.setSize(sizeX,sizeY/3);
+			listedActions.setSize(sizeX,(int)(sizeY * 0.75));
 			listedActions.setPreferredSize(listedActions.getSize());
-			
+
 			actionOptions = new JPanel();
 			actionOptions.setLayout(flow);
-			actionOptions.setSize(sizeX,sizeY/2);
+			actionOptions.setSize(sizeX,(int)(sizeY * 0.25));
 			actionOptions.setPreferredSize(actionOptions.getSize());
-			
-			/*
-			addAction = new JButton("New Event +");
-			addAction.addActionListener(this);
-			addAction.setSize((int)(listedActions.WIDTH * 0.2), (int)(listedActions.HEIGHT * 0.2));
-			addAction.setPreferredSize(addAction.getPreferredSize());		
-			
-			MainFrame.editJButton(addAction);
-			*/
+
+			jEventName = new JLabel("Event Name: " + eventName);
 			
 			JActionNode newNode = new JActionNode();
 			actionList.add(newNode);
+			listedActions.add(jEventName);
 			listedActions.add(newNode);
+			
+			//---------------ACTION OPTIONS--------------------\\
+			
+			
+			
 		}
-		
+
+		private String getEventName() {
+			return eventName;
+		}
+
 		private LinkedList getActionList() {
 			return actionList;
 		}
-		
+
 		private void addAction(int indexToAdd) {
-			System.out.println(actionList.size() + ", " + indexToAdd);
-			
+
 			JActionNode newNode = new JActionNode();
 			newNode.setIndex(indexToAdd);			
 			if (newNode.getIndex() == actionList.size()) {
@@ -245,17 +262,29 @@ public class ScenarioCreatorGUI {
 			}else {
 				throw new IllegalArgumentException("INVALID INDEX ON NEW ACTION NODE");
 			}
-			
-			listedActions.removeAll();
-			
+
+			repaintGUI();
+
+		}
+
+		private void removeAction(JActionNode nodeToRemove) {			
+			actionList.remove(nodeToRemove.getIndex());			
+			repaintGUI();			
+		}
+
+
+		private void repaintGUI() {
+			listedActions.removeAll();			
 			Iterator<JActionNode> it = actionList.iterator();
+			int index = 0;
 			while (it.hasNext()) {
-				listedActions.add(it.next());
-			}
-			
+				JActionNode node = it.next();
+				listedActions.add(node);
+				node.setIndex(index);
+				index = index+1;
+			}			
 			listedActions.validate();
 			listedActions.repaint();
-			
 		}
 
 		private void repaintEditor() {eventEditor.repaint();}
@@ -271,60 +300,66 @@ public class ScenarioCreatorGUI {
 
 		public void actionPerformed(ActionEvent e) {
 
-			
+
 
 
 
 		}	
-		
+
 		public String toString() {
-			return "event";
+			return this.eventName;
 		}
-		
-		
-		
+
+
 		private class JActionNode extends JPanel implements ActionListener{
-			
+
 			private int index = 0;
-			
+
 			private JPanel buttons;
 			private JComboBox actionList;
 			private JButton addAction;
 			private JButton removeAction;
-			
+			private JLabel arrow;
+			private JButton edit;
+
 			private int sizeX;
 			private int sizeY;
-			
+
 			private JActionNode(){
-				
+
 				sizeX = MainFrame.getSizeX()/7;
 				sizeY = MainFrame.getSizeY()/7;
-				
+
 				buttons = new JPanel();
 				actionList = new JComboBox(ScenarioCreatorManager.userCommandList);
 				addAction = new JButton("+");
 				removeAction = new JButton("-");
-				
+				edit = new JButton("Edit");
+				arrow = new JLabel("THEN: ");
+
 				this.add(actionList);
 				this.add(buttons);
-				buttons.add(addAction);
+				buttons.add(edit);
 				buttons.add(removeAction);	
+				buttons.add(addAction);
 				
+				this.add(arrow);
+
 				addAction.addActionListener(this);
 				removeAction.addActionListener(this);
-				
+
 				this.setSize(sizeX, sizeY);				
 			}
-			
-			
+
+
 			public int getSelectedItem() {
 				return actionList.getSelectedIndex();
 			}
-			
+
 			public JButton getRemoveButton() {
 				return this.removeAction;
 			}
-			
+
 			public JButton getAddButton() {
 				return this.addAction;
 			}
@@ -336,22 +371,24 @@ public class ScenarioCreatorGUI {
 			public void setIndex(int i) {
 				index = i;
 			}
-			
+
 			public void actionPerformed(ActionEvent e) {
 
 				if (e.getSource().equals(addAction)){
 					activeEvent.addAction(this.index+1);
+				}else if (e.getSource().equals(removeAction)) {
+					activeEvent.removeAction(this);
 				}
-				
+
 			}
-						
-			
+
+
 		}
-		
+
 	}
 
-	private static EventGUI createNewEvent() {		
-		return instance.new EventGUI();		
+	private static EventGUI createNewEvent(String eventName) {		
+		return instance.new EventGUI(eventName);		
 	}
 
 }
