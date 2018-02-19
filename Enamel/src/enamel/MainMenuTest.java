@@ -1,70 +1,162 @@
 package enamel;
 
-import static javax.imageio.ImageIO.getCacheDirectory;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Random;
+import java.io.IOException;
+import java.io.PrintStream;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class MainMenuTest {
 
-	Random rand;
+	MainFrame f;
+	ByteArrayOutputStream b;
+	PrintStream c;
+	File file;
 
-	@Before
-	void start() {
-		rand = new Random();
+	@BeforeEach
+	void start() throws IOException {
+		f = new MainFrame();
+		b = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(b));
+		c = System.out;
+		if ((file != null) && file.exists())
+			file.delete();
 	}
 
-	@Test(expected = Exception.class)
-	public void testRandomFileName() {
-		String testString = "";
-		int index = rand.nextInt(10) + 1;
-		for (int i = 0; i < index; i++) {
-			testString += (char) (rand.nextInt(26) + 'a');
-		}
-		testString += ".txt";
-		File testFile = new File(getCacheDirectory(), "FactoryScenarios/" + testString);
-
-		try {
-			testFile.createNewFile();
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-		fail("Exception not thrown");
+	@AfterEach
+	void clear() throws IOException {
+		b.flush();
+		b.close();
+		System.setOut(c);
+		f = null;
+		MainFrame.frame.dispose();
+		if ((file != null) && file.exists())
+			file.delete();
 	}
 
-	@Test(expected = Exception.class)
-	public void testInvalidHeader() {
-		String testString = "Scenario_100.txt";
-		File testFile = new File(getCacheDirectory(), "FactoryScenarios/" + testString);
-		try {
-			testFile.createNewFile();
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-		try {
-			PrintWriter writer = new PrintWriter(testFile);
-			writer.print("");
-			writer.close();
-		} catch (FileNotFoundException e) {
-			System.out.println(e.toString());
-		}
-		
-		try {
-			PrintWriter writer = new PrintWriter(testFile);
-			writer.print("Cell -1");
-			writer.print("Button -1");
-			writer.close();
-		} catch (FileNotFoundException e) {
-			System.out.println(e.toString());
-		}
-		fail("Exception not thrown");
+	@Test
+	void testPlayWithWrongName() throws AWTException, IOException {
+		file = new File("1.txt");
+		file.createNewFile();
+		Robot r = new Robot();
+		r.mouseMove(MainMenu.panel.getComponent(3).getX() + MainFrame.frame.getX() + 20,
+				MainMenu.panel.getComponent(3).getY() + MainFrame.frame.getY() + 40);
+		r.delay(100);
+		r.mousePress(KeyEvent.BUTTON1_MASK);
+		r.delay(100);
+		r.mouseRelease(KeyEvent.BUTTON1_MASK);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_ENTER);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_ENTER);
+		r.delay(100);
+		assertEquals("***Parser Created***\nError: Invalid file name\n", b.toString());
+	}
+
+	@Test
+	void testPlayWithWrongFormat() throws AWTException, IOException {
+		file = new File("Scenario_0.txt");
+		file.createNewFile();
+		Robot r = new Robot();
+		r.mouseMove(MainMenu.panel.getComponent(3).getX() + MainFrame.frame.getX() + 20,
+				MainMenu.panel.getComponent(3).getY() + MainFrame.frame.getY() + 40);
+		r.delay(100);
+		r.mousePress(KeyEvent.BUTTON1_MASK);
+		r.delay(100);
+		r.mouseRelease(KeyEvent.BUTTON1_MASK);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_ENTER);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_ENTER);
+		r.delay(100);
+		assertEquals("***Parser Created***\nError: Invalid file format. Cell and Button numbers not found\n",
+				b.toString());
+	}
+
+	@Test
+	void testPlayCorrect() throws AWTException {
+		Robot r = new Robot();
+		r.mouseMove(MainMenu.panel.getComponent(3).getX() + MainFrame.frame.getX() + 20,
+				MainMenu.panel.getComponent(3).getY() + MainFrame.frame.getY() + 40);
+		r.delay(100);
+		r.mousePress(KeyEvent.BUTTON1_MASK);
+		r.delay(100);
+		r.mouseRelease(KeyEvent.BUTTON1_MASK);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_ENTER);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_ENTER);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_DOWN);
+		r.delay(100);
+		r.keyPress(KeyEvent.VK_ENTER);
+		r.delay(100);
+		r.keyRelease(KeyEvent.VK_ENTER);
+		r.delay(100);
+		assertEquals("***Parser Created***\n", b.toString());
+	}
+
+	@Test
+	void testEdit() throws AWTException {
+		Robot r = new Robot();
+		r.mouseMove(MainMenu.panel.getComponent(4).getX() + MainFrame.frame.getX() + 20,
+				MainMenu.panel.getComponent(4).getY() + MainFrame.frame.getY() + 40);
+		r.delay(100);
+		r.mousePress(KeyEvent.BUTTON1_MASK);
+		r.delay(100);
+		r.mouseRelease(KeyEvent.BUTTON1_MASK);
+		r.delay(100);
+		assertEquals(ScenarioEditorMenu.pane, MainFrame.getMainPanel().getComponent(0));
 	}
 
 }
