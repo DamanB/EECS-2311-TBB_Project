@@ -40,9 +40,28 @@ public class ScenarioCreatorGUI {
 
 	public static JPanel actionOptions;
 
-	private static List<EventGUI> eventsList;
-	private static EventGUI activeEvent;
+	public static List<EventGUI> eventsList;
+	public static EventGUI activeEvent;
+	
 	private static ScenarioCreatorGUI instance;
+	
+    public static String[] userCommandList = {
+            "Text to Speech", //DONE
+            "Play Audio", //DONE
+            "Pause", //DONE
+            "Display Pins on Braille Cell", //DONE
+            "Display Word with Braille Cells", //DONE
+            "Display Character on Braille Cell", //DONE
+            "Clear All Braille Cells", //DONE       
+            "Clear Specific Braille Cell", //DONE
+            "Lower Pins on Cell", //DONE
+            "Raise Pins on Cell", //DONE
+            "Repeat Text w/ Button Clicked", //DONE
+            "Go to Event", //DONE
+            "Go to Event w/ Button Clicked", //DONE
+            "Reset Button Configurations", //DONE
+            "User Input" //DONE  
+    };
 
 
 	private ScenarioCreatorGUI() {
@@ -216,9 +235,17 @@ public class ScenarioCreatorGUI {
 
 		private JPanel listedActions;
 		private JLabel jEventName;
+		
+		public List<JBrailleCell> cells;
 
 		private EventGUI(String eventName) {
 
+			cells = new ArrayList<JBrailleCell>();
+			
+			for (int i =0; i<ScenarioCreatorManager.getNumCells(); i++) {
+				cells.add(new JBrailleCell((i+1)));
+			}
+			
 			//------------LISTED ACTIONS-------------------\\
 			this.eventName = eventName;
 			sizeX = eventEditor.getWidth();
@@ -230,6 +257,7 @@ public class ScenarioCreatorGUI {
 			listedActions.setPreferredSize(listedActions.getSize());
 
 			jEventName = new JLabel("Event Name: " + eventName);
+			jEventName.setPreferredSize(new Dimension(listedActions.getSize().width,20));
 
 			actionOptions.setSize(sizeX,(int)(sizeY * 0.25));
 			actionOptions.setPreferredSize(actionOptions.getSize());
@@ -238,10 +266,6 @@ public class ScenarioCreatorGUI {
 			actionList.add(newNode);
 			listedActions.add(jEventName);
 			listedActions.add(newNode);
-
-			//---------------ACTION OPTIONS--------------------\\
-
-
 
 		}
 
@@ -341,7 +365,7 @@ public class ScenarioCreatorGUI {
 				sizeY = MainFrame.getSizeY()/7;
 
 				buttons = new JPanel();
-				actionList = new JComboBox<String>(ScenarioCreatorManager.userCommandList);
+				actionList = new JComboBox<String>(userCommandList);
 				addAction = new JButton("+");
 				removeAction = new JButton("-");
 				edit = new JButton("Select");
@@ -387,8 +411,10 @@ public class ScenarioCreatorGUI {
 
 				if (e.getSource().equals(addAction)){
 					activeEvent.addAction(this.index+1);
+					removeActionOption();
 				}else if (e.getSource().equals(removeAction)) {
 					activeEvent.removeAction(this);
+					removeActionOption();
 				}else if (e.getSource().equals(edit)) {
 					if (edit.getText().equals("Select")) {					
 						this.actionList.setEnabled(false);
@@ -416,6 +442,14 @@ public class ScenarioCreatorGUI {
 		actionOptions.validate();
 		actionOptions.repaint();		
 	}
+	
+	private static void removeActionOption() {
+		actionOptions.removeAll();
+		actionOptions.validate();
+		actionOptions.repaint();
+	}
 
+	
+	
 }
 
