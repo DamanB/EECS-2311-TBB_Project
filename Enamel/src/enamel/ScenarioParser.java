@@ -150,12 +150,12 @@ public class ScenarioParser {
             else if (fileLine.length() >= 14 && fileLine.substring(0, 14).equals("/~disp-string:")) {
 
                 // Checks if the string is composed of letters then displays it. If not logs it and exits
-                if (fileLine.substring(14).matches("^[a-zA-Z]+$")) {
+                //if (fileLine.substring(14).matches("^[a-zA-Z]+$")) {
                     player.displayString(fileLine.substring(14));
-                } else {
-                    errorLog(IllegalArgumentException.class.toString(), "Invalid String for disp-string.");
-                    System.exit(0);
-                }
+                //} else {
+                //    errorLog(IllegalArgumentException.class.toString(), "Invalid String for disp-string.");
+                //    System.exit(0);
+                //}
             }
             // The key phrase to change the cell to represent a character in
             // Braille.
