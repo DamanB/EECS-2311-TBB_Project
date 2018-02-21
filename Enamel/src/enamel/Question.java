@@ -6,6 +6,11 @@ import java.util.List;
 public class Question {
     private List<Command> commands;
 
+    public Question()
+    {
+        commands = new ArrayList<>();
+    }
+
     public Question(List<Command> commands) {
         this.commands = commands;
     }
@@ -23,7 +28,7 @@ public class Question {
         String result = "";
 
         for (Command i : this.commands) {
-            result += i.toString();
+            result += i.toString() + "\n";
         }
         return result;
     }
