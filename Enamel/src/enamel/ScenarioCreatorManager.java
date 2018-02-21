@@ -85,21 +85,6 @@ public class ScenarioCreatorManager {
 
         this.questions = new ArrayList<>();
         this.questions.add(new Question());
-
-        // If the file already exists it parses the file and
-        /*if (scenarioFile.exists()) {
-            // parseFile(scenarioFile);
-        } else {
-            if (scenarioFile.getName().matches("^Scenario_[1-9][0-9]*.txt$")) {
-                try {
-                    scenarioFile.createNewFile();
-                } catch (IOException e) {
-                    System.out.println(e.toString());
-                }
-            } else {
-                throw new IllegalArgumentException("Invalid Scenario File Name");
-            }
-        }*/
     }
 
     // Saves the list of questions, cell number and button numbers to the file.
@@ -629,20 +614,23 @@ public class ScenarioCreatorManager {
 
 
     //////////////////////////////////////// TESTING /////////////////////////////////////
+    // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
+    // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
     public static void main(String[] args) {
 
-        // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
         File temp = (new File("Enamel/FactoryScenarios/Scenario_10.txt"));
 
+        // Initialise ScenarioCreatorManager and pass through file object as param
         ScenarioCreatorManager scenarioCreatorManager = new ScenarioCreatorManager(temp);
 
-        //System.out.println(temp.exists());
-
+        // You MUST set cell and button num before adding any commands.
+        // Title command is optional
         scenarioCreatorManager.setCellNum(1);
         scenarioCreatorManager.setButtonNum(4);
         scenarioCreatorManager.setTitle("Directional Orientation");
 
-
+        // Every method for every command returns a boolean which tells you whether the input was valid or not
+        //When it returns false it will update the errorMessage string which can be accessed with getErrorMessage();
         if (!(scenarioCreatorManager.addDispCellPins("0", "11100000"))) {
             System.out.println(scenarioCreatorManager.errorMessage);
         }
@@ -659,6 +647,7 @@ public class ScenarioCreatorManager {
             System.out.println(scenarioCreatorManager.errorMessage);
         }
 
+        // Use next question to increment the question index and put a space in the ScenarioFile for the next question
         scenarioCreatorManager.nextQuestion();
 
         if (!(scenarioCreatorManager.addSkipPos("ONEE"))) {
@@ -846,7 +835,7 @@ public class ScenarioCreatorManager {
         }
 
 
-
+        // After all the commands have been added saveFile() 
         scenarioCreatorManager.saveToFile();
     }
     //////////////////////////////////////// TESTING /////////////////////////////////////
