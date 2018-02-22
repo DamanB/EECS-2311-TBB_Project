@@ -338,16 +338,57 @@ public class ScenarioCreatorManager {
                     // TODO FINISH REST
                     // The key phrase to lower a pin of the specified Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-lower:")) {
+                        Command temp;
+                        try{
+                            temp = new DispCellLower(lines.get(i).substring(0,18), lines.get(i).substring(18), this.cellNum);
+                        }
+                        catch(Exception e)
+                        {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
                         /////dispCellLower(lines.get(i).substring(18));
                     }
                     // The key phrase to clear a Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-clear:")) {
+                        Command temp;
+                        try{
+                            temp = new DispCellClear(lines.get(i).substring(0,18), lines.get(i).substring(18), this.cellNum);
+                        }
+                        catch (Exception e)
+                        {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
                         /////dispCellClear(lines.get(i).substring(18));
                     } else if (lines.get(i).length() >= 21 && lines.get(i).substring(0, 21).equals("/~disp-cell-lowerPins")) {
+                        Command temp;
+                        try
+                        {
+                            temp = new DispCellLowerPins(lines.get(i).substring(0,21), lines.get(i).substring(21));
+                        }
+                        catch (Exception e)
+                        {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
                         /////dispCellRaise("0");
                     }
                     // The key phrase to wait for the program to receive a user's input.
                     else if (lines.get(i).length() >= 12 && lines.get(i).substring(0, 12).equals("/~user-input")) {
+                        Command temp;
+                        try
+                        {
+                            temp = new UserInput(lines.get(i).substring(0,12), lines.get(i).substring(12));
+                        }
+                        catch (Exception e)
+                        {
+                            this.errorMessage = e.toString();
+                            return;
+                        }
+
                         /////userInput = true;
                     }
                     // Anything other than the specified commands above, is to be
@@ -625,7 +666,7 @@ public class ScenarioCreatorManager {
     }
 
 
-   /* //////////////////////////////////////// TESTING /////////////////////////////////////
+    //////////////////////////////////////// TESTING /////////////////////////////////////
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
     // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
     public static void main(String[] args) {
@@ -850,5 +891,5 @@ public class ScenarioCreatorManager {
         // After all the commands have been added saveFile() 
         scenarioCreatorManager.saveToFile();
     }
-    //////////////////////////////////////// TESTING /////////////////////////////////////*/
+    //////////////////////////////////////// TESTING /////////////////////////////////////
 }

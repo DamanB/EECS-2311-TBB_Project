@@ -1,14 +1,11 @@
 package enamel;
 
 import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.util.logging.*;
 
-//import com.sun.media.sound.InvalidFormatException;
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 
@@ -30,9 +27,9 @@ public class ScenarioParser {
         //String currDir = System.getProperty("user.dir");
         //System.setProperty("mbrola.base", currDir + File.separator + "lib/mbrola.jar");
         vm = VoiceManager.getInstance();
-        voice = vm.getVoice("kevin16");
+        voice = vm.getVoice ("kevin16");
         voice.allocate();
-        repeatedText = new ArrayList<String>();
+        repeatedText = new ArrayList<String> ();
         userInput = false;
         this.isVisual = isVisual;
     }
@@ -86,7 +83,6 @@ public class ScenarioParser {
         // This statement checks if the key phrase /~repeat has been read. If it
         // has, then everything
         // after the key phrase is assumed to be text to be repeated.
-
         if (repeat) {
             // Stops assuming that the text is being repeated with the
             // /~endrepeat key phrase
@@ -99,7 +95,7 @@ public class ScenarioParser {
         } else {
             // The key phrase to indicate to play a sound file.
             if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~sound:")) {
-                playSound(fileLine.substring(8));
+                playSound(fileLine.substring(8).trim());
             }
             // The key phrase to indicate to skip to another part of the
             // scenario.
@@ -109,14 +105,7 @@ public class ScenarioParser {
             // The key phrase to indicate to pause for a specified number of
             // seconds.
             else if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~pause:")) {
-
-                // Checks if there is a positive integer after the pause command if not logs it then exits
-                if (fileLine.substring(8).matches("^[1-9][0-9]*$")) {
-                    pause(fileLine.substring(8));
-                } else {
-                    errorLog(IllegalArgumentException.class.toString(), "Number of seconds for pause is not a positive integer.");
-                    System.exit(0);
-                }
+                pause(fileLine.substring(8));
             }
             // The key phrase to assign a button to repeat text.
             else if (fileLine.length() >= 16 && fileLine.substring(0, 16).equals("/~repeat-button:")) {
@@ -148,14 +137,7 @@ public class ScenarioParser {
             }
             // The key phrase to represent a string in Braille.
             else if (fileLine.length() >= 14 && fileLine.substring(0, 14).equals("/~disp-string:")) {
-
-                // Checks if the string is composed of letters then displays it. If not logs it and exits
-                //if (fileLine.substring(14).matches("^[a-zA-Z]+$")) {
-                    player.displayString(fileLine.substring(14));
-                //} else {
-                //    errorLog(IllegalArgumentException.class.toString(), "Invalid String for disp-string.");
-                //    System.exit(0);
-                //}
+                player.displayString(fileLine.substring(14));
             }
             // The key phrase to change the cell to represent a character in
             // Braille.
@@ -187,7 +169,6 @@ public class ScenarioParser {
                 speak(fileLine);
             }
         }
-
     }
 
     /*
@@ -524,7 +505,7 @@ public class ScenarioParser {
             if (isVisual)
                 player = new VisualPlayer(cellNum, buttonNum);
             else
-                player = new AudioPlayer(cellNum, buttonNum);
+                player =  new AudioPlayer(cellNum, buttonNum);
         } catch (Exception e) {
 
             errorLog("Exception error: " + e.toString(),
