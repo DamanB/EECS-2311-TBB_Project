@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -17,11 +20,15 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import enamel.ScenarioCreatorGUI.EventGUI;
+
 public class JActionConfigure extends JPanel{
 
 	private static JLabel instruction;
-
 	private static Dimension panelSize;
+	private int index;
+	private JPanel main = this;
+	public Action action;
 
 	public JActionConfigure(int index) {		
 		this.panelSize = ScenarioCreatorGUI.actionOptions.getSize();
@@ -35,87 +42,109 @@ public class JActionConfigure extends JPanel{
 	private void getOptions(int index) {
 		this.removeAll();
 		this.add(instruction);		
-		
+		this.index = index;
+
 		if (index == 0) {
-			this.add(new JTextToSpeech());
+			action = new JTextToSpeech();
 		}else if (index == 1) {
-			this.add(new PlayAudio());
+			action = new PlayAudio();
 		}else if (index == 2) {
-			this.add(new JPauseButton());
+			action = new JPauseButton();
 		}else if (index == 3) {	
-			this.add(new JDisplayPins());
+			action = new JDisplayPins();
 		}else if (index == 4) {
-			this.add(new JDisplayWordInBraille());
+			action = new JDisplayWordInBraille();
 		}else if (index == 5) {
-			this.add(new JDisplayChar());
+			action = new JDisplayChar();
 		}else if (index == 6) {
-			this.add(new JClearCells());
+			action = new JClearCells();
 		}else if (index == 7) {
-			this.add(new JClearSpecificCell());
+			action = new JClearSpecificCell();
 		}else if (index == 8) {
-			this.add(new JLowerPins());
+			action = new JLowerPins();
 		}else if (index == 9) {
-			this.add(new JRaisePins());
+			action = new JRaisePins();
 		}else if (index == 10) {
-			this.add(new JRepeat());
+			action = new JRepeat();
 		}else if (index == 11) {
-			this.add(new GoToEvent());
+			action = new GoToEvent();
 		}else if (index == 12) {
-			this.add(new GoToEventButton());
+			action = new GoToEventButton();
 		}else if (index == 13) {
-			this.add(new JResetButtons());
+			action = new JResetButtons();
 		}else if (index == 14) {
-			this.add(new JUserInput());
+			action = new JUserInput();
 		}else {
 			throw new IllegalArgumentException("Action Selected DNE");
 		}
 	}
 
-	private class JPauseButton extends JPanel{		
-		//private JTextField pauseTime;
+	private class JPauseButton extends Action{		
 		private JSpinner pauseTime;
 		private JPauseButton() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Pause: Select the amount of time in seconds (a value greater than 0) you wish to pause");
 			SpinnerModel number = new SpinnerNumberModel();
 			pauseTime = new JSpinner(number);			
-			pauseTime = new JSpinner();			
 			pauseTime.setPreferredSize(new Dimension(100,20));
-			this.add(pauseTime);
-		}		
+			main.add(pauseTime);
+		}	
+
+		public boolean build(ScenarioCreatorManager sm) {
+			return sm.addPause(Integer.toString((int)pauseTime.getValue()));
+		}
+
+
+
 	}
 
-	private class JDisplayWordInBraille extends JPanel{		
+	private class JDisplayWordInBraille extends Action{		
 		private JTextField stringToDisp;
 		private JDisplayWordInBraille() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Display Word: Please enter the word you would like to display in braille. Ensure adequate Braille cells are created beforehand");
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/5,20));
-			this.add(stringToDisp);
+			main.add(stringToDisp);
+		}
+		public boolean build(ScenarioCreatorManager sm) {
+			return sm.addDispString(stringToDisp.getText());			
 		}		
 	}
 
-	private class JRepeat extends JPanel{		
+	private class JRepeat extends Action{		
 		private JTextField stringToDisp;
 		private JLabel selectButton;
 		private JResponseButtonBox buttons;
 
 		private JRepeat() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Repeat Text: Set the text to what you would like to repeat, as well as button to initalize the repeat");	
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/2,20));
-			this.add(stringToDisp);		
+			main.add(stringToDisp);		
 			selectButton = new JLabel("Select Repeat Button: ");
 			buttons = new JResponseButtonBox();
-			this.add(selectButton);
-			this.add(buttons);
+			main.add(selectButton);
+			main.add(buttons);
 
-		}			
+		}	
+
+		public boolean build(ScenarioCreatorManager sm) {
+
+			boolean toReturn = true;
+			sm.addRepeat();
+			List string = new ArrayList<String>();
+			string.add(stringToDisp.getText());
+			if (!(sm.addText(string))) {
+				return false;
+			}
+			if (!(sm.addRepeatButton(Integer.toString(buttons.responseButtons.getSelectedIndex())))) {
+				return false;
+			}
+			return sm.addEndRepeat();			
+
+		}
 	}
 
-	private class GoToEventButton extends JPanel implements ActionListener{
+	private class GoToEventButton extends Action implements ActionListener{
 		private JLabel goToEvent;
 		private JLabel when;
 		private JResponseButtonBox buttons;
@@ -123,18 +152,22 @@ public class JActionConfigure extends JPanel{
 		private JComboBox eventList;
 
 		private GoToEventButton(){
-			this.setPreferredSize(panelSize);
 			instruction.setText("Go To Event: Select which event you would like to travel to when a specfifc button is clicked. The event must occur after this one");	
 			goToEvent = new JLabel("Go To Event: "); 
 			when = new JLabel("When This Button is Clicked: ");
 			events = new JEventList();
 			buttons = new JResponseButtonBox();
 			events.jEvents.addActionListener(this);
-			this.add(goToEvent);
-			this.add(events);
-			this.add(when);
-			this.add(buttons);
+			main.add(goToEvent);
+			main.add(events);
+			main.add(when);
+			main.add(buttons);
 
+		}
+
+		public boolean build(ScenarioCreatorManager sm) {
+			EventGUI selectedItem = (ScenarioCreatorGUI.EventGUI)events.jEvents.getSelectedItem();			
+			return sm.addSkipButton(Integer.toString(buttons.responseButtons.getSelectedIndex()),selectedItem.getEventName());		
 		}
 
 
@@ -151,53 +184,75 @@ public class JActionConfigure extends JPanel{
 
 	}
 
-	private class JClearCells extends JPanel{		
+	private class JClearCells extends Action{		
 		private JClearCells() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Clear Cells: This command will clear all of the Braille Cells");
 		}		
+
+		public boolean build(ScenarioCreatorManager sm) {
+
+			return sm.addDispClearAll();
+
+		}
 	}
 
-	private class JClearSpecificCell extends JPanel{	
+	private class JClearSpecificCell extends Action{	
 
 		JBrailleList cells;
 
 		private JClearSpecificCell() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Clear Specfifc Cell: Select which Braille Cell you would like to clear");
 			cells = new JBrailleList();			
-			this.add(cells);
-		}		
+			main.add(cells);
+		}	
+
+		public boolean build(ScenarioCreatorManager sm) {
+			return sm.addDispCellClear(Integer.toString(cells.jBraille.getSelectedIndex()));
+		}
 	}
 
-	private class JDisplayChar extends JPanel{		
+	private class JDisplayChar extends Action{		
 		private JTextField stringToDisp;
 		private JBrailleList cells;
 		private JDisplayChar() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Display Character: Enter the character you would like to display as well as the cell it will appear on");
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/10,20));
 			cells = new JBrailleList();
-			this.add(stringToDisp);
-			this.add(cells);
-		}		
+			main.add(stringToDisp);
+			main.add(cells);
+		}
+
+		public boolean build(ScenarioCreatorManager sm) {
+
+			if (!(stringToDisp.getText().matches("^[a-zA-Z]$"))){
+				return false;
+			}else {
+				return sm.addDispCellChar(Integer.toString(cells.jBraille.getSelectedIndex()), stringToDisp.getText());
+			}		
+		}
 	}
 
-	private class JDisplayPins extends JPanel implements ActionListener{	
+	private class JDisplayPins extends Action implements ActionListener{	
 
 		JBrailleList cells;
 		JButton select;
 		JBrailleCell edit;
 
 		private JDisplayPins() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Display Pins on Cell: Select which Braille Cell you want to edit and select its pins");
 			cells = new JBrailleList();			
 			select = new JButton("Select");	
 			select.addActionListener(this);
-			this.add(cells);
-			this.add(select);
+			main.add(cells);
+			main.add(select);
+		}
+
+		public boolean build(ScenarioCreatorManager sm) {
+
+			return sm.addDispCellPins(Integer.toString(cells.jBraille.getSelectedIndex()), edit.cellConfig());
+
+
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -205,46 +260,57 @@ public class JActionConfigure extends JPanel{
 				select.setEnabled(false);
 				cells.jBraille.setEnabled(false);
 				edit = (JBrailleCell)cells.jBraille.getSelectedItem();
-				this.add(edit.getJBrailleCell());
-				this.validate();
-				this.repaint();
+				main.add(edit.getJBrailleCell());
+				main.validate();
+				main.repaint();
 			}
 		}		
 	}
 
-	private class JTextToSpeech extends JPanel{		
+	private class JTextToSpeech extends Action{		
 		private JTextField stringToDisp;
 		private JTextToSpeech() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Text To Speech: Enter the text you would like to say");
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/2,20));
-			this.add(stringToDisp);
-		}		
+			main.add(stringToDisp);
+		}	
+
+		public boolean build(ScenarioCreatorManager sm) {
+			List string = new ArrayList<String>();
+			string.add(stringToDisp.getText());
+			return sm.addText(string);
+		}
 	}
 
-	private class JUserInput extends JPanel{		
+	private class JUserInput extends Action{		
 		private JUserInput() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("User Input: The program will wait for a user input");
-		}		
+		}
+
+		public boolean build(ScenarioCreatorManager sm) {
+			return sm.addUserInput();
+		}
 	}
 
-	private class GoToEvent extends JPanel implements ActionListener{
+	private class GoToEvent extends Action implements ActionListener{
 		private JLabel goToEvent;
 		private JEventList events;
 		private JComboBox eventList;
 
 		private GoToEvent(){
-			this.setPreferredSize(panelSize);
 			instruction.setText("Go To Event: Select which event you would like to travel to. The event must occur after this one");	
 			goToEvent = new JLabel("Go To Event: "); 
 			events = new JEventList();
 			events.jEvents.addActionListener(this);
-			this.add(goToEvent);
-			this.add(events);
+			main.add(goToEvent);
+			main.add(events);
 		}
 
+		public boolean build(ScenarioCreatorManager sm) {
+			EventGUI selectedItem = (EventGUI)events.jEvents.getSelectedItem();			
+			return sm.addSkip(selectedItem.getEventName());
+		}
 
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(events.jEvents)) {
@@ -259,14 +325,17 @@ public class JActionConfigure extends JPanel{
 
 	}
 
-	private class JResetButtons extends JPanel{		
+	private class JResetButtons extends Action{		
 		private JResetButtons() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Reset Buttons: Resets the commands implemented with each button. Recommended to use at the beggining of each event");
-		}		
+		}	
+
+		public boolean build(ScenarioCreatorManager sm) {
+			return sm.addResetButtons();
+		}
 	}
 
-	private class JLowerPins extends JPanel implements ActionListener{	
+	private class JLowerPins extends Action implements ActionListener{	
 
 		JBrailleList cells;
 		JButton select;
@@ -278,14 +347,17 @@ public class JActionConfigure extends JPanel{
 		};
 
 		private JLowerPins() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Lower Pin on Cell: Select which Braille Cell you want to edit then select the pin to lower");
 			cells = new JBrailleList();			
 			select = new JButton("Select");	
 			select.addActionListener(this);
 			pins = new JComboBox<Integer>(pin);
-			this.add(cells);
-			this.add(select);
+			main.add(cells);
+			main.add(select);
+		}
+
+		public boolean build(ScenarioCreatorManager sm) {
+			return sm.addDispCellRaise(Integer.toString(cells.jBraille.getSelectedIndex()), Integer.toString((int)pins.getSelectedItem()));
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -293,17 +365,17 @@ public class JActionConfigure extends JPanel{
 				select.setEnabled(false);
 				cells.jBraille.setEnabled(false);
 				edit = new JBrailleCell(JBrailleCell.DISPLAY_INDEX);
-				this.add(edit.getJBrailleCell());
-				this.add(pins);
-				this.validate();
-				this.repaint();
+				main.add(edit.getJBrailleCell());
+				main.add(pins);
+				main.validate();
+				main.repaint();
 			}			
 
 
 		}		
 	}
 
-	private class JRaisePins extends JPanel implements ActionListener{	
+	private class JRaisePins extends Action implements ActionListener{	
 
 		JBrailleList cells;
 		JButton select;
@@ -315,14 +387,17 @@ public class JActionConfigure extends JPanel{
 		};
 
 		private JRaisePins() {
-			this.setPreferredSize(panelSize);
 			instruction.setText("Raise Pin on Cell: Select which Braille Cell you want to edit then select the pin to raise");
 			cells = new JBrailleList();			
 			select = new JButton("Select");	
 			select.addActionListener(this);
 			pins = new JComboBox<Integer>(pin);
-			this.add(cells);
-			this.add(select);
+			main.add(cells);
+			main.add(select);
+		}
+
+		public boolean build(ScenarioCreatorManager sm) {
+			return sm.addDispCellRaise(Integer.toString(cells.jBraille.getSelectedIndex()), Integer.toString((int)pins.getSelectedItem()));
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -330,10 +405,10 @@ public class JActionConfigure extends JPanel{
 				select.setEnabled(false);
 				cells.jBraille.setEnabled(false);
 				edit = new JBrailleCell(JBrailleCell.DISPLAY_INDEX);
-				this.add(edit.getJBrailleCell());
-				this.add(pins);
-				this.validate();
-				this.repaint();
+				main.add(edit.getJBrailleCell());
+				main.add(pins);
+				main.validate();
+				main.repaint();
 			}			
 
 
@@ -341,13 +416,15 @@ public class JActionConfigure extends JPanel{
 	}
 
 
-	private class PlayAudio extends JPanel implements ActionListener{
+	private class PlayAudio extends Action implements ActionListener{
 		private JLabel playAudio;
 		private JButton browse;
 		private JLabel audioName;
 
+		private String fileName;
+		
 		private PlayAudio(){
-			this.setPreferredSize(panelSize);
+			fileName = "";
 			instruction.setText("Play Audio: Select an audio file to play. The audio must a .WAV format!");	
 			playAudio = new JLabel("Browse Audio");
 			browse = new JButton("Browse");
@@ -355,10 +432,13 @@ public class JActionConfigure extends JPanel{
 
 			browse.addActionListener(this);
 
-			this.add(playAudio);
-			this.add(browse);
-			this.add(audioName);
+			main.add(playAudio);
+			main.add(browse);
+			main.add(audioName);
+		}
 
+		public boolean build(ScenarioCreatorManager sm) {
+			return sm.addSound(fileName);
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -371,7 +451,8 @@ public class JActionConfigure extends JPanel{
 
 				if (fileChooser.showOpenDialog(browse) == JFileChooser.APPROVE_OPTION) {
 					if (fileChooser.getSelectedFile().getName().matches(".*.wav$")) {
-						audioName.setText("Selected Audio: " + fileChooser.getSelectedFile().getName());
+						fileName = fileChooser.getSelectedFile().getName();
+						audioName.setText("Selected Audio: " + fileName);
 					}else {
 						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Invalid Audio File!", "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
 					}				
@@ -399,16 +480,13 @@ public class JActionConfigure extends JPanel{
 	}
 
 	private class JEventList extends JPanel{		
-		public JComboBox jEvents;
-		String[] events;
+		public JComboBox<EventGUI> jEvents;
 
-		private JEventList() {
-			events = new String[ScenarioCreatorGUI.eventsList.size()];			
-			for (int i = 0; i< events.length; i++) {
-				events[i] = ScenarioCreatorGUI.eventsList.get(i).toString();
-			}			
-			jEvents = new JComboBox<String>(events);			
-			this.add(jEvents);
+		private JEventList() {	
+			jEvents = new JComboBox<EventGUI>();
+			jEvents.setModel(new DefaultComboBoxModel(ScenarioCreatorGUI.eventsList.toArray()));
+			
+			this.add(jEvents);			
 		}			
 	}
 
@@ -424,6 +502,12 @@ public class JActionConfigure extends JPanel{
 		}			
 	}
 
+
+	public boolean build() {
+
+		return true;
+
+	}
 
 
 }

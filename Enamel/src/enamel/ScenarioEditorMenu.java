@@ -93,36 +93,50 @@ public class ScenarioEditorMenu implements MouseListener {
 	}
 
 	public static void getEditorInfo() {
-	
+
 		boolean asking = true;
-		
+
 		while(asking) {
-			String numCells = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Enter The Number of Cells You Wish To Use: ");
+			String numCells = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Enter The Number of Cells You Wish To Use: ", "Config", JOptionPane.INFORMATION_MESSAGE);
 			if (numCells == null) {
 				MainFrame.changeScreen(getScreen());
 				break;
 			}
 			else if (numCells.matches("^[1-9][0-9]*$")) {
-				ScenarioCreatorManager.setNumCells(Integer.parseInt(numCells));
+				ScenarioCreatorGUI.numCells = (Integer.parseInt(numCells));
 
-				while(true) {
-					String numButton = JOptionPane.showInputDialog(MainFrame.getMainPanel(),"Please Enter The Number of Response Buttons You Wish To Use: ");
+				while(asking) {
+					String numButton = JOptionPane.showInputDialog(MainFrame.getMainPanel(),"Please Enter The Number of Response Buttons You Wish To Use: ", "Config", JOptionPane.INFORMATION_MESSAGE);
 					if (numButton == null) {
 						break;
 					}
 					if (numButton.matches("^[1-9][0-9]*$")) {
-						ScenarioCreatorManager.setNumButtons(Integer.parseInt(numButton));
-						asking = false;
-						break;
+						ScenarioCreatorGUI.numButtons = (Integer.parseInt(numButton));
+
+						while (true) {
+							String title = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Input the Scenarios Title", "Title", JOptionPane.INFORMATION_MESSAGE);
+							if ( title == null){
+								break;
+							}else if(title.length() == 0) {
+								JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Please input a valid title", "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
+							}else{
+								ScenarioCreatorGUI.ScenarioTitle = title;
+								asking = false;
+								break;
+							}		
+						}
 					}else {
-						JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again");
+						JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again", "Invalid Number", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}	
 			}else {
-				JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again");
-			}
-
+				JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again",  "Invalid Number", JOptionPane.INFORMATION_MESSAGE);
+			}		
+			
 		}
+
+
+
 	}
 
 
@@ -133,7 +147,7 @@ public class ScenarioEditorMenu implements MouseListener {
 
 		if (e.getSource().equals(create)) {
 			MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
-			//getEditorInfo();----------------------------------------------------------------------------------------------------------
+			getEditorInfo();
 		}else if (e.getSource().equals(modify)) {
 			JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Sorry This Is Under Construction", "Sorry", JOptionPane.PLAIN_MESSAGE, null);
 		}else if (e.getSource().equals(back)) {

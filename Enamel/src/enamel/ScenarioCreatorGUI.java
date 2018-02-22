@@ -10,6 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +31,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -38,30 +46,34 @@ public class ScenarioCreatorGUI {
 	private static JPanel eventEditor;
 	private static JPanel controls;
 
+	public static String ScenarioTitle;
+	public static int numCells = 0;
+	public static int numButtons = 0;
+
 	public static JPanel actionOptions;
 
 	public static List<EventGUI> eventsList;
 	public static EventGUI activeEvent;
-	
+
 	private static ScenarioCreatorGUI instance;
-	
-    public static String[] userCommandList = {
-            "Text to Speech", //DONE
-            "Play Audio", //DONE
-            "Pause", //DONE
-            "Display Pins on Braille Cell", //DONE
-            "Display Word with Braille Cells", //DONE
-            "Display Character on Braille Cell", //DONE
-            "Clear All Braille Cells", //DONE       
-            "Clear Specific Braille Cell", //DONE
-            "Lower Pins on Cell", //DONE
-            "Raise Pins on Cell", //DONE
-            "Repeat Text w/ Button Clicked", //DONE
-            "Go to Event", //DONE
-            "Go to Event w/ Button Clicked", //DONE
-            "Reset Button Configurations", //DONE
-            "User Input" //DONE  
-    };
+
+	public static String[] userCommandList = {
+			"Text to Speech", //DONE
+			"Play Audio", //DONE
+			"Pause", //DONE
+			"Display Pins on Braille Cell", //DONE
+			"Display Word with Braille Cells", //DONE
+			"Display Character on Braille Cell", //DONE
+			"Clear All Braille Cells", //DONE       
+			"Clear Specific Braille Cell", //DONE
+			"Lower Pins on Cell", //DONE
+			"Raise Pins on Cell", //DONE
+			"Repeat Text w/ Button Clicked", //DONE
+			"Go to Event", //DONE
+			"Go to Event w/ Button Clicked", //DONE
+			"Reset Button Configurations", //DONE
+			"User Input" //DONE  
+	};
 
 
 	private ScenarioCreatorGUI() {
@@ -122,6 +134,8 @@ public class ScenarioCreatorGUI {
 		private static JLabel optionsTitle;
 		private static JButton backButton;
 		private static JButton buildButton;
+		public static JSpinner scenarioIndex;
+		private static JLabel indexText;
 
 		private controlGUI(){
 
@@ -145,8 +159,16 @@ public class ScenarioCreatorGUI {
 			MainFrame.editJButton(backButton);
 			MainFrame.editJButton(buildButton);
 
+			indexText = new JLabel("Scenario_");
+
+			SpinnerModel number = new SpinnerNumberModel();
+			scenarioIndex = new JSpinner(number);	
+			scenarioIndex.setPreferredSize(new Dimension(controls.getSize().width/2,20));
+
 			controls.add(optionsTitle);
 			controls.add(backButton);
+			controls.add(indexText);
+			controls.add(scenarioIndex);
 			controls.add(buildButton);
 
 		}
@@ -161,9 +183,72 @@ public class ScenarioCreatorGUI {
 
 		}
 
-		private void build() {} //TODO: IMPLEMENT
+		private void build() {
 
-	}
+			File file;				
+
+			while (true) {
+				//CREATE FILE
+				if ((int)controlGUI.scenarioIndex.getValue() <= 0) {
+					JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Please select an index greater than 0 for the Scenario name", "Invalid Index", JOptionPane.INFORMATION_MESSAGE);
+					break;
+				}
+				String fileName = "Scenario_" + (int)scenarioIndex.getValue() + ".txt";	
+				Path path = Paths.get("./" + fileName); 
+				if ((Files.exists(path))) {
+					JOptionPane.showMessageDialog(MainFrame.getMainPanel(), fileName + " Already Exists. Please Choose a New Index", "File Name Exists", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Overwriting a file will become available during the final launch", "Overwriting", JOptionPane.INFORMATION_MESSAGE);
+					break;
+				}else {
+					file = new File(fileName);
+					try {
+						file.createNewFile();
+					}catch (IOException e){
+						e.printStackTrace();
+					}
+				}
+
+				ScenarioCreatorManager sm = new ScenarioCreatorManager(file);				
+				//ADDING ACTIONS	
+				sm.setTitle(ScenarioTitle);		
+				sm.setButtonNum(numButtons);
+				sm.setCellNum(numCells);
+
+				boolean valid = true;
+
+				for (EventGUI event : eventsList) {
+					for (ScenarioCreatorGUI.EventGUI.JActionNode action : event.actionList) {
+						if (action.actionConfigure.action == null) {
+							JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "There is an action in event: " + event.eventName + " that has not been initalized", "Compilation Error", JOptionPane.INFORMATION_MESSAGE);
+							valid = false;
+							break;
+						}
+						if (!(action.actionConfigure.action.build(sm))) {						
+							JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "You have error:" + sm.getErrorMessage() + " in event: " + event.getEventName() + " in Action indexed: " + (action.getIndex()+1), "Compilation Error", JOptionPane.INFORMATION_MESSAGE);
+							valid = false;
+							break;
+						}
+					}					
+
+					if (valid == false) {
+						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "BUILD FAILED!", "Error", JOptionPane.INFORMATION_MESSAGE);
+						break;
+					}else {
+						sm.nextQuestion();
+					}
+
+				}	
+
+				if (valid) {
+					sm.saveToFile();
+				}
+				break;
+			}
+
+		}
+	} //TODO: IMPLEMENT
+
+
 
 	private static class EventsListGUI implements ActionListener{
 
@@ -227,7 +312,7 @@ public class ScenarioCreatorGUI {
 	public class EventGUI implements ActionListener{
 
 		FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
-		LinkedList actionList = new LinkedList();
+		LinkedList<JActionNode> actionList = new LinkedList<JActionNode>();
 
 		private int sizeX;
 		private int sizeY;
@@ -235,17 +320,17 @@ public class ScenarioCreatorGUI {
 
 		private JPanel listedActions;
 		private JLabel jEventName;
-		
+
 		public List<JBrailleCell> cells;
 
 		private EventGUI(String eventName) {
 
 			cells = new ArrayList<JBrailleCell>();
-			
+
 			for (int i =0; i<ScenarioCreatorManager.getNumCells(); i++) {
 				cells.add(new JBrailleCell((i+1)));
 			}
-			
+
 			//------------LISTED ACTIONS-------------------\\
 			this.eventName = eventName;
 			sizeX = eventEditor.getWidth();
@@ -269,11 +354,11 @@ public class ScenarioCreatorGUI {
 
 		}
 
-		private String getEventName() {
+		public String getEventName() {
 			return eventName;
 		}
 
-		private LinkedList getActionList() {
+		private LinkedList<JActionNode> getActionList() {
 			return actionList;
 		}
 
@@ -357,7 +442,8 @@ public class ScenarioCreatorGUI {
 			private int sizeX;
 			private int sizeY;
 
-			public JPanel actionConfigure;
+
+			public JActionConfigure actionConfigure;
 
 			private JActionNode(){
 
@@ -384,7 +470,6 @@ public class ScenarioCreatorGUI {
 
 				this.setSize(sizeX, sizeY);				
 			}
-
 
 			public int getSelectedItem() {
 				return actionList.getSelectedIndex();
@@ -435,21 +520,21 @@ public class ScenarioCreatorGUI {
 	private static EventGUI createNewEvent(String eventName) {		
 		return instance.new EventGUI(eventName);		
 	}
-	
+
 	private static void changeActionOptions(JPanel newPanel) {	
 		actionOptions.removeAll();
 		actionOptions.add(newPanel);
 		actionOptions.validate();
 		actionOptions.repaint();		
 	}
-	
+
 	private static void removeActionOption() {
 		actionOptions.removeAll();
 		actionOptions.validate();
 		actionOptions.repaint();
 	}
 
-	
-	
+
+
 }
 

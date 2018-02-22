@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 /**
  * @author Sanjay Paraboo, Damanveer Bharaj, Penguin Guo
  */
@@ -73,13 +75,15 @@ public class ScenarioCreatorManager {
             throw new IllegalArgumentException("Invalid Scenario File Name Format");
         }
 
-        if (!(scenarioFile.exists())) {
+       /* if (!(scenarioFile.exists())) {
             try {
                 scenarioFile.createNewFile();
             } catch (IOException e) {
                 this.errorMessage = e.toString();
             }
         }
+        */
+        
 
         this.scenarioFile = scenarioFile;
 
@@ -107,6 +111,9 @@ public class ScenarioCreatorManager {
             printWriter.println();
             printWriter.println(result);
             printWriter.close();
+            
+            JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "BUILD SUCCESSFUL", "Builder", JOptionPane.INFORMATION_MESSAGE);
+            
         } catch (Exception e) {
             System.out.println(e.toString());
             this.errorMessage = e.toString();
@@ -613,7 +620,7 @@ public class ScenarioCreatorManager {
     }
 
 
-    //////////////////////////////////////// TESTING /////////////////////////////////////
+   /* //////////////////////////////////////// TESTING /////////////////////////////////////
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
     // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
     public static void main(String[] args) {
@@ -838,5 +845,5 @@ public class ScenarioCreatorManager {
         // After all the commands have been added saveFile() 
         scenarioCreatorManager.saveToFile();
     }
-    //////////////////////////////////////// TESTING /////////////////////////////////////
+    //////////////////////////////////////// TESTING /////////////////////////////////////*/
 }

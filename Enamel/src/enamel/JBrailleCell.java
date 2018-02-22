@@ -86,5 +86,21 @@ public class JBrailleCell{
 		return "Braill Cell: " + index;
 	}
 
+	public String cellConfig() {
+		
+		String toReturn = "";
+		
+		for (JRadioButton pin : pins) {
+			if (pin.isSelected()) {
+				toReturn += "1";
+			}else {
+				toReturn+= "0";
+			}
+		}
+		
+		return toReturn;
+		
+		
+	}
 
 }
