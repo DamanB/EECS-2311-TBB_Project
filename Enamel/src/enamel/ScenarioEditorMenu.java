@@ -92,14 +92,13 @@ public class ScenarioEditorMenu implements MouseListener {
 		button.setVerticalAlignment(JButton.CENTER);
 	}
 
-	public static void getEditorInfo() {
+	public static boolean getEditorInfo() {
 
 		boolean asking = true;
 
 		while(asking) {
 			String numCells = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Enter The Number of Cells You Wish To Use: ", "Config", JOptionPane.INFORMATION_MESSAGE);
 			if (numCells == null) {
-				MainFrame.changeScreen(getScreen());
 				break;
 			}
 			else if (numCells.matches("^[1-9][0-9]*$")) {
@@ -132,10 +131,14 @@ public class ScenarioEditorMenu implements MouseListener {
 			}else {
 				JOptionPane.showMessageDialog(MainFrame.getMainPanel(),"This is an invalid number. Please try again",  "Invalid Number", JOptionPane.INFORMATION_MESSAGE);
 			}		
-			
+
 		}
 
+		if (asking) {
+			MainFrame.changeScreen(getScreen());
+		}
 
+		return asking;
 
 	}
 
@@ -146,8 +149,9 @@ public class ScenarioEditorMenu implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 
 		if (e.getSource().equals(create)) {
-			MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
-			getEditorInfo();
+			if (!(getEditorInfo())) {
+				MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
+			}
 		}else if (e.getSource().equals(modify)) {
 			JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Sorry This Is Under Construction", "Sorry", JOptionPane.PLAIN_MESSAGE, null);
 		}else if (e.getSource().equals(back)) {

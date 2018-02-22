@@ -175,8 +175,13 @@ public class ScenarioCreatorGUI {
 
 		public void actionPerformed(ActionEvent e) {
 
-			if (e.getSource().equals(backButton)) {				
-				MainFrame.changeScreen(ScenarioEditorMenu.getScreen());
+			if (e.getSource().equals(backButton)) {		
+
+				int k = JOptionPane.showConfirmDialog(MainFrame.getMainPanel(), "Exiting will cause you to loose any changes made to this Scenario. Are you sure you wish to exit?", "Exit", JOptionPane.OK_CANCEL_OPTION);
+
+				if (k == JOptionPane.OK_OPTION) {
+					MainFrame.changeScreen(ScenarioEditorMenu.getScreen());
+				}
 			}else if (e.getSource().equals(buildButton)) {
 				build();
 			}
@@ -215,8 +220,14 @@ public class ScenarioCreatorGUI {
 				sm.setCellNum(numCells);
 
 				boolean valid = true;
+				int count = 0;
 
 				for (EventGUI event : eventsList) {
+
+					if (count != 0) {
+						sm.addSkipPos(event.getEventName().toUpperCase());
+					}					
+					count++;
 					for (ScenarioCreatorGUI.EventGUI.JActionNode action : event.actionList) {
 						if (action.actionConfigure.action == null) {
 							JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "There is an action in event: " + event.eventName + " that has not been initalized", "Compilation Error", JOptionPane.INFORMATION_MESSAGE);
@@ -231,7 +242,8 @@ public class ScenarioCreatorGUI {
 					}					
 
 					if (valid == false) {
-						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "BUILD FAILED!", "Error", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "BUILD FAILED! " + fileName + " will be deleted" , "Error", JOptionPane.INFORMATION_MESSAGE);
+						file.delete();
 						break;
 					}else {
 						sm.nextQuestion();
@@ -246,7 +258,7 @@ public class ScenarioCreatorGUI {
 			}
 
 		}
-	} //TODO: IMPLEMENT
+	}
 
 
 
@@ -259,7 +271,7 @@ public class ScenarioCreatorGUI {
 		private static JTextField eventNameField;
 
 		private EventsListGUI() {
-			addEvent = new JButton("New Event");
+			addEvent = new JButton("Add Event");
 			addEvent.addActionListener(this);
 			addEvent.setSize((int)(eventListPanel.getSize().height * 0.8), (int)(eventListPanel.getSize().height * 0.8));
 			addEvent.setPreferredSize(addEvent.getPreferredSize());		
@@ -276,23 +288,30 @@ public class ScenarioCreatorGUI {
 			eventComboBox.addActionListener(this);
 			eventComboBox.setBackground(Color.WHITE);
 
-			eventListPanel.add(addEvent);
 			eventListPanel.add(eventNameLabel);
 			eventListPanel.add(eventNameField);
+			eventListPanel.add(addEvent);
 			eventListPanel.add(currentlyEditing);
 			eventListPanel.add(eventComboBox);
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == addEvent) {				
-				String name = this.eventNameField.getText();
+				String name = this.eventNameField.getText().toLowerCase();
 				boolean create = true;
-				for (EventGUI el : eventsList) {
-					if (el.getEventName().equals(name)) {
-						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Please Enter a Non Duplicate Name", "Error Duplicate Name", JOptionPane.INFORMATION_MESSAGE);
-						create = false;
-						break;
-					}					
+
+				if (name.isEmpty() || !name.matches("^[A-Za-z]*$")) {
+					JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Please Enter a Name Consisting of Only Letters and no Spaces", "Error Invalid Name", JOptionPane.INFORMATION_MESSAGE);
+					create = false;
+				}
+				if (create) {
+					for (EventGUI el : eventsList) {
+						if (el.getEventName().toLowerCase().equals(name)) {
+							JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Please Enter a Non Duplicate Name (Event names are not case sensitive)", "Error Duplicate Name", JOptionPane.INFORMATION_MESSAGE);
+							create = false;
+							break;
+						}					
+					}
 				}
 				if (create) {
 					EventGUI newEvent =	ScenarioCreatorGUI.createNewEvent(this.eventNameField.getText());
@@ -300,11 +319,13 @@ public class ScenarioCreatorGUI {
 					eventComboBox.addItem(newEvent);
 					eventComboBox.setSelectedItem(newEvent);
 					newEvent.addToFrame();
+					removeActionOption(); 
 				}
 			}else if (e.getSource().equals(eventComboBox)) {
 
 				activeEvent = (EventGUI) eventComboBox.getSelectedItem();
 				activeEvent.addToFrame();
+				removeActionOption();
 			}
 		}
 	}
@@ -327,7 +348,7 @@ public class ScenarioCreatorGUI {
 
 			cells = new ArrayList<JBrailleCell>();
 
-			for (int i =0; i<ScenarioCreatorManager.getNumCells(); i++) {
+			for (int i =0; i<numCells; i++) {
 				cells.add(new JBrailleCell((i+1)));
 			}
 
@@ -379,7 +400,8 @@ public class ScenarioCreatorGUI {
 		}
 
 		private void removeAction(JActionNode nodeToRemove) {			
-			actionList.remove(nodeToRemove.getIndex());		
+			if (actionList.remove(nodeToRemove.getIndex()) == null) {		
+			}
 			if (actionList.isEmpty()) {
 				JActionNode newNode = new JActionNode();
 				actionList.add(newNode);

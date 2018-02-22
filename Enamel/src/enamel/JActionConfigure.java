@@ -157,6 +157,7 @@ public class JActionConfigure extends JPanel{
 			when = new JLabel("When This Button is Clicked: ");
 			events = new JEventList();
 			buttons = new JResponseButtonBox();
+			events.jEvents.setSelectedIndex(-1);
 			events.jEvents.addActionListener(this);
 			main.add(goToEvent);
 			main.add(events);
@@ -166,8 +167,11 @@ public class JActionConfigure extends JPanel{
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
+			if (events.jEvents.getSelectedItem() == null) {
+				return false;
+			}
 			EventGUI selectedItem = (ScenarioCreatorGUI.EventGUI)events.jEvents.getSelectedItem();			
-			return sm.addSkipButton(Integer.toString(buttons.responseButtons.getSelectedIndex()),selectedItem.getEventName());		
+			return sm.addSkipButton(Integer.toString(buttons.responseButtons.getSelectedIndex()),selectedItem.getEventName().toUpperCase());		
 		}
 
 
@@ -176,7 +180,7 @@ public class JActionConfigure extends JPanel{
 				if (events.jEvents.getSelectedIndex() <= ScenarioCreatorGUI.eventsList.indexOf(ScenarioCreatorGUI.activeEvent))
 				{
 					JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "You are not allowed to traverse to this event!", "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
-					events.jEvents.setSelectedIndex(0);
+					events.jEvents.setSelectedIndex(-1);
 				}
 			}
 		}	
@@ -302,14 +306,19 @@ public class JActionConfigure extends JPanel{
 			instruction.setText("Go To Event: Select which event you would like to travel to. The event must occur after this one");	
 			goToEvent = new JLabel("Go To Event: "); 
 			events = new JEventList();
+			events.jEvents.setSelectedIndex(-1);
 			events.jEvents.addActionListener(this);
 			main.add(goToEvent);
 			main.add(events);
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
+			if (events.jEvents.getSelectedItem() == null) {
+				return false;
+			}
+			
 			EventGUI selectedItem = (EventGUI)events.jEvents.getSelectedItem();			
-			return sm.addSkip(selectedItem.getEventName());
+			return sm.addSkip(selectedItem.getEventName().toUpperCase());
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -317,7 +326,7 @@ public class JActionConfigure extends JPanel{
 				if (events.jEvents.getSelectedIndex() <= ScenarioCreatorGUI.eventsList.indexOf(ScenarioCreatorGUI.activeEvent))
 				{
 					JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "You are not allowed to traverse to this event!", "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
-					events.jEvents.setSelectedIndex(0);
+					events.jEvents.setSelectedIndex(-1);
 				}
 			}
 		}	
@@ -470,7 +479,7 @@ public class JActionConfigure extends JPanel{
 		String[] buttons;
 
 		private JResponseButtonBox() {
-			buttons = new String[ScenarioCreatorManager.getNumButtons()];			
+			buttons = new String[ScenarioCreatorGUI.numButtons];			
 			for (int i = 0; i< buttons.length; i++) {
 				buttons[i] = "Button: " + (i+1);
 			}			
@@ -495,7 +504,7 @@ public class JActionConfigure extends JPanel{
 
 		private JBrailleList() {
 			jBraille = new JComboBox<JBrailleCell>();			
-			for (int i=0 ; i<ScenarioCreatorGUI.activeEvent.cells.size() ; i++) {
+			for (int i=0 ; i<ScenarioCreatorGUI.numCells; i++) {
 				jBraille.addItem(ScenarioCreatorGUI.activeEvent.cells.get(i));
 			}			
 			this.add(jBraille);

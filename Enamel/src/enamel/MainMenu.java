@@ -40,12 +40,12 @@ public class MainMenu {
 		panel.setBackground(primaryColor);
 
 
-		logoImage = new ImageIcon("Images/CompanyLogo.png");
-		logo = new JLabel(logoImage);
-		Dimension dLogo = new Dimension(sizeX/4,sizeY/7);
-		logo.setSize(dLogo);
-		logo.setPreferredSize(dLogo);
-		logo.setLocation((int)(sizeX*0.01),(int)(sizeY*0.01));
+		//logoImage = new ImageIcon("Images/CompanyLogo.png");
+		//logo = new JLabel(logoImage);
+		//Dimension dLogo = new Dimension(sizeX/4,sizeY/7);
+		//logo.setSize(dLogo);
+		//logo.setPreferredSize(dLogo);
+		//logo.setLocation((int)(sizeX*0.01),(int)(sizeY*0.01));
 		
 
 
@@ -74,7 +74,7 @@ public class MainMenu {
 		editor.setLocation(sizeX-(sizeX/4), sizeY/2);
 		customizeButton(editor);
 		
-		panel.add(logo);
+		//panel.add(logo);
 		panel.add(title);
 		panel.add(instruction);
 		panel.add(this.player);

@@ -21,8 +21,8 @@ public class ScenarioCreatorManager {
     private int cellNum;                // Records Actual Value
     private int buttonNum;
     private String title = "";
-    private static int numCells = 3;
-    private static int numButtons = 4;
+    private static int numCells;
+    private static int numButtons;
     private List<Question> questions;
     private File scenarioFile;
     private String errorMessage = "Nothing";
@@ -373,6 +373,7 @@ public class ScenarioCreatorManager {
 
     public void setCellNum(int cellNum) {
         this.cellNum = cellNum;
+        this.numCells = cellNum;
     }
 
     public int getButtonNum() {
@@ -381,6 +382,7 @@ public class ScenarioCreatorManager {
 
     public void setButtonNum(int buttonNum) {
         this.buttonNum = buttonNum;
+        this.numButtons = buttonNum;
     }
 
     public String getTitle() {
@@ -402,18 +404,21 @@ public class ScenarioCreatorManager {
     public static int getNumButtons() {
         return numButtons;
     }
-
+    
+/*
     public static void setNumButtons(int numButtons) {
         ScenarioCreatorManager.numButtons = numButtons;
     }
-
+*/
     public static int getNumCells() {
         return numCells;
     }
 
+/*
     public static void setNumCells(int numCells) {
         ScenarioCreatorManager.numCells = numCells;
     }
+    */
 
     public Integer getQuestionIndex() {
         return questionIndex;
