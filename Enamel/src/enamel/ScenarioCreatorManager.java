@@ -661,7 +661,7 @@ public class ScenarioCreatorManager {
     }
 
 
-   /* //////////////////////////////////////// TESTING /////////////////////////////////////
+    //////////////////////////////////////// TESTING /////////////////////////////////////
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
     // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
     public static void main(String[] args) {
@@ -886,5 +886,5 @@ public class ScenarioCreatorManager {
         // After all the commands have been added saveFile() 
         scenarioCreatorManager.saveToFile();
     }
-    //////////////////////////////////////// TESTING /////////////////////////////////////*/
+    //////////////////////////////////////// TESTING /////////////////////////////////////
 }

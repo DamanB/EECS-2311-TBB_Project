@@ -48,7 +48,7 @@ public abstract class Command {
     @Override
     public String toString() {
 
-        return (!input.equals("")) ? (this.command + " " + this.input) : (this.command);
+        return (!input.equals("")) ? (this.command + this.input) : (this.command);
     }
 }
 // Used for adding Text into the Scenario file for TTS
@@ -89,7 +89,7 @@ class Sound extends Command {
 class SkipButton extends Command {
     public SkipButton(String command, String input, Integer buttonSize) {
         super(command);
-        this.regexPattern = "^[0-9]*\\s[A-Z]+$"; // Matches a valid button value and then a skip position
+        this.regexPattern = "^[0-9]*\\s[a-zA-Z]+$"; // Matches a valid button value and then a skip position
         setInput(input, buttonSize);
     }
 
