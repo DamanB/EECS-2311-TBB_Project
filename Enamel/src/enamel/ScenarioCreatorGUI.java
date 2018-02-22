@@ -45,7 +45,7 @@ public class ScenarioCreatorGUI {
 	private static JPanel eventListPanel;
 	private static JPanel eventEditor;
 	private static JPanel controls;
-
+	
 	public static String ScenarioTitle;
 	public static int numCells = 0;
 	public static int numButtons = 0;
@@ -235,7 +235,8 @@ public class ScenarioCreatorGUI {
 							break;
 						}
 						if (!(action.actionConfigure.action.build(sm))) {						
-							JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "You have error:" + sm.getErrorMessage() + " in event: " + event.getEventName() + " in Action indexed: " + (action.getIndex()+1), "Compilation Error", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "You have error in event: " + event.getEventName() + " in Action indexed: " + (action.getIndex()+1), "Compilation Error", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "ERROR LISTED AS: " + sm.getErrorMessage(), "Compilation Error", JOptionPane.INFORMATION_MESSAGE);
 							valid = false;
 							break;
 						}
@@ -269,6 +270,7 @@ public class ScenarioCreatorGUI {
 		private static JComboBox<EventGUI> eventComboBox;
 		private static JLabel eventNameLabel;
 		private static JTextField eventNameField;
+		private static JButton deleteEvent;
 
 		private EventsListGUI() {
 			addEvent = new JButton("Add Event");
@@ -287,12 +289,19 @@ public class ScenarioCreatorGUI {
 			eventComboBox = new JComboBox<EventGUI>();
 			eventComboBox.addActionListener(this);
 			eventComboBox.setBackground(Color.WHITE);
+			
+			deleteEvent = new JButton("Delete Event");
+			MainFrame.editJButton(deleteEvent);
+			deleteEvent.addActionListener(this);
+			deleteEvent.setSize((int)(eventListPanel.getSize().height * 0.8), (int)(eventListPanel.getSize().height * 0.8));
+			deleteEvent.setPreferredSize(deleteEvent.getPreferredSize());	
 
 			eventListPanel.add(eventNameLabel);
 			eventListPanel.add(eventNameField);
 			eventListPanel.add(addEvent);
 			eventListPanel.add(currentlyEditing);
 			eventListPanel.add(eventComboBox);
+			eventListPanel.add(deleteEvent);
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -326,13 +335,29 @@ public class ScenarioCreatorGUI {
 				activeEvent = (EventGUI) eventComboBox.getSelectedItem();
 				activeEvent.addToFrame();
 				removeActionOption();
+			}else if (e.getSource().equals(deleteEvent)){
+				
+				int k = JOptionPane.showConfirmDialog(MainFrame.getMainPanel(), "Deleting this event will cause any other references to this event to break and build to fail. Confirm Delete?", "Delete?", JOptionPane.OK_CANCEL_OPTION);
+				if (k==JOptionPane.OK_OPTION) {					
+					activeEvent.removeFromFrame();
+					removeActionOption();
+					eventsList.remove(activeEvent);
+					eventComboBox.removeActionListener(this);
+					eventComboBox.removeItem(activeEvent);
+					eventComboBox.setSelectedIndex(-1);						
+					eventComboBox.addActionListener(this);	
+					activeEvent = null;
+				}
+				
+				
 			}
 		}
 	}
 
 	public class EventGUI implements ActionListener{
 
-		FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
+		//FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
+		
 		LinkedList<JActionNode> actionList = new LinkedList<JActionNode>();
 
 		private int sizeX;
@@ -341,13 +366,15 @@ public class ScenarioCreatorGUI {
 
 		private JPanel listedActions;
 		private JLabel jEventName;
-
+		
+		private JScrollPane scroll;
+		
 		public List<JBrailleCell> cells;
 
 		private EventGUI(String eventName) {
 
 			cells = new ArrayList<JBrailleCell>();
-
+			
 			for (int i =0; i<numCells; i++) {
 				cells.add(new JBrailleCell((i+1)));
 			}
@@ -357,21 +384,29 @@ public class ScenarioCreatorGUI {
 			sizeX = eventEditor.getWidth();
 			sizeY = eventEditor.getHeight();
 
-			flow.setHgap(10);
-			listedActions = new JPanel(flow);	
-			listedActions.setSize(sizeX,(int)(sizeY * 0.75));
-			listedActions.setPreferredSize(listedActions.getSize());
-
+			//flow.setHgap(10);
+			listedActions = new JPanel();	
+			listedActions.setLayout(new BoxLayout(listedActions, BoxLayout.Y_AXIS));
+			//listedActions.setSize(sizeX,(int)(sizeY * 0.75));
+			//listedActions.setPreferredSize(listedActions.getSize());
+			//listedActions.setMaximumSize(new Dimension(sizeX,(int)(sizeY * 1000)));
+			
 			jEventName = new JLabel("Event Name: " + eventName);
 			jEventName.setPreferredSize(new Dimension(listedActions.getSize().width,20));
 
 			actionOptions.setSize(sizeX,(int)(sizeY * 0.25));
 			actionOptions.setPreferredSize(actionOptions.getSize());
 
+			scroll = new JScrollPane(listedActions, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			scroll.setSize(20,(int)(sizeY * 0.75));
+			scroll.setPreferredSize(scroll.getSize());
+
+			
 			JActionNode newNode = new JActionNode();
 			actionList.add(newNode);
 			listedActions.add(jEventName);
 			listedActions.add(newNode);
+			//leftBorder.add(scroll);
 
 		}
 
@@ -424,17 +459,24 @@ public class ScenarioCreatorGUI {
 			}			
 			listedActions.validate();
 			listedActions.repaint();
+			scroll.repaint();
+
 		}
 
 		private void repaintEditor() {eventEditor.repaint();}
 
 		private void addToFrame() {
 			eventEditor.removeAll();
-			eventEditor.add(listedActions, BorderLayout.NORTH);
+			eventEditor.add(scroll, BorderLayout.NORTH);
 			eventEditor.add(actionOptions, BorderLayout.CENTER);
 			eventEditor.validate();
 			activeEvent = this;
 			repaintEditor();	
+		}
+		
+		private void removeFromFrame() {
+			eventEditor.removeAll();
+			repaintEditor();
 		}
 
 		public void actionPerformed(ActionEvent e) {
