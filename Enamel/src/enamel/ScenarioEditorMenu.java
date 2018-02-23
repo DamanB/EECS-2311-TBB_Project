@@ -97,7 +97,7 @@ public class ScenarioEditorMenu implements MouseListener {
 		boolean asking = true;
 
 		while(asking) {
-			String numCells = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Enter The Number of Cells You Wish To Use: ", "Config", JOptionPane.INFORMATION_MESSAGE);
+			String numCells = JOptionPane.showInputDialog(MainFrame.getMainPanel(), "Please Enter The Number of Braille Cells You Wish To Use: ", "Config", JOptionPane.INFORMATION_MESSAGE);
 			if (numCells == null) {
 				break;
 			}
