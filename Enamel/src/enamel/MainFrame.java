@@ -17,6 +17,7 @@ public class MainFrame {
 	private static int sizeY = 720;	
 	public static Dimension dimension = new Dimension(sizeX,sizeY);
 	public static Color primColor = new Color(153,197,217);
+	public static boolean isDisposed = false;
 
 
 	public MainFrame() {		

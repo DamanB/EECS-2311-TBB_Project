@@ -14,7 +14,5 @@ public class ToyAuthoring {
 
 	public static void main(String[] args) {
 		MainFrame main = new MainFrame();
-		ScenarioParser s = new ScenarioParser(true);
-		s.setScenarioFile("E:\\GitKrakenRepos\\EECS-2311-TBB_Project\\Enamel\\FactoryScenarios\\Scenario_1.txt");
 	}
 }
