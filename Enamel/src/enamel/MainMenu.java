@@ -108,7 +108,7 @@ public class MainMenu {
 			// Initialising objects for file explorer and the ScenarioParser
 			JButton openfile = new JButton();
 			JFileChooser fileChooser = new JFileChooser();
-			ScenarioParser s;
+			ScenarioParser s = new ScenarioParser(true);
 
 			// Starts JFileChooser at project directory
 			fileChooser.setCurrentDirectory(new java.io.File("."));
@@ -116,11 +116,6 @@ public class MainMenu {
 			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
 
 			if (fileChooser.showOpenDialog(openfile) == JFileChooser.APPROVE_OPTION) {
-				s = new ScenarioParser(true);
-				// TESTING
-				System.out.println("***Parser Created***");
-				// TESTING
-
 				// Using regex checks if the file name has the following: ["Scenario_" + (a positive integer) + ".txt"]
 				if (fileChooser.getSelectedFile().getName().matches("^Scenario_[1-9][0-9]*.txt$")) {
 					try {

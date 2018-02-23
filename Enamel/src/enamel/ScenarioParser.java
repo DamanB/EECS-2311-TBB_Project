@@ -27,9 +27,9 @@ public class ScenarioParser {
         //String currDir = System.getProperty("user.dir");
         //System.setProperty("mbrola.base", currDir + File.separator + "lib/mbrola.jar");
         vm = VoiceManager.getInstance();
-        voice = vm.getVoice ("kevin16");
+        voice = vm.getVoice("kevin16");
         voice.allocate();
-        repeatedText = new ArrayList<String> ();
+        repeatedText = new ArrayList<String>();
         userInput = false;
         this.isVisual = isVisual;
     }
@@ -505,7 +505,7 @@ public class ScenarioParser {
             if (isVisual)
                 player = new VisualPlayer(cellNum, buttonNum);
             else
-                player =  new AudioPlayer(cellNum, buttonNum);
+                player = new AudioPlayer(cellNum, buttonNum);
         } catch (Exception e) {
 
             errorLog("Exception error: " + e.toString(),
