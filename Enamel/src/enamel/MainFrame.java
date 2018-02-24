@@ -17,7 +17,7 @@ public class MainFrame {
 	private static int sizeY = 720;	
 	public static Dimension dimension = new Dimension(sizeX,sizeY);
 	public static Color primColor = new Color(153,197,217);
-	public static boolean isDisposed = false;
+	public static boolean runScen = false;
 
 
 	public MainFrame() {		
@@ -50,7 +50,7 @@ public class MainFrame {
 		mainPanel.add(screen);
 		mainPanel.validate();
 		LoadingScreen.loadingScreen.showLoadingScreen(false);
-		frame.repaint();		
+		frame.repaint();
 	}
 	
 	public static JPanel getMainPanel() {
