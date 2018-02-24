@@ -27,6 +27,7 @@ public class MainMenu {
     private JLabel logo;
     private JLabel instruction;
 
+
     public static MainMenu instance;
 
     private MainMenu() {
@@ -107,7 +108,6 @@ public class MainMenu {
             // Initialising objects for file explorer and the ScenarioParser
             JButton openfile = new JButton();
             JFileChooser fileChooser = new JFileChooser();
-            ScenarioParser s = new ScenarioParser(true);
 
             // Starts JFileChooser at project directory
             fileChooser.setCurrentDirectory(new java.io.File("."));
@@ -128,7 +128,9 @@ public class MainMenu {
                         if (lines[0].matches("^Cell [1-9][0-9]*$") && lines[1].matches("^Button [1-9][0-9]*$")) {
                             br.close();
                             // frame.setVisible(false);
-                            s.setScenarioFile(fileChooser.getSelectedFile().getAbsolutePath());
+                            //s.setScenarioFile(fileChooser.getSelectedFile().getAbsolutePath());
+                            ScenarioThread starterCodeThread = new ScenarioThread(fileChooser.getSelectedFile().getAbsolutePath());
+                            starterCodeThread.start();
                         } else {
                             // exit
                             System.out.println("Error: Invalid file format. Cell and Button numbers not found");
