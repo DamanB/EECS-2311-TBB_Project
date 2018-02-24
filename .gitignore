@@ -1,0 +1,8 @@
+
+*.class
+
+\.idea/
+
+out/
+
+ERROR_LOG\.txt
