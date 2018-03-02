@@ -186,7 +186,7 @@ class ScenarioEditorMenuTest {
 		r.delay(100);
 		r.keyRelease(KeyEvent.VK_ENTER);
 		r.delay(100);
-		assertEquals(ScenarioCreatorGUI.mainPanel, MainFrame.getMainPanel());
+		assertEquals(ScenarioCreatorGUI.getMainPanel(), MainFrame.getMainPanel());
 	}
 
 	@Test

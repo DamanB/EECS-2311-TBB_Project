@@ -180,4 +180,9 @@ public class MainMenu {
         public void mouseExited(MouseEvent e) {
         }
     }
+    
+    public static JPanel getPanel() {
+    	return panel;
+    }
+    
 }

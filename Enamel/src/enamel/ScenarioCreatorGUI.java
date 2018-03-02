@@ -599,6 +599,9 @@ public class ScenarioCreatorGUI {
 	}
 
 
+	public static JPanel getMainPanel() {
+		return mainPanel;
+	}
 
 }
 

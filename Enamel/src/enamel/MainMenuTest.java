@@ -212,7 +212,7 @@ class MainMenuTest {
 		r.delay(100);
 		r.mouseRelease(KeyEvent.BUTTON1_MASK);
 		r.delay(100);
-		assertEquals(MainMenu.panel, MainFrame.getMainPanel().getComponent(0));
+		assertEquals(MainMenu.getPanel(), MainFrame.getMainPanel().getComponent(0));
 	}
 
 }

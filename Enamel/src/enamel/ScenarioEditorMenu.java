@@ -18,9 +18,9 @@ public class ScenarioEditorMenu implements MouseListener {
 
 	public static ScenarioEditorMenu instance;	
 
-	private static JPanel pane; 
+	public static JPanel pane; 
 	private static JLabel title, instruction, welcome;
-	private static JButton create,modify,back;
+	public static JButton create,modify,back;
 
 	private static int sizeX;
 	private static int sizeY;
