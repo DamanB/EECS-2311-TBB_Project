@@ -11,7 +11,7 @@ import javax.swing.border.LineBorder;
 
 public class MainFrame {
 
-	private static JFrame frame;
+	public static JFrame frame;
 	private static JPanel mainPanel;
 	private static int sizeX = 1280;
 	private static int sizeY = 720;	
