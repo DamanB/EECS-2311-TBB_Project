@@ -1,9 +1,14 @@
 package enamel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -36,49 +41,60 @@ public class MainMenu {
         sizeX = MainFrame.dimension.width;
         sizeY = MainFrame.dimension.height;
 
-        panel = new JPanel(null);
-        panel.setSize(MainFrame.dimension);
+        panel = new JPanel();
+        GridBagLayout f = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        panel.setLayout(f);
         panel.setBackground(primaryColor);
 
-
-        //logoImage = new ImageIcon("Images/CompanyLogo.png");
-        //logo = new JLabel(logoImage);
-        //Dimension dLogo = new Dimension(sizeX/4,sizeY/7);
-        //logo.setSize(dLogo);
-        //logo.setPreferredSize(dLogo);
-        //logo.setLocation((int)(sizeX*0.01),(int)(sizeY*0.01));
-
-
         title = new JLabel("Treasure Box Braille");
-        Dimension dTitle = new Dimension(sizeX, sizeY / 7);
-        title.setSize(dTitle);
-        title.setPreferredSize(dTitle);
-        title.setFont(new Font("calibri", Font.PLAIN, 50));
+       // Dimension dTitle = new Dimension(sizeX, sizeY / 7);
+        //title.setSize(dTitle);
+        //title.setPreferredSize(dTitle);
+        title.setFont(new Font("calibri", Font.PLAIN, 35));
         title.setForeground(Color.black);
-        title.setLocation((int) (sizeX * 0.05), (int) (sizeY * 0.3));
+        title.setHorizontalAlignment(JLabel.CENTER);
+       // title.setLocation((int) (sizeX * 0.05), (int) (sizeY * 0.3));
 
         instruction = new JLabel("Choose whether to open the Scenario Editor or the Scenario Player");
-        Dimension dInstruc = new Dimension(sizeX, sizeY / 7);
-        instruction.setSize(dInstruc);
-        instruction.setPreferredSize(dInstruc);
-        instruction.setFont(new Font("calibri", Font.ITALIC, 30));
+       // Dimension dInstruc = new Dimension(sizeX, sizeY / 7);
+        //instruction.setSize(dInstruc);
+       // instruction.setPreferredSize(dInstruc);
+        instruction.setFont(new Font("calibri", Font.ITALIC, 25));
         instruction.setForeground(Color.black);
-        instruction.setLocation((int) (sizeX * 0.05), (int) (sizeY * 0.4));
-
+        instruction.setHorizontalAlignment(JLabel.CENTER);
+       // instruction.setLocation((int) (sizeX * 0.05), (int) (sizeY * 0.4));
 
         player = new JButton("Player");
-        player.setLocation(sizeX - (sizeX / 4), sizeY / 3);
         customizeButton(player);
-
+        
         editor = new JButton("Editor");
-        editor.setLocation(sizeX - (sizeX / 4), sizeY / 2);
         customizeButton(editor);
+        
+        c.insets = new Insets(10,10,10,10);
+        
+        c.gridx = 0;
+        c.gridy = 0; 
+        c.gridwidth=2;
+        c.fill = c.HORIZONTAL;
+        panel.add(title,c);  
+        
+        c.gridy=1;
+        c.fill = c.HORIZONTAL;
+        panel.add(instruction,c);
+        
+        c.fill=c.NONE;
+        c.gridwidth=1;
+        c.gridx=0;
+        c.gridy=2;  
+        panel.add(this.player,c);        
+        
+        c.gridwidth=1;
+        c.gridx=1;
+        c.gridy=2;
+        c.anchor=c.LINE_END;
+        panel.add(this.editor,c);
 
-        //panel.add(logo);
-        panel.add(title);
-        panel.add(instruction);
-        panel.add(this.player);
-        panel.add(this.editor);
     }
 
     public static JPanel getScreen() {
@@ -89,8 +105,8 @@ public class MainMenu {
     private void customizeButton(JButton button) {
         Dimension d = new Dimension(sizeX / 6, sizeY / 12);
         button.addMouseListener(new Click());
-        button.setSize(d);
         button.setPreferredSize(d);
+        button.setMinimumSize(d);
         button.setFont(new Font("calibri", Font.PLAIN, 22));
         MainFrame.editJButton(button);
     }

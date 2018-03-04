@@ -2,6 +2,9 @@ package enamel;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-public class MainFrame {
+public class MainFrame{
 
 	public static JFrame frame;
 	private static JPanel mainPanel;
@@ -23,20 +26,28 @@ public class MainFrame {
 	public MainFrame() {		
 		
 		frame = new JFrame("SDP-16 Treasure Box Braille");		
+		//frame.setSize(dimension);
+		//frame.setPreferredSize(dimension);
 		frame.setSize(dimension);
-		frame.setPreferredSize(dimension);
-		frame.setLayout(null);
-		frame.setResizable(false);
-		frame.setMinimumSize(dimension);
+		//frame.setLayout(null);
+		//frame.setResizable(false);
+		frame.setMinimumSize(new Dimension(200,200));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new GridLayout(1,0));
 		
 		mainPanel = new JPanel();
-		mainPanel.setSize(dimension);
-		mainPanel.setPreferredSize(dimension);
-		mainPanel.setLayout(null);
+		//mainPanel.setBackground(primColor);
+		/*frame.addComponentListener(new ComponentAdapter() {				
+			public void componentResized(ComponentEvent e) {			
+				dimension = frame.getSize();
+			}
+								
+	});*/
+		//mainPanel.setSize(dimension);
+		//mainPanel.setPreferredSize(dimension);
+		//mainPanel.setLayout(null);
 		
 		frame.add(mainPanel);
-		frame.add(LoadingScreen.loadingScreen);
 		frame.setVisible(true);
 		frame.repaint();
 		
@@ -45,11 +56,10 @@ public class MainFrame {
 	
 	public static void changeScreen(JPanel screen) {
 		mainPanel.removeAll();
-		LoadingScreen.loadingScreen.showLoadingScreen(true);
+		mainPanel.setLayout(new GridLayout(1,0));
 		frame.repaint();
 		mainPanel.add(screen);
 		mainPanel.validate();
-		LoadingScreen.loadingScreen.showLoadingScreen(false);
 		frame.repaint();
 	}
 	
@@ -57,36 +67,13 @@ public class MainFrame {
 		return mainPanel;
 	}
 	
-	public static int getSizeX() {return sizeX;}
-	public static int getSizeY() {return sizeY;}
+	public static int getSizeX() {return dimension.width;}
+	public static int getSizeY() {return dimension.height;}
 	
 	public static void editJButton(JButton button) {		
 		button.setBackground(Color.WHITE);
 		button.setForeground(Color.BLACK);	
 		button.setBorder(new LineBorder(Color.BLACK));
 	}
-	
-	private static class LoadingScreen extends JPanel{
 		
-		private static JLabel loading;
-		private static LoadingScreen loadingScreen = new LoadingScreen();
-		
-		public LoadingScreen() {
-			this.setSize(MainFrame.getSizeX(),MainFrame.getSizeY());
-			this.setPreferredSize(this.getSize());
-			this.setBackground(MainFrame.primColor);
-			loading = new JLabel("Loading...");		
-			this.add(loading);
-			this.setVisible(false);		
-		}
-		
-		private void showLoadingScreen(boolean show) {
-			this.setVisible(show);
-		}
-			
-		
-		
-	}
-	
-	
 }
