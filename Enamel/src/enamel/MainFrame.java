@@ -14,6 +14,7 @@ import javax.swing.border.LineBorder;
 
 public class MainFrame{
 
+	//TODO Delete Commented Code for resizing
 	public static JFrame frame;
 	private static JPanel mainPanel;
 	private static int sizeX = 1280;
