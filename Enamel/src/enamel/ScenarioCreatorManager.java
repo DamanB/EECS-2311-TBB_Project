@@ -83,7 +83,7 @@ public class ScenarioCreatorManager {
             }
         }
         */
-        
+
 
         this.scenarioFile = scenarioFile;
 
@@ -95,25 +95,22 @@ public class ScenarioCreatorManager {
     public void saveToFile() {
         String result = "";
         try {
-            for (Question i : this.questions) {
-                result += i.toString();
-            }
+            result = this.toString();
 
             // Erases the contents of the file
             PrintWriter printWriter = new PrintWriter(this.scenarioFile);
 
             printWriter.println("Cell " + this.cellNum);
             printWriter.println("Button " + this.buttonNum);
-            if (!title.equals(""))
-            {
+            if (!title.equals("")) {
                 printWriter.println(this.title);
             }
             printWriter.println();
             printWriter.println(result);
             printWriter.close();
-            
+
             JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "BUILD SUCCESSFUL", "Builder", JOptionPane.INFORMATION_MESSAGE);
-            
+
         } catch (Exception e) {
             System.out.println(e.toString());
             this.errorMessage = e.toString();
@@ -136,8 +133,10 @@ public class ScenarioCreatorManager {
             }
             br.close();
         } catch (FileNotFoundException e) {
+            this.errorMessage = "File has not been found|" + e.toString();
             System.out.println(e.toString());
         } catch (IOException e) {
+            errorMessage = "Error when reading file|" + e.toString();
             System.out.println(e.toString());
         }
 
@@ -155,19 +154,23 @@ public class ScenarioCreatorManager {
 
         for (int i = 2; i < lines.size(); i++) {
             if (!textReached) {
-                textReached = (!(lines.get(i).equals("")));
-            }
-            if (!lines.get(i).equals("")) {
+                if (!(lines.get(i).equals(""))) {
+                    textReached = true;
+                    this.setTitle(lines.get(i));
+                }
+            } else if (!lines.get(i).equals("")) {
                 if (repeat) {
-                    // Stops assuming that the text is being repeated with the
-                    // /~endrepeat key phrase
+                    // Stops assuming that the text is being repeated with the /~endrepeat key phrase
                     if (lines.get(i).length() >= 11 && lines.get(i).substring(0, 11).equals("/~endrepeat")) {
                         repeat = false;
+                        this.addText(repeatedText);
+                        repeatedText = new ArrayList<>();
                     } else {
                         repeatedText.add(lines.get(i));
                     }
                 } else {
                     // The key phrase to indicate to play a sound file.
+                    // TODO check if sound file exists
                     if (lines.get(i).length() >= 8 && lines.get(i).substring(0, 8).equals("/~sound:")) {
 
                         Command temp;
@@ -339,11 +342,9 @@ public class ScenarioCreatorManager {
                     // The key phrase to lower a pin of the specified Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-lower:")) {
                         Command temp;
-                        try{
-                            temp = new DispCellLower(lines.get(i).substring(0,18), lines.get(i).substring(18), this.cellNum);
-                        }
-                        catch(Exception e)
-                        {
+                        try {
+                            temp = new DispCellLower(lines.get(i).substring(0, 18), lines.get(i).substring(18), this.cellNum);
+                        } catch (Exception e) {
                             this.errorMessage = e.toString();
                             return;
                         }
@@ -353,23 +354,18 @@ public class ScenarioCreatorManager {
                     // The key phrase to clear a Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-clear:")) {
                         Command temp;
-                        try{
-                            temp = new DispCellClear(lines.get(i).substring(0,18), lines.get(i).substring(18), this.cellNum);
-                        }
-                        catch (Exception e)
-                        {
+                        try {
+                            temp = new DispCellClear(lines.get(i).substring(0, 18), lines.get(i).substring(18), this.cellNum);
+                        } catch (Exception e) {
                             this.errorMessage = e.toString();
                             return;
                         }
                         /////dispCellClear(lines.get(i).substring(18));
                     } else if (lines.get(i).length() >= 21 && lines.get(i).substring(0, 21).equals("/~disp-cell-lowerPins")) {
                         Command temp;
-                        try
-                        {
-                            temp = new DispCellLowerPins(lines.get(i).substring(0,21), lines.get(i).substring(21));
-                        }
-                        catch (Exception e)
-                        {
+                        try {
+                            temp = new DispCellLowerPins(lines.get(i).substring(0, 21), lines.get(i).substring(21));
+                        } catch (Exception e) {
                             this.errorMessage = e.toString();
                             return;
                         }
@@ -379,12 +375,9 @@ public class ScenarioCreatorManager {
                     // The key phrase to wait for the program to receive a user's input.
                     else if (lines.get(i).length() >= 12 && lines.get(i).substring(0, 12).equals("/~user-input")) {
                         Command temp;
-                        try
-                        {
-                            temp = new UserInput(lines.get(i).substring(0,12), lines.get(i).substring(12));
-                        }
-                        catch (Exception e)
-                        {
+                        try {
+                            temp = new UserInput(lines.get(i).substring(0, 12), lines.get(i).substring(12));
+                        } catch (Exception e) {
                             this.errorMessage = e.toString();
                             return;
                         }
@@ -445,12 +438,12 @@ public class ScenarioCreatorManager {
     public static int getNumButtons() {
         return numButtons;
     }
-    
-/*
-    public static void setNumButtons(int numButtons) {
-        ScenarioCreatorManager.numButtons = numButtons;
-    }
-*/
+
+    /*
+        public static void setNumButtons(int numButtons) {
+            ScenarioCreatorManager.numButtons = numButtons;
+        }
+    */
     public static int getNumCells() {
         return numCells;
     }
@@ -665,6 +658,16 @@ public class ScenarioCreatorManager {
         return true;
     }
 
+    @Override
+    public String toString() {
+        String result = "";
+
+        for (Question i : this.questions) {
+            result += i.toString();
+        }
+
+        return result;
+    }
 
     //////////////////////////////////////// TESTING /////////////////////////////////////
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
@@ -878,8 +881,7 @@ public class ScenarioCreatorManager {
             System.out.println(scenarioCreatorManager.errorMessage);
         }
 
-        if (!(scenarioCreatorManager.addText(Arrays.asList("That's the end of directional orientation"))))
-        {
+        if (!(scenarioCreatorManager.addText(Arrays.asList("That's the end of directional orientation")))) {
             System.out.println(scenarioCreatorManager.errorMessage);
         }
 
