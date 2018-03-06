@@ -124,11 +124,35 @@ public class ScenarioCreatorGUI {
 
 	}
 
+	private ScenarioCreatorGUI(File file) {
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
 	public static JPanel getScreen() {
 		instance = new ScenarioCreatorGUI();
 		return instance.mainPanel;
 	}
 
+	public static JPanel getPreBuiltScreen(File file) {
+		instance = new ScenarioCreatorGUI(file);
+		return instance.mainPanel;
+	}
+	
 	private static class controlGUI implements ActionListener{
 
 		private static JLabel optionsTitle;
@@ -229,7 +253,7 @@ public class ScenarioCreatorGUI {
 					}					
 					count++;
 					for (ScenarioCreatorGUI.EventGUI.JActionNode action : event.actionList) {
-						if (action.actionConfigure.action == null) {
+						if (action.actionConfigure == null) {
 							JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "There is an action in event: " + event.eventName + " that has not been initalized", "Compilation Error", JOptionPane.INFORMATION_MESSAGE);
 							valid = false;
 							break;
@@ -261,8 +285,6 @@ public class ScenarioCreatorGUI {
 		}
 	}
 
-
-
 	private static class EventsListGUI implements ActionListener{
 
 		private static JButton addEvent;
@@ -275,8 +297,8 @@ public class ScenarioCreatorGUI {
 		private EventsListGUI() {
 			addEvent = new JButton("Add Event");
 			addEvent.addActionListener(this);
-			addEvent.setSize((int)(eventListPanel.getSize().height * 0.8), (int)(eventListPanel.getSize().height * 0.8));
-			addEvent.setPreferredSize(addEvent.getPreferredSize());		
+			addEvent.setSize(80,25);
+			addEvent.setPreferredSize(addEvent.getSize());		
 			MainFrame.editJButton(addEvent);
 
 			eventNameLabel = new JLabel("Event Name: ");
@@ -293,8 +315,8 @@ public class ScenarioCreatorGUI {
 			deleteEvent = new JButton("Delete Event");
 			MainFrame.editJButton(deleteEvent);
 			deleteEvent.addActionListener(this);
-			deleteEvent.setSize((int)(eventListPanel.getSize().height * 0.8), (int)(eventListPanel.getSize().height * 0.8));
-			deleteEvent.setPreferredSize(deleteEvent.getPreferredSize());	
+			deleteEvent.setSize(80,25);
+			deleteEvent.setPreferredSize(deleteEvent.getSize());	
 
 			eventListPanel.add(eventNameLabel);
 			eventListPanel.add(eventNameField);
@@ -597,7 +619,6 @@ public class ScenarioCreatorGUI {
 		actionOptions.validate();
 		actionOptions.repaint();
 	}
-
 
 	public static JPanel getMainPanel() {
 		return mainPanel;

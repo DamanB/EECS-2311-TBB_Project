@@ -18,6 +18,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import enamel.ScenarioCreatorGUI.EventGUI;
@@ -79,13 +81,15 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JPauseButton extends Action{		
+	private class JPauseButton extends Action implements ChangeListener{		
 		private JSpinner pauseTime;
 		private JPauseButton() {
 			instruction.setText("Pause: Select the amount of time in seconds (a value greater than 0) you wish to pause");
 			SpinnerModel number = new SpinnerNumberModel();
 			pauseTime = new JSpinner(number);			
 			pauseTime.setPreferredSize(new Dimension(100,20));
+			pauseTime.setValue((int)1);
+			pauseTime.addChangeListener(this);
 			main.add(pauseTime);
 		}	
 
@@ -93,8 +97,15 @@ public class JActionConfigure extends JPanel{
 			return sm.addPause(Integer.toString((int)pauseTime.getValue()));
 		}
 
-
-
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			if (e.getSource().equals(pauseTime)) {
+				
+				if ((int)pauseTime.getValue() < 1) {
+					pauseTime.setValue((int)1);
+				}				
+			}			
+		}
 	}
 
 	private class JDisplayWordInBraille extends Action{		
