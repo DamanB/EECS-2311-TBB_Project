@@ -202,11 +202,8 @@ class MainMenuTest {
 		r.delay(100);
 		r.mouseRelease(KeyEvent.BUTTON1_MASK);
 		r.delay(100);
-		r.mouseMove(
-				ScenarioEditorMenu.back.getX() + ScenarioEditorMenu.pane.getComponent(2).getX() + MainFrame.frame.getX()
-						+ 20,
-				ScenarioEditorMenu.back.getY() + ScenarioEditorMenu.pane.getComponent(2).getY() + MainFrame.frame.getY()
-						+ 40);
+		r.mouseMove(ScenarioEditorMenu.back.getX() + MainFrame.frame.getX() + 20,
+				ScenarioEditorMenu.back.getY() + MainFrame.frame.getY() + 40);
 		r.delay(100);
 		r.mousePress(KeyEvent.BUTTON1_MASK);
 		r.delay(100);
