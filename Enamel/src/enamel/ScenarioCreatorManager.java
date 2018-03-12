@@ -644,8 +644,8 @@ public class ScenarioCreatorManager {
     @Override
     public String toString() {
         String result = "Cell " + this.cellNum + "\n";
-        result += "Button" + this.buttonNum + "\n";
-        result += this.title + "\n";
+        result += "Button " + this.buttonNum + "\n";
+        result += this.title + "\n\n";
 
 
         for (Question i : this.questions) {
@@ -657,16 +657,16 @@ public class ScenarioCreatorManager {
 
     //////////////////////////////////////// TESTING /////////////////////////////////////
     // The following main method is used to test
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         ScenarioCreatorManager scenarioCreatorManager = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
 
         scenarioCreatorManager.parseFile();
 
         System.out.println(scenarioCreatorManager.toString());
-    }*/
+    }
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
     // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         File temp = (new File("Enamel/FactoryScenarios/Scenario_10.txt"));
 
@@ -681,9 +681,6 @@ public class ScenarioCreatorManager {
 
         // Every method for every command returns a boolean which tells you whether the input was valid or not
         //When it returns false it will update the errorMessage string which can be accessed with getErrorMessage();
-        if (!(scenarioCreatorManager.addSpace())) {
-            System.out.println(scenarioCreatorManager.errorMessage);
-        }
 
         if (!(scenarioCreatorManager.addDispCellPins("0", "11100000"))) {
             System.out.println(scenarioCreatorManager.errorMessage);
@@ -890,7 +887,7 @@ public class ScenarioCreatorManager {
 
         // After all the commands have been added saveFile() 
         scenarioCreatorManager.saveToFile();
-    }
+    }*/
     //////////////////////////////////////// TESTING /////////////////////////////////////
 
 }
