@@ -135,9 +135,11 @@ public class ScenarioCreatorManager {
         } catch (FileNotFoundException e) {
             this.errorMessage = "File has not been found|" + e.toString();
             System.out.println(e.toString());
+            return;
         } catch (IOException e) {
             errorMessage = "Error when reading file|" + e.toString();
             System.out.println(e.toString());
+            return;
         }
 
 
@@ -157,6 +159,8 @@ public class ScenarioCreatorManager {
                 if (!(lines.get(i).equals(""))) {
                     textReached = true;
                     this.setTitle(lines.get(i));
+                    this.questions.add(new Question());
+                    this.questions.get(questionIndex).getCommands().add(new Space());
                 }
             } else if (!lines.get(i).equals("")) {
                 if (repeat) {
@@ -349,7 +353,7 @@ public class ScenarioCreatorManager {
                             return;
                         }
 
-                        /////dispCellLower(lines.get(i).substring(18));
+                        this.questions.get(questionIndex).getCommands().add(temp);
                     }
                     // The key phrase to clear a Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-clear:")) {
@@ -360,7 +364,9 @@ public class ScenarioCreatorManager {
                             this.errorMessage = e.toString();
                             return;
                         }
-                        /////dispCellClear(lines.get(i).substring(18));
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
+
                     } else if (lines.get(i).length() >= 21 && lines.get(i).substring(0, 21).equals("/~disp-cell-lowerPins")) {
                         Command temp;
                         try {
@@ -370,7 +376,7 @@ public class ScenarioCreatorManager {
                             return;
                         }
 
-                        /////dispCellRaise("0");
+                        this.questions.get(questionIndex).getCommands().add(temp);
                     }
                     // The key phrase to wait for the program to receive a user's input.
                     else if (lines.get(i).length() >= 12 && lines.get(i).substring(0, 12).equals("/~user-input")) {
@@ -382,18 +388,19 @@ public class ScenarioCreatorManager {
                             return;
                         }
 
-                        /////userInput = true;
+                        this.questions.get(questionIndex).getCommands().add(temp);
                     }
                     // Anything other than the specified commands above, is to be
                     // interpreted as text that
                     // will be spoken for the user to hear.
                     else {
                         this.questions.get(questionIndex).getCommands().add(new Text(lines.get(i)));
-                        //repeatedText(lines.get(i));
                     }
                 }
             } else {
                 questionIndex++;
+                this.questions.add(new Question());
+                this.questions.get(questionIndex).getCommands().add(new Space());
             }
         }
     }
@@ -661,6 +668,10 @@ public class ScenarioCreatorManager {
     @Override
     public String toString() {
         String result = "";
+        result += "Cell " + this.cellNum + "\n";
+        result += "Button jeff" + this.buttonNum + "\n";
+        result += this.title;
+
 
         for (Question i : this.questions) {
             result += i.toString();
@@ -670,9 +681,17 @@ public class ScenarioCreatorManager {
     }
 
     //////////////////////////////////////// TESTING /////////////////////////////////////
+    // The following main method is used to test
+    public static void main(String[] args) {
+        ScenarioCreatorManager scenarioCreatorManager = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
+
+        scenarioCreatorManager.parseFile();
+
+        System.out.println(scenarioCreatorManager.toString());
+    }
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
     // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         File temp = (new File("Enamel/FactoryScenarios/Scenario_10.txt"));
 
@@ -892,6 +911,6 @@ public class ScenarioCreatorManager {
 
         // After all the commands have been added saveFile() 
         scenarioCreatorManager.saveToFile();
-    }
+    }*/
     //////////////////////////////////////// TESTING /////////////////////////////////////
 }
