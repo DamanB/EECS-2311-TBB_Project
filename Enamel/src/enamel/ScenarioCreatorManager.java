@@ -99,13 +99,13 @@ public class ScenarioCreatorManager {
 
             // Erases the contents of the file
             PrintWriter printWriter = new PrintWriter(this.scenarioFile);
-
+            /*
             printWriter.println("Cell " + this.cellNum);
             printWriter.println("Button " + this.buttonNum);
             if (!title.equals("")) {
                 printWriter.println(this.title);
             }
-            printWriter.println();
+            printWriter.println();*/
             printWriter.println(result);
             printWriter.close();
 
@@ -122,7 +122,7 @@ public class ScenarioCreatorManager {
     // TODO At the end check for skip buttons and repeat connecting to end repeat
     // TODO Check to see if only command and input is on the line if not throw error. Check input length?
     // TODO Check to see is user input is done after skip button and repeat button
-    public void parseFile() {
+    public boolean parseFile() {
         List<String> lines = new ArrayList<>();
         this.errorMessage = "";
 
@@ -135,11 +135,11 @@ public class ScenarioCreatorManager {
         } catch (FileNotFoundException e) {
             this.errorMessage = "File has not been found|" + e.toString();
             System.out.println(e.toString());
-            return;
+            return false;
         } catch (IOException e) {
-            errorMessage = "Error when reading file|" + e.toString();
+            this.errorMessage = "Error when reading file|" + e.toString();
             System.out.println(e.toString());
-            return;
+            return false;
         }
 
 
@@ -148,6 +148,8 @@ public class ScenarioCreatorManager {
             this.buttonNum = Integer.parseInt(lines.get(1).substring(7));
         } else {
             System.out.println("Invalid Cell or Button commands");
+            this.errorMessage = "Invalid Cell or Button commands";
+            return false;
         }
 
         int questionIndex = 0;
@@ -160,7 +162,6 @@ public class ScenarioCreatorManager {
                     textReached = true;
                     this.setTitle(lines.get(i));
                     this.questions.add(new Question());
-                    this.questions.get(questionIndex).getCommands().add(new Space());
                 }
             } else if (!lines.get(i).equals("")) {
                 if (repeat) {
@@ -183,7 +184,7 @@ public class ScenarioCreatorManager {
                             temp = new Sound(lines.get(i).substring(0, 8), lines.get(i).substring(8));
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
@@ -197,11 +198,10 @@ public class ScenarioCreatorManager {
                             temp = new Skip(lines.get(i).substring(0, 7), lines.get(i).substring(7));
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
-                        //skip(lines.get(i).substring(7));
                     }
                     // The key phrase to indicate to pause for a specified number of
                     // seconds.
@@ -213,18 +213,10 @@ public class ScenarioCreatorManager {
                             temp = new Pause(lines.get(i).substring(0, 8), lines.get(i).substring(8));
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
-
-                        // Checks if there is a positive integer after the pause command if not logs it then exits
-                        /*if (lines.get(i).substring(8).matches("^[1-9][0-9]*$")) {
-                            pause(lines.get(i).substring(8));
-                        } else {
-                            errorLog(IllegalArgumentException.class.toString(), "Number of seconds for pause is not a positive integer.");
-                            System.exit(0);
-                        }*/
                     }
                     // The key phrase to assign a button to repeat text.
                     else if (lines.get(i).length() >= 16 && lines.get(i).substring(0, 16).equals("/~repeat-button:")) {
@@ -235,11 +227,10 @@ public class ScenarioCreatorManager {
                             temp = new RepeatButton(lines.get(i).substring(0, 8), lines.get(i).substring(8), this.buttonNum);
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
-                        //repeatButton(lines.get(i).substring(16));
                     }
                     // The key phrase to signal that everything after that key phrase
                     // will be repeated.
@@ -253,7 +244,6 @@ public class ScenarioCreatorManager {
                     // JButtons.
                     else if (lines.get(i).length() >= 15 && lines.get(i).substring(0, 15).equals("/~reset-buttons")) {
                         this.questions.get(questionIndex).getCommands().add(new ResetButtons(lines.get(i).substring(0, 15), lines.get(i).substring(15)));
-                        //resetButtons();
                     }
                     // The key phrase to assign a button to skip to another part of the
                     // scenario.
@@ -264,11 +254,10 @@ public class ScenarioCreatorManager {
                             temp = new SkipButton(lines.get(i).substring(0, 14), lines.get(i).substring(14), this.buttonNum);
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
-                        //skipButton(lines.get(i).substring(14));
                     }
                     // The key phrase to clear the display of all of the braille cells.
                     else if (lines.get(i).length() >= 15 && lines.get(i).substring(0, 15).equals("/~disp-clearAll")) {
@@ -284,12 +273,10 @@ public class ScenarioCreatorManager {
                             temp = new DispCellPins(lines.get(i).substring(0, 17), lines.get(i).substring(17), this.cellNum);
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
-
-                        //dispCellPins(lines.get(i).substring(17));
                     }
                     // The key phrase to represent a string in Braille.
                     else if (lines.get(i).length() >= 14 && lines.get(i).substring(0, 14).equals("/~disp-string:")) {
@@ -299,18 +286,10 @@ public class ScenarioCreatorManager {
                             temp = new DispString(lines.get(i).substring(0, 14), lines.get(i).substring(14));
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
-
-                        // Checks if the string is composed of letters then displays it. If not logs it and exits
-                        /*if (lines.get(i).substring(14).matches("^[a-zA-Z]+$")) {
-                            player.displayString(lines.get(i).substring(14));
-                        } else {
-                            errorLog(IllegalArgumentException.class.toString(), "Invalid String for disp-string.");
-                            System.exit(0);
-                        }*/
                     }
                     // The key phrase to change the cell to represent a character in
                     // Braille.
@@ -321,11 +300,10 @@ public class ScenarioCreatorManager {
                             temp = new DispCellChar(lines.get(i).substring(0, 17), lines.get(i).substring(17), this.cellNum);
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
-                        //dispCellChar(lines.get(i).substring(17));
                     }
                     // The key phrase to raise a pin of the specified Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-raise:")) {
@@ -336,13 +314,11 @@ public class ScenarioCreatorManager {
                             temp = new DispCellRaise(lines.get(i).substring(0, 18), lines.get(i).substring(18), this.cellNum);
                         } catch (Exception e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
-                        //dispCellRaise(lines.get(i).substring(18));
                     }
-                    // TODO FINISH REST
                     // The key phrase to lower a pin of the specified Braille cell.
                     else if (lines.get(i).length() >= 18 && lines.get(i).substring(0, 18).equals("/~disp-cell-lower:")) {
                         Command temp;
@@ -350,7 +326,7 @@ public class ScenarioCreatorManager {
                             temp = new DispCellLower(lines.get(i).substring(0, 18), lines.get(i).substring(18), this.cellNum);
                         } catch (Exception e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
@@ -362,7 +338,7 @@ public class ScenarioCreatorManager {
                             temp = new DispCellClear(lines.get(i).substring(0, 18), lines.get(i).substring(18), this.cellNum);
                         } catch (Exception e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
@@ -373,7 +349,7 @@ public class ScenarioCreatorManager {
                             temp = new DispCellLowerPins(lines.get(i).substring(0, 21), lines.get(i).substring(21));
                         } catch (Exception e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
@@ -385,7 +361,7 @@ public class ScenarioCreatorManager {
                             temp = new UserInput(lines.get(i).substring(0, 12), lines.get(i).substring(12));
                         } catch (Exception e) {
                             this.errorMessage = e.toString();
-                            return;
+                            return false;
                         }
 
                         this.questions.get(questionIndex).getCommands().add(temp);
@@ -403,6 +379,7 @@ public class ScenarioCreatorManager {
                 this.questions.get(questionIndex).getCommands().add(new Space());
             }
         }
+        return true;
     }
 
 
@@ -446,20 +423,9 @@ public class ScenarioCreatorManager {
         return numButtons;
     }
 
-    /*
-        public static void setNumButtons(int numButtons) {
-            ScenarioCreatorManager.numButtons = numButtons;
-        }
-    */
     public static int getNumCells() {
         return numCells;
     }
-
-/*
-    public static void setNumCells(int numCells) {
-        ScenarioCreatorManager.numCells = numCells;
-    }
-    */
 
     public Integer getQuestionIndex() {
         return questionIndex;
@@ -665,12 +631,21 @@ public class ScenarioCreatorManager {
         return true;
     }
 
+    public boolean addSpace() {
+        try {
+            this.questions.get(this.questionIndex).getCommands().add(new Space());
+        } catch (IllegalArgumentException e) {
+            this.errorMessage = e.toString();
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
-        String result = "";
-        result += "Cell " + this.cellNum + "\n";
-        result += "Button jeff" + this.buttonNum + "\n";
-        result += this.title;
+        String result = "Cell " + this.cellNum + "\n";
+        result += "Button" + this.buttonNum + "\n";
+        result += this.title + "\n";
 
 
         for (Question i : this.questions) {
@@ -682,16 +657,16 @@ public class ScenarioCreatorManager {
 
     //////////////////////////////////////// TESTING /////////////////////////////////////
     // The following main method is used to test
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         ScenarioCreatorManager scenarioCreatorManager = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
 
         scenarioCreatorManager.parseFile();
 
         System.out.println(scenarioCreatorManager.toString());
-    }
+    }*/
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
     // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
 
         File temp = (new File("Enamel/FactoryScenarios/Scenario_10.txt"));
 
@@ -706,6 +681,10 @@ public class ScenarioCreatorManager {
 
         // Every method for every command returns a boolean which tells you whether the input was valid or not
         //When it returns false it will update the errorMessage string which can be accessed with getErrorMessage();
+        if (!(scenarioCreatorManager.addSpace())) {
+            System.out.println(scenarioCreatorManager.errorMessage);
+        }
+
         if (!(scenarioCreatorManager.addDispCellPins("0", "11100000"))) {
             System.out.println(scenarioCreatorManager.errorMessage);
         }
@@ -911,6 +890,7 @@ public class ScenarioCreatorManager {
 
         // After all the commands have been added saveFile() 
         scenarioCreatorManager.saveToFile();
-    }*/
+    }
     //////////////////////////////////////// TESTING /////////////////////////////////////
+
 }
