@@ -47,7 +47,6 @@ public abstract class Command {
 
     @Override
     public String toString() {
-
         return (!input.equals("")) ? (this.command + this.input) : (this.command);
     }
 }
@@ -56,7 +55,7 @@ class Text extends Command {
 
     public Text(String input) {
         super("");
-        this.regexPattern = ".*?"; // Regex matches anything
+        this.regexPattern = "^[0-9A-Za-z]+$"; // Regex matches anything
         setInput(input);
     }
 
@@ -107,7 +106,7 @@ class SkipButton extends Command {
 class Skip extends Command {
     public Skip(String command, String input) {
         super(command);
-        this.regexPattern = "^[A-Z]+$"; // Matches any text in all caps
+        this.regexPattern = "^[a-zA-Z]+$"; // Matches any text in all caps
         setInput(input);
     }
 }
@@ -276,6 +275,14 @@ class SkipPos extends Command {
 
     public String toString() {
         return this.command + this.input;
+    }
+
+    public void setInput(String input) {
+        if (input.matches(regexPattern)) {
+            this.input = input;
+        } else {
+            throw new IllegalArgumentException("Invalid format on a SkipPos command.");
+        }
     }
 }
 

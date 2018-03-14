@@ -75,15 +75,6 @@ public class ScenarioCreatorManager {
             throw new IllegalArgumentException("Invalid Scenario File Name Format");
         }
 
-       /* if (!(scenarioFile.exists())) {
-            try {
-                scenarioFile.createNewFile();
-            } catch (IOException e) {
-                this.errorMessage = e.toString();
-            }
-        }
-        */
-
 
         this.scenarioFile = scenarioFile;
 
