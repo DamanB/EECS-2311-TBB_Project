@@ -55,7 +55,7 @@ class Text extends Command {
 
     public Text(String input) {
         super("");
-        this.regexPattern = "^[0-9A-Za-z]+$"; // Regex matches anything
+        this.regexPattern = "^[\\d\\D]+$"; // Regex matches anything
         setInput(input);
     }
 
