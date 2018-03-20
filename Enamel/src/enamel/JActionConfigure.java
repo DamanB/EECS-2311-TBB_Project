@@ -18,74 +18,88 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import enamel.ScenarioCreatorGUI.EventGUI;
 
 public class JActionConfigure extends JPanel{
 
 	private static JLabel instruction;
 	private static Dimension panelSize;
-	private int index;
 	private JPanel main = this;
 	public Action action;
 
 	public JActionConfigure(int index) {		
-		this.panelSize = ScenarioCreatorGUI.actionOptions.getSize();
+		this.panelSize = ScenarioCreatorGUI.configuration.getSize();
 		this.setPreferredSize(panelSize);		
 		instruction = new JLabel("Instruction: ");
 		instruction.setHorizontalAlignment(JLabel.CENTER);
+		instruction.setSize(panelSize.width,30);
 		this.add(instruction);		
 		getOptions(index);
 	}
 
 	private void getOptions(int index) {
-		this.removeAll();
-		this.add(instruction);		
-		this.index = index;
 
 		if (index == 0) {
+			action = new Checkpoint();
+		}
+		else if (index == 1) {
 			action = new JTextToSpeech();
-		}else if (index == 1) {
-			action = new PlayAudio();
 		}else if (index == 2) {
+			action = new PlayAudio();
+		}else if (index == 3) {
 			action = new JPauseButton();
-		}else if (index == 3) {	
+		}else if (index == 4) {	
 			action = new JDisplayPins();
-		}else if (index == 4) {
-			action = new JDisplayWordInBraille();
 		}else if (index == 5) {
-			action = new JDisplayChar();
+			action = new JDisplayWordInBraille();
 		}else if (index == 6) {
-			action = new JClearCells();
+			action = new JDisplayChar();
 		}else if (index == 7) {
-			action = new JClearSpecificCell();
+			action = new JClearCells();
 		}else if (index == 8) {
-			action = new JLowerPins();
+			action = new JClearSpecificCell();
 		}else if (index == 9) {
-			action = new JRaisePins();
+			action = new JLowerPins();
 		}else if (index == 10) {
-			action = new JRepeat();
+			action = new JRaisePins();
 		}else if (index == 11) {
-			action = new GoToEvent();
+			action = new JRepeat();
 		}else if (index == 12) {
-			action = new GoToEventButton();
+			action = new GoToEvent();
 		}else if (index == 13) {
-			action = new JResetButtons();
+			action = new GoToCheckpointButtonClick();
 		}else if (index == 14) {
+			action = new JResetButtons();
+		}else if (index == 15) {
 			action = new JUserInput();
 		}else {
 			throw new IllegalArgumentException("Action Selected DNE");
 		}
 	}
 
-	private class JPauseButton extends Action{		
+	private class Checkpoint extends Action{
+
+		private Checkpoint() {
+			instruction.setText("Checkpoint: Give this checkpoint a name (One word consiting of only letters and no duplicates)");
+		}
+
+		public boolean build(ScenarioCreatorManager sm) {
+			return false;
+		}	
+
+	}
+
+	private class JPauseButton extends Action implements ChangeListener{		
 		private JSpinner pauseTime;
 		private JPauseButton() {
 			instruction.setText("Pause: Select the amount of time in seconds (a value greater than 0) you wish to pause");
 			SpinnerModel number = new SpinnerNumberModel();
 			pauseTime = new JSpinner(number);			
 			pauseTime.setPreferredSize(new Dimension(100,20));
+			pauseTime.setValue((int)1);
+			pauseTime.addChangeListener(this);
 			main.add(pauseTime);
 		}	
 
@@ -93,8 +107,14 @@ public class JActionConfigure extends JPanel{
 			return sm.addPause(Integer.toString((int)pauseTime.getValue()));
 		}
 
+		public void stateChanged(ChangeEvent e) {
+			if (e.getSource().equals(pauseTime)) {
 
-
+				if ((int)pauseTime.getValue() < 1) {
+					pauseTime.setValue((int)1);
+				}				
+			}			
+		}
 	}
 
 	private class JDisplayWordInBraille extends Action{		
@@ -144,16 +164,16 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class GoToEventButton extends Action implements ActionListener{
+	private class GoToCheckpointButtonClick extends Action implements ActionListener{
 		private JLabel goToEvent;
 		private JLabel when;
 		private JResponseButtonBox buttons;
 		private JEventList events;
 		private JComboBox eventList;
 
-		private GoToEventButton(){
-			instruction.setText("Go To Event: Select which event you would like to travel to when a specfifc button is clicked. The event must occur after this one");	
-			goToEvent = new JLabel("Go To Event: "); 
+		private GoToCheckpointButtonClick(){
+			instruction.setText("Go To Checkpoint: Select which checkpoint you would like to travel to when a specfifc button is clicked. The event must occur after this one");	
+			goToEvent = new JLabel("Go To Checkpoint: "); 
 			when = new JLabel("When This Button is Clicked: ");
 			events = new JEventList();
 			buttons = new JResponseButtonBox();
@@ -316,7 +336,7 @@ public class JActionConfigure extends JPanel{
 			if (events.jEvents.getSelectedItem() == null) {
 				return false;
 			}
-			
+
 			EventGUI selectedItem = (EventGUI)events.jEvents.getSelectedItem();			
 			return sm.addSkip(selectedItem.getEventName().toUpperCase());
 		}
@@ -431,7 +451,7 @@ public class JActionConfigure extends JPanel{
 		private JLabel audioName;
 
 		private String fileName;
-		
+
 		private PlayAudio(){
 			fileName = "";
 			instruction.setText("Play Audio: Select an audio file to play. The audio must a .WAV format!");	
@@ -494,7 +514,7 @@ public class JActionConfigure extends JPanel{
 		private JEventList() {	
 			jEvents = new JComboBox<EventGUI>();
 			jEvents.setModel(new DefaultComboBoxModel(ScenarioCreatorGUI.eventsList.toArray()));
-			
+
 			this.add(jEvents);			
 		}			
 	}
