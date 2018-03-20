@@ -115,9 +115,7 @@ public class ScenarioEditorMenu implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 
 		if (e.getSource().equals(create)) {
-
-			EditorInfo info = new EditorInfo();
-
+			MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
 		} else if (e.getSource().equals(modify)) {
 			JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Sorry This Is Under Construction", "Sorry",
 					JOptionPane.PLAIN_MESSAGE, null);
@@ -143,7 +141,9 @@ public class ScenarioEditorMenu implements MouseListener {
 	public void mouseReleased(MouseEvent arg0) {
 	}
 
-	private class EditorInfo extends JPanel implements ActionListener, ChangeListener {
+
+/*
+ * 	private class EditorInfo extends JPanel implements ActionListener, ChangeListener {
 
 		private JLabel infoTitle;
 		private JLabel cellNumberInst;
@@ -191,7 +191,7 @@ public class ScenarioEditorMenu implements MouseListener {
 			setSize(titleInst);
 			infoTitle.setHorizontalAlignment(JLabel.CENTER);
 
-			c.insets = new Insets(20, 20, 20, 20);
+			c.insets = new Insets(10, 20, 10, 20);
 			c.anchor = c.CENTER;
 			c.fill = c.HORIZONTAL;
 			c.gridwidth = 2;
@@ -276,48 +276,8 @@ public class ScenarioEditorMenu implements MouseListener {
 		}
 	}
 
-	public EditorInfo getEditorInfo() {
-		return new EditorInfo();
-	}
-
-	/*
-	 * boolean asking = true;
-	 * 
-	 * while(asking) { String numCells =
-	 * JOptionPane.showInputDialog(MainFrame.getMainPanel(),
-	 * "Please Enter The Number of Braille Cells You Wish To Use: ", "Config",
-	 * JOptionPane.INFORMATION_MESSAGE); if (numCells == null) { break; } else if
-	 * (numCells.matches("^[1-9][0-9]*$")) { ScenarioCreatorGUI.numCells =
-	 * (Integer.parseInt(numCells));
-	 * 
-	 * while(asking) { String numButton =
-	 * JOptionPane.showInputDialog(MainFrame.getMainPanel()
-	 * ,"Please Enter The Number of Response Buttons You Wish To Use: ", "Config",
-	 * JOptionPane.INFORMATION_MESSAGE); if (numButton == null) { break; } if
-	 * (numButton.matches("^[1-9][0-9]*$")) { ScenarioCreatorGUI.numButtons =
-	 * (Integer.parseInt(numButton));
-	 * 
-	 * while (true) { String title =
-	 * JOptionPane.showInputDialog(MainFrame.getMainPanel(),
-	 * "Please Input the Scenarios Title", "Title",
-	 * JOptionPane.INFORMATION_MESSAGE); if ( title == null){ break; }else
-	 * if(title.length() == 0) {
-	 * JOptionPane.showMessageDialog(MainFrame.getMainPanel(),
-	 * "Please input a valid title", "Invalid Input",
-	 * JOptionPane.INFORMATION_MESSAGE); }else{ ScenarioCreatorGUI.ScenarioTitle =
-	 * title; asking = false; break; } } }else {
-	 * JOptionPane.showMessageDialog(MainFrame.getMainPanel()
-	 * ,"This is an invalid number. Please try again", "Invalid Number",
-	 * JOptionPane.INFORMATION_MESSAGE); } } }else {
-	 * JOptionPane.showMessageDialog(MainFrame.getMainPanel()
-	 * ,"This is an invalid number. Please try again", "Invalid Number",
-	 * JOptionPane.INFORMATION_MESSAGE); }
-	 * 
-	 * }
-	 * 
-	 * if (asking) { MainFrame.changeScreen(getScreen()); }
-	 * 
-	 * return asking;
-	 */
+ * 
+ * 
+ */
 
 }
