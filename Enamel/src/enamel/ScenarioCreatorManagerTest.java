@@ -3,6 +3,8 @@ package enamel;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,24 @@ class ScenarioCreatorManagerTest {
 	int cell;
 	int button;
 	List<Question> q;
+
+	class RobotThread extends Thread {
+		Robot r;
+		int delay;
+
+		RobotThread(int ms) throws AWTException {
+			r = new Robot();
+			delay = ms;
+			this.start();
+		}
+
+		public void run() {
+			r.delay(delay);
+			r.keyPress(KeyEvent.VK_ENTER);
+			r.delay(100);
+			r.keyRelease(KeyEvent.VK_ENTER);
+		}
+	}
 
 	void test(String path, int cell, int button, List<Question> q) {
 		ScenarioCreatorManager s = new ScenarioCreatorManager(new File(path));
@@ -55,6 +75,7 @@ class ScenarioCreatorManagerTest {
 		s2.setButtonNum(s1.getButtonNum());
 		s2.setTitle(s1.getTitle());
 		s2.setQuestions(s1.getQuestions());
+		new RobotThread(2000);
 		s2.saveToFile();
 		test("FactoryScenarios/Scenario_4.txt", "FactoryScenarios/Scenario_1.txt");
 	}
