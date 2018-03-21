@@ -328,7 +328,7 @@ public class ScenarioCreatorGUI {
 			createBrailleGUI();
 			createButtonGUI();
 			
-			JCheckpointNode n = new JCheckpointNode(1, true);
+			JCheckpointNode n = new JCheckpointNode(0, true);
 			config.connected=n;
 			editor.add(n);
 		}
@@ -372,12 +372,35 @@ public class ScenarioCreatorGUI {
 			nodes.add(index, n);
 		}
 		
-		private static void addActionNode(int cpIndex, int actionIndex) {
-			JActionNode n = editorClass.new JActionNode(cpIndex,actionIndex);
+		private static void addActionNode(int index) {
+			JActionNode n = editorClass.new JActionNode(index);
 			config.setConnected(n);
 			editor.add(n);
 			n.repaint();
 			editor.repaint();
+			nodes.add(index,n);
+		}
+		
+		private static void createNode(int index) {
+			if (controlGUI.getSelectedAction() <= 0) {
+				addCheckpointNode(index);
+			}else{
+				addActionNode(index);						
+			}		
+			refreshEditor();
+		}
+		
+		private static void refreshEditor() {
+			editor.removeAll();
+			editor.add(numberOfBraille);
+			editor.add(numberOfButtons);
+
+			int count = 2;
+			for (JNode n:nodes ) {
+				n.setIndex(count);
+				editor.add(n);
+				count++;
+			}	
 		}
 		
 		public void stateChanged(ChangeEvent e) {
@@ -392,14 +415,13 @@ public class ScenarioCreatorGUI {
 				}
 			}			
 		}
-		
-		
+			
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(add)){	
 				if (controlGUI.getSelectedAction() <= 0) {
 					EditorGUI.addCheckpointNode(1);
 				}else{
-					EditorGUI.addActionNode(1, 1);						
+					EditorGUI.addActionNode(1);						
 				}
 			}
 		}
@@ -408,41 +430,23 @@ public class ScenarioCreatorGUI {
 		private class JNodeConfig extends JPanel implements ActionListener{
 
 			public JNode connected;
-			private JButton moveUp, moveDown, add, delete;
+			private JButton moveUp, moveDown, delete;
 
 			private JNodeConfig(){
 				this.setBackground(MainFrame.primColor);
 				this.setBorder(new LineBorder(Color.BLACK,1));
 				moveUp = new JButton("Shift Up");
 				moveDown = new JButton("Shift Down");
-				add = new JButton("Add Selected Below");
 				delete = new JButton("Delete");
 
 				moveUp.addActionListener(this);
 				moveDown.addActionListener(this);
-				add.addActionListener(this);
 				delete.addActionListener(this);
 
 				this.add(moveUp);
 				this.add(moveDown);
-				this.add(add);
 				this.add(delete);
 
-			}
-
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource().equals(add)) {
-					createNode();					
-				}
-				
-			}
-
-			private void createNode() {
-				if (controlGUI.getSelectedAction() <= 0) {
-					EditorGUI.addCheckpointNode(connected.checkpointIndex+1);
-				}else{
-					EditorGUI.addActionNode(connected.checkpointIndex, connected.actionIndex+1);						
-				}
 			}
 
 			public void setConnected(JNode node) {
@@ -459,38 +463,46 @@ public class ScenarioCreatorGUI {
 				editor.repaint();
 			}			
 			public JNode getConnected() {return connected;}
+			public void actionPerformed(ActionEvent e) {}
 
 		}
 
 		private class JNode extends JPanel implements ActionListener{
 
 			private JButton header;
-			public int checkpointIndex = 1;
-			public int actionIndex = 0;
+			private JButton add;
+			public int index;
 			private JActionConfigure action;
 
-			private JNode() {	
+			private JNode(int index) {	
 				this.setSize(editor.getSize().width,60);
 				this.setPreferredSize(this.getSize());
 				this.setBackground(Color.WHITE);
 				this.setLayout(new FlowLayout(FlowLayout.LEFT,10,10));
 
 				header = new JButton();
-				header.setBackground(null);
+				header.setBackground(MainFrame.primColor);
 				//header.setBorderPainted(false);
 				header.setHorizontalAlignment(JLabel.LEFT);
 				header.addActionListener(this);
 				this.add(header, BorderLayout.CENTER);				
 				action = new JActionConfigure(controlGUI.getSelectedAction());
-				//TODO ADD TO NODES
+				this.index = index;
+				add = new JButton("Add Below");
+				add.addActionListener(this);
+				nodes.add(this);
 								
 			}
 
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource().equals(header)) {
 					EditorGUI.config.setConnected(this);
+				}else if (e.getSource().equals(add)) {
+					EditorGUI.createNode(this.index);
 				}
 			}
+			
+			public void setIndex(int index) {}
 			
 		}
 
@@ -498,37 +510,31 @@ public class ScenarioCreatorGUI {
 
 			private String checkpointInst;
 			private JTextField checkpointName;
-			private LinkedList<JActionNode> attachedNodes;
 			
 			private JCheckpointNode(int index, boolean isTitle) {
-				super();
+				super(index);
 				if (isTitle) {
 					checkpointInst = "Enter a Title for this Scenario";
 				}else {
 					checkpointInst = "Enter a Checkpoint Name";
 				}
-				super.checkpointIndex = index;
-				super.actionIndex = 0;
-				super.header.setText(super.checkpointIndex + "." + super.actionIndex + " - " + checkpointInst);
+				super.header.setText(super.index + " - " + checkpointInst);
 				checkpointName = new JTextField();
 				checkpointName.setSize(250,20);
 				checkpointName.setPreferredSize(checkpointName.getSize());
 				super.add(checkpointName);
-				
-				attachedNodes = new LinkedList<JActionNode>();
+				super.add(super.add);
+
 			}
 			
 			public String checkpointName() {
 				return this.checkpointName.getText();
 			}
 			
-			public void addActionNode(JActionNode node) {
-				attachedNodes.add(node.actionIndex, node);
-				int count = 1;
-				for (JActionNode n : attachedNodes) {
-					n.setActionIndex(count);
-					count++;
-				}			
+			@Override 
+			public void setIndex(int index) {
+				super.index = index;
+				super.header.setText(super.index + " - " + checkpointInst);
 			}
 
 		}
@@ -537,16 +543,17 @@ public class ScenarioCreatorGUI {
 			
 			private String actionName;
 
-			private JActionNode(int cpIndex, int actionIndex) {
-				super();				
-				actionName = super.action.action.getName();
-				super.checkpointIndex = cpIndex;
-				super.actionIndex = actionIndex;
-				super.header.setText("\t             " + super.checkpointIndex + "." + super.actionIndex + " - " + actionName);
+			private JActionNode(int index) {
+				super(index);				
+				actionName = super.action.action.toString();
+				super.header.setText("\t             " + super.index + " - " + actionName);
+				super.add(super.add);
 			}			
-			public void setActionIndex(int index) {
-				super.actionIndex = index;
-				super.header.setText(("\t             " + super.checkpointIndex + "." + super.actionIndex + " - " + actionName));
+			
+			@Override
+			public void setIndex(int index) {
+				super.index = index;
+				super.header.setText("\t             " + super.index + " - " + actionName);
 			}
 		}
 
