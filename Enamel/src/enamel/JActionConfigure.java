@@ -82,18 +82,20 @@ public class JActionConfigure extends JPanel{
 	private class Checkpoint extends Action{
 
 		private Checkpoint() {
+			super.name = "Checkpoint: ";
 			instruction.setText("Checkpoint: Give this checkpoint a name (One word consiting of only letters and no duplicates)");
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
 			return false;
-		}	
-
+		}
+				
 	}
 
 	private class JPauseButton extends Action implements ChangeListener{		
 		private JSpinner pauseTime;
 		private JPauseButton() {
+			super.name = "Pause";
 			instruction.setText("Pause: Select the amount of time in seconds (a value greater than 0) you wish to pause");
 			SpinnerModel number = new SpinnerNumberModel();
 			pauseTime = new JSpinner(number);			
@@ -117,9 +119,11 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JDisplayWordInBraille extends Action{		
+	private class JDisplayWordInBraille extends Action{	
+		
 		private JTextField stringToDisp;
 		private JDisplayWordInBraille() {
+			super.name = "Braille: Display Word";
 			instruction.setText("Display Word: Please enter the word you would like to display in braille. Ensure adequate Braille cells are created beforehand");
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/5,20));
@@ -136,6 +140,7 @@ public class JActionConfigure extends JPanel{
 		private JResponseButtonBox buttons;
 
 		private JRepeat() {
+			super.name = "Button: Repeat Text";
 			instruction.setText("Repeat Text: Set the text to what you would like to repeat, as well as button to initalize the repeat");	
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/2,20));
@@ -172,6 +177,7 @@ public class JActionConfigure extends JPanel{
 		private JComboBox eventList;
 
 		private GoToCheckpointButtonClick(){
+			super.name = "Button: Go To Checkpoint";
 			instruction.setText("Go To Checkpoint: Select which checkpoint you would like to travel to when a specfifc button is clicked. The event must occur after this one");	
 			goToEvent = new JLabel("Go To Checkpoint: "); 
 			when = new JLabel("When This Button is Clicked: ");
@@ -208,9 +214,10 @@ public class JActionConfigure extends JPanel{
 
 	}
 
-	private class JClearCells extends Action{		
+	private class JClearCells extends Action{
 		private JClearCells() {
 			instruction.setText("Clear Cells: This command will clear all of the Braille Cells");
+			super.name = "Braille: Clear All Braille Cells";
 		}		
 
 		public boolean build(ScenarioCreatorManager sm) {
@@ -225,6 +232,7 @@ public class JActionConfigure extends JPanel{
 		JBrailleList cells;
 
 		private JClearSpecificCell() {
+			super.name = "Braille: Clear A Specific Braille Cell";
 			instruction.setText("Clear Specfifc Cell: Select which Braille Cell you would like to clear");
 			cells = new JBrailleList();			
 			main.add(cells);
@@ -239,6 +247,7 @@ public class JActionConfigure extends JPanel{
 		private JTextField stringToDisp;
 		private JBrailleList cells;
 		private JDisplayChar() {
+			super.name = "Braille: Display a Character";
 			instruction.setText("Display Character: Enter the character you would like to display as well as the cell it will appear on");
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/10,20));
@@ -264,6 +273,7 @@ public class JActionConfigure extends JPanel{
 		JBrailleCell edit;
 
 		private JDisplayPins() {
+			super.name = "Braille: Display Specific Pins";
 			instruction.setText("Display Pins on Cell: Select which Braille Cell you want to edit and select its pins");
 			cells = new JBrailleList();			
 			select = new JButton("Select");	
@@ -294,6 +304,7 @@ public class JActionConfigure extends JPanel{
 	private class JTextToSpeech extends Action{		
 		private JTextField stringToDisp;
 		private JTextToSpeech() {
+			super.name = "Text To Speech";
 			instruction.setText("Text To Speech: Enter the text you would like to say");
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/2,20));
@@ -309,6 +320,7 @@ public class JActionConfigure extends JPanel{
 
 	private class JUserInput extends Action{		
 		private JUserInput() {
+			super.name = "Wait For User Input";
 			instruction.setText("User Input: The program will wait for a user input");
 		}
 
@@ -323,6 +335,7 @@ public class JActionConfigure extends JPanel{
 		private JComboBox eventList;
 
 		private GoToEvent(){
+			super.name = "Go To A Specific Checkpoint";
 			instruction.setText("Go To Event: Select which event you would like to travel to. The event must occur after this one");	
 			goToEvent = new JLabel("Go To Event: "); 
 			events = new JEventList();
@@ -356,6 +369,7 @@ public class JActionConfigure extends JPanel{
 
 	private class JResetButtons extends Action{		
 		private JResetButtons() {
+			super.name = "Reset Button Configurations";
 			instruction.setText("Reset Buttons: Resets the commands implemented with each button. Recommended to use at the beggining of each event");
 		}	
 
@@ -376,6 +390,7 @@ public class JActionConfigure extends JPanel{
 		};
 
 		private JLowerPins() {
+			super.name = "Braille: Lower Specific Pins";
 			instruction.setText("Lower Pin on Cell: Select which Braille Cell you want to edit then select the pin to lower");
 			cells = new JBrailleList();			
 			select = new JButton("Select");	
@@ -416,6 +431,7 @@ public class JActionConfigure extends JPanel{
 		};
 
 		private JRaisePins() {
+			super.name = "Braille: Raise Specific Pins";
 			instruction.setText("Raise Pin on Cell: Select which Braille Cell you want to edit then select the pin to raise");
 			cells = new JBrailleList();			
 			select = new JButton("Select");	
@@ -453,6 +469,7 @@ public class JActionConfigure extends JPanel{
 		private String fileName;
 
 		private PlayAudio(){
+			super.name = "Audio: Browse or Record Audio";
 			fileName = "";
 			instruction.setText("Play Audio: Select an audio file to play. The audio must a .WAV format!");	
 			playAudio = new JLabel("Browse Audio");
