@@ -326,6 +326,7 @@ public class ScenarioCreatorGUI {
 			config.connected=n;
 			editor.add(n);
 			nodes.add(n);
+			refreshEditor();
 		}
 
 		private void createBrailleGUI() {
@@ -402,6 +403,16 @@ public class ScenarioCreatorGUI {
 				editor.add(n);
 				count++;
 			}
+			
+			if (nodes.size() < 10) {
+				int amountToFill = 10 - nodes.size();
+				for (int i = 0; i<amountToFill; i++) {
+					JPanel p = new JPanel();
+					p.setBackground(null);
+					editor.add(p);
+				}
+			}
+			
 			editor.validate();
 			editor.setVisible(true);
 			editor.repaint();
@@ -452,10 +463,6 @@ public class ScenarioCreatorGUI {
 				connected = node;
 				connected.add(this);
 				connected.validate();
-				configuration.removeAll();
-				configuration.add(connected.action);
-				//configuration.setBackground(Color.white);
-				configuration.repaint();
 				this.setVisible(true);
 				this.repaint();
 				connected.repaint();
@@ -506,6 +513,10 @@ public class ScenarioCreatorGUI {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource().equals(configure)) {
 					EditorGUI.config.setConnected(this);
+					configuration.removeAll();
+					configuration.add(EditorGUI.config.connected.action);
+					configuration.validate();
+					configuration.repaint();
 				}else if (e.getSource().equals(add)) {
 					EditorGUI.createNode(this.index+1);
 				}
@@ -542,7 +553,8 @@ public class ScenarioCreatorGUI {
 			private JCheckpointNode(int index, boolean isTitle) {
 				super(index);
 				if (isTitle) {
-					checkpointInst = "Enter a Title for this Scenario";
+					checkpointInst = "Enter this Scenarios Title:";
+					super.action = new JActionConfigure(16);
 				}else {
 					checkpointInst = "Enter a Checkpoint Name";
 				}

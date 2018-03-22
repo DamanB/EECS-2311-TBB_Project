@@ -2,12 +2,12 @@ package enamel;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -18,6 +18,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -30,11 +31,20 @@ public class JActionConfigure extends JPanel{
 	public Action action;
 
 	public JActionConfigure(int index) {		
-		JActionConfigure.panelSize = ScenarioCreatorGUI.configuration.getSize();
-		this.setPreferredSize(panelSize);		
+		JActionConfigure.panelSize = new Dimension((int)(ScenarioCreatorGUI.configuration.getSize().width * 0.9), (int)(ScenarioCreatorGUI.configuration.getSize().height * 0.9));
+		this.setPreferredSize(panelSize);
+		this.setBackground(Color.WHITE);
+		this.setBorder(new LineBorder(Color.GRAY, 5));
 		instruction = new JLabel("Instruction: ");
 		instruction.setHorizontalAlignment(JLabel.CENTER);
 		instruction.setSize(panelSize.width,30);
+		instruction.setPreferredSize(instruction.getSize());
+		JLabel config = new JLabel("- Configuration -");
+		config.setFont(new Font("calibri", Font.BOLD, 17));
+		config.setHorizontalAlignment(JLabel.CENTER);
+		config.setSize(panelSize.width,30);
+		config.setPreferredSize(config.getSize());
+		this.add(config);
 		this.add(instruction);		
 		getOptions(index);
 	}
@@ -73,6 +83,8 @@ public class JActionConfigure extends JPanel{
 			action = new JResetButtons();
 		}else if (index == 15) {
 			action = new JUserInput();
+		}else if (index == 16) {
+			action = new Title();
 		}else {
 			throw new IllegalArgumentException("Action Selected DNE");
 		}
@@ -150,7 +162,10 @@ public class JActionConfigure extends JPanel{
 
 		public boolean build(ScenarioCreatorManager sm) {
 
-			boolean toReturn = true;
+			if (buttons.value() >= ScenarioCreatorGUI.numButtons) {
+				return false;
+			}		
+			
 			sm.addRepeat();
 			List<String> string = new ArrayList<String>();
 			string.add(stringToDisp.getText());
@@ -185,7 +200,12 @@ public class JActionConfigure extends JPanel{
 
 		}
 
-		public boolean build(ScenarioCreatorManager sm) {			
+		public boolean build(ScenarioCreatorManager sm) {	
+			if (buttons.value() >= ScenarioCreatorGUI.numButtons) {
+				return false;
+			}else if (nodeIndex.value() >= ScenarioCreatorGUI.nodes.size()) {
+				return false;
+			}		
 			return sm.addSkipButton(Integer.toString(buttons.value()), ScenarioCreatorGUI.nodes.get(nodeIndex.value()).getCheckpointName().toUpperCase()); 		
 		}
 
@@ -217,6 +237,9 @@ public class JActionConfigure extends JPanel{
 		}	
 
 		public boolean build(ScenarioCreatorManager sm) {
+			if (cells.value() >= ScenarioCreatorGUI.numCells) {
+				return false;
+			}	
 			return sm.addDispCellClear(Integer.toString(cells.value()));
 		}
 	}
@@ -236,7 +259,9 @@ public class JActionConfigure extends JPanel{
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
-
+			if (cells.value() >= ScenarioCreatorGUI.numCells) {
+				return false;
+			}			
 			if (!(stringToDisp.getText().matches("^[a-zA-Z]$"))){
 				return false;
 			}else {
@@ -261,9 +286,12 @@ public class JActionConfigure extends JPanel{
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
+			if (cells.value() >= ScenarioCreatorGUI.numCells) {
+				return false;
+			}
 			return sm.addDispCellPins(Integer.toString(cells.value()), edit.cellConfig());
 		}
-	
+
 	}
 
 	private class JTextToSpeech extends Action{		
@@ -297,7 +325,7 @@ public class JActionConfigure extends JPanel{
 	private class GoToEvent extends Action{
 		private ActionSpinner events;
 		private GoToEvent(){
-			super.name = "Go To A Specific Checkpoint";
+			super.name = "Traverse to a Checkpoint";
 			instruction.setText("Go To Event: Select which event you would like to travel to. The event must occur after this one");	
 			main.add(new JLabel("Go To Event: ")); 
 			events = new ActionSpinner();
@@ -305,8 +333,12 @@ public class JActionConfigure extends JPanel{
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
+			if (events.value() >= ScenarioCreatorGUI.nodes.size()) {
+				return false;
+			}
 			return sm.addSkip(ScenarioCreatorGUI.nodes.get(events.value()).getCheckpointName().toUpperCase());
 		}
+
 	}
 
 	private class JResetButtons extends Action{		
@@ -320,86 +352,60 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JLowerPins extends Action implements ActionListener{	
+	private class JLowerPins extends Action{	
 
 		BrailleCellSpinner cells;
-		JButton select;
 		JBrailleCell edit;
 		JComboBox<Integer> pins;
-
 		Integer[] pin = {
 				1,2,3,4,5,6,7,8		
 		};
 
 		private JLowerPins() {
-			super.name = "Braille: Lower Specific Pins";
+			super.name = "Braille: Lower Specific Pin";
 			instruction.setText("Lower Pin on Cell: Select which Braille Cell you want to edit then select the pin to lower");
-			cells = new JBrailleList();			
-			select = new JButton("Select");	
-			select.addActionListener(this);
-			pins = new JComboBox<Integer>(pin);
+			main.add(new JLabel("Braille Cell: "));
+			cells = new BrailleCellSpinner();
 			main.add(cells);
-			main.add(select);
+			pins = new JComboBox<Integer>(pin);
+			main.add(new JLabel("Lower Pin: "));
+			main.add(pins);
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
-			return sm.addDispCellRaise(Integer.toString(cells.jBraille.getSelectedIndex()), Integer.toString((int)pins.getSelectedItem()));
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource().equals(select)) {
-				select.setEnabled(false);
-				cells.jBraille.setEnabled(false);
-				edit = new JBrailleCell(JBrailleCell.DISPLAY_INDEX);
-				main.add(edit.getJBrailleCell());
-				main.add(pins);
-				main.validate();
-				main.repaint();
-			}			
-
-
+			if (cells.value() >= ScenarioCreatorGUI.numCells) {
+				return false;
+			}
+			return sm.addDispCellRaise(Integer.toString(cells.value()), Integer.toString((int)pins.getSelectedItem()));
 		}		
 	}
 
-	private class JRaisePins extends Action implements ActionListener{	
+	private class JRaisePins extends Action{	
 
-		JBrailleList cells;
-		JButton select;
+		BrailleCellSpinner cells;
 		JBrailleCell edit;
 		JComboBox<Integer> pins;
-
 		Integer[] pin = {
 				1,2,3,4,5,6,7,8		
 		};
 
 		private JRaisePins() {
-			super.name = "Braille: Raise Specific Pins";
-			instruction.setText("Raise Pin on Cell: Select which Braille Cell you want to edit then select the pin to raise");
-			cells = new JBrailleList();			
-			select = new JButton("Select");	
-			select.addActionListener(this);
-			pins = new JComboBox<Integer>(pin);
+			super.name = "Braille: Raise Specific Pin";
+			instruction.setText("Lower Pin on Cell: Select which Braille Cell you want to edit then select the pin to raise");
+			main.add(new JLabel("Braille Cell: "));
+			cells = new BrailleCellSpinner();
 			main.add(cells);
-			main.add(select);
+			pins = new JComboBox<Integer>(pin);
+			main.add(new JLabel("Raise Pin: "));
+			main.add(pins);
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
-			return sm.addDispCellRaise(Integer.toString(cells.jBraille.getSelectedIndex()), Integer.toString((int)pins.getSelectedItem()));
+			if (cells.value() >= ScenarioCreatorGUI.numCells) {
+				return false;
+			}
+			return sm.addDispCellRaise(Integer.toString(cells.value()), Integer.toString((int)pins.getSelectedItem()));
 		}
-
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource().equals(select)) {
-				select.setEnabled(false);
-				cells.jBraille.setEnabled(false);
-				edit = new JBrailleCell(JBrailleCell.DISPLAY_INDEX);
-				main.add(edit.getJBrailleCell());
-				main.add(pins);
-				main.validate();
-				main.repaint();
-			}			
-
-
-		}		
 	}
 
 	private class PlayAudio extends Action implements ActionListener{
@@ -449,9 +455,22 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
+	private class Title extends Action{
+		private Title() {
+			super.name = "Title: ";
+			instruction.setText("Title: Give this scenario a title");
+		}
+
+		public boolean build(ScenarioCreatorManager sm) {
+			return true;
+		}
+		
+		
+	}
+	
 	//SETTING CLASSES	
 	private class ResponseButtonSpinner extends JSpinner implements ChangeListener{
-		private Dimension size = new Dimension(80,50);
+		private Dimension size = new Dimension(80,20);
 		private ResponseButtonSpinner() {
 			this.setPreferredSize(size);
 			addChangeListener(this);			
@@ -469,7 +488,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 	private class BrailleCellSpinner extends JSpinner implements ChangeListener{
-		private Dimension size = new Dimension(80,50);
+		private Dimension size = new Dimension(80,20);
 		private BrailleCellSpinner() {
 			this.setPreferredSize(size);
 			addChangeListener(this);			
@@ -487,7 +506,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 	private class ActionSpinner extends JSpinner implements ChangeListener{
-		private Dimension size = new Dimension(80,50);
+		private Dimension size = new Dimension(80,20);
 		private ActionSpinner() {
 			this.setPreferredSize(size);
 			addChangeListener(this);			
@@ -507,9 +526,6 @@ public class JActionConfigure extends JPanel{
 	}
 
 	//SETTING METHODS
-	public boolean build() {
-		return true;
-	}
 	private void setAboveMin(JSpinner spinner) {
 		if ((int)spinner.getValue() < 1) {
 			spinner.setValue((int)1);
