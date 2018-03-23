@@ -14,6 +14,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
@@ -27,11 +28,13 @@ public class JActionConfigure extends JPanel{
 
 	private static JLabel instruction;
 	private static Dimension panelSize;
+	private static JScrollPane configScroll;
 	private JPanel main = this;
 	public Action action;
 
 	public JActionConfigure(int index) {		
 		JActionConfigure.panelSize = new Dimension((int)(ScenarioCreatorGUI.configuration.getSize().width * 0.9), (int)(ScenarioCreatorGUI.configuration.getSize().height * 0.9));
+		configScroll = new JScrollPane(main, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		this.setPreferredSize(panelSize);
 		this.setBackground(Color.WHITE);
 		this.setBorder(new LineBorder(Color.GRAY, 5));
@@ -189,7 +192,7 @@ public class JActionConfigure extends JPanel{
 		private GoToCheckpointButtonClick(){
 			super.name = "Button: Go To Checkpoint";
 			instruction.setText("Go To Checkpoint: Select the index of the checkpoint you would like to travel to when a specfifc button is clicked. The checkpoint must occur after this one");	
-			goToEvent = new JLabel("Go To Checkpoint: "); 
+			goToEvent = new JLabel("Go To Checkpoint Indexed: "); 
 			when = new JLabel("When This Button is Clicked: ");
 			nodeIndex = new ActionSpinner();
 			buttons = new ResponseButtonSpinner();
@@ -472,15 +475,20 @@ public class JActionConfigure extends JPanel{
 	private class ResponseButtonSpinner extends JSpinner implements ChangeListener{
 		private Dimension size = new Dimension(80,20);
 		private ResponseButtonSpinner() {
+			SpinnerModel number = new SpinnerNumberModel();
+			this.setModel(number);
 			this.setPreferredSize(size);
-			addChangeListener(this);			
+			addChangeListener(this);	
+			this.setValue(1);
 		}
 
 		public void stateChanged(ChangeEvent e) {
+			this.removeChangeListener(this);
 			setAboveMin(this);
 			if ((int)getValue() > ScenarioCreatorGUI.numButtons) {
-				this.setValue(ScenarioCreatorGUI.numButtons);
+				this.setValue((int)ScenarioCreatorGUI.numButtons);
 			}
+			this.addChangeListener(this);
 		}	
 
 		public int value() {
@@ -490,15 +498,20 @@ public class JActionConfigure extends JPanel{
 	private class BrailleCellSpinner extends JSpinner implements ChangeListener{
 		private Dimension size = new Dimension(80,20);
 		private BrailleCellSpinner() {
+			SpinnerModel number = new SpinnerNumberModel();
+			this.setModel(number);
 			this.setPreferredSize(size);
+			this.setValue(1);
 			addChangeListener(this);			
 		}
 
 		public void stateChanged(ChangeEvent e) {
+			this.removeChangeListener(this);
 			setAboveMin(this);
 			if ((int)getValue() > ScenarioCreatorGUI.numCells) {
-				this.setValue(ScenarioCreatorGUI.numCells);
+				this.setValue((int)ScenarioCreatorGUI.numCells);
 			}
+			this.addChangeListener(this);
 		}		
 
 		public int value() {
@@ -508,16 +521,21 @@ public class JActionConfigure extends JPanel{
 	private class ActionSpinner extends JSpinner implements ChangeListener{
 		private Dimension size = new Dimension(80,20);
 		private ActionSpinner() {
+			SpinnerModel number = new SpinnerNumberModel();
+			this.setModel(number);
 			this.setPreferredSize(size);
+			this.setValue(1);
 			addChangeListener(this);			
 		}
 
 		public void stateChanged(ChangeEvent e) {
+			this.removeChangeListener(this);
 			if ((int)getValue() < 0) {
 				this.setValue(0);
 			}else if ((int)getValue() > ScenarioCreatorGUI.nodes.size()-1) {
-				this.setValue(ScenarioCreatorGUI.nodes.size()-1);
+				this.setValue((int)(ScenarioCreatorGUI.nodes.size()-1));
 			}
+			this.addChangeListener(this);
 		}		
 
 		public int value() {
@@ -528,7 +546,7 @@ public class JActionConfigure extends JPanel{
 	//SETTING METHODS
 	private void setAboveMin(JSpinner spinner) {
 		if ((int)spinner.getValue() < 1) {
-			spinner.setValue((int)1);
+			spinner.setValue(1);
 		}
 	}
 

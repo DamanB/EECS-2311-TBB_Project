@@ -51,8 +51,8 @@ public class ScenarioCreatorGUI {
 	public static JPanel configuration;
 
 	public static String ScenarioTitle;
-	public static int numCells = 0;
-	public static int numButtons = 0;
+	public static int numCells = 1;
+	public static int numButtons = 1;
 
 	public static LinkedList<EditorGUI.JNode> nodes = new LinkedList<EditorGUI.JNode>();
 
@@ -106,13 +106,12 @@ public class ScenarioCreatorGUI {
 		northBorder.setBackground(MainFrame.primColor);
 		configuration.setBackground(MainFrame.primColor);
 
-		editor.setSize((int) (MainFrame.getSizeX() * 0.78), (int) (MainFrame.getSizeY() * 0.80));
+		editor.setSize((int) (MainFrame.getSizeX() * 0.78), (int) (MainFrame.getSizeY() * 0.70));
 		controls.setSize((int) (MainFrame.getSizeX() * 0.2), (int) (MainFrame.getSizeY()));
 		leftBorder.setSize((int) (MainFrame.getSizeX() * 0.02), (int) (MainFrame.getSizeY() * 0.80));
 		northBorder.setSize(MainFrame.getSizeX(), (int) (MainFrame.getSizeY() * 0.02));
-		configuration.setSize((int) (MainFrame.getSizeX() * 0.78), (int) (MainFrame.getSizeY() * 0.20));
+		configuration.setSize((int) (MainFrame.getSizeX() * 0.78), (int) (MainFrame.getSizeY() * 0.30));
 
-		//editor.setPreferredSize(editor.getSize());
 		controls.setPreferredSize(controls.getSize());
 		leftBorder.setPreferredSize(leftBorder.getSize());
 		northBorder.setPreferredSize(northBorder.getSize());
@@ -317,7 +316,7 @@ public class ScenarioCreatorGUI {
 		private EditorGUI(){
 
 			scroll = new JScrollPane(editor, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,	JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			mainPanel.add(scroll);			
+			mainPanel.add(scroll);
 			config = new JNodeConfig();
 			createBrailleGUI();
 			createButtonGUI();
@@ -333,7 +332,7 @@ public class ScenarioCreatorGUI {
 			braille = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			braille.setSize(editor.getSize().width,60);
 			braille.setPreferredSize(braille.getSize());
-			braille.add(new JLabel("Select The Amount of Buttons: "));
+			braille.add(new JLabel("Select The Amount of Braille Cells: "));
 			braille.setBackground(Color.white);
 			SpinnerModel number = new SpinnerNumberModel();
 			numberOfBraille = new JSpinner(number);
@@ -463,6 +462,15 @@ public class ScenarioCreatorGUI {
 				connected = node;
 				connected.add(this);
 				connected.validate();
+				if (connected.index == 0) {
+					delete.setEnabled(false);
+					moveUp.setEnabled(false);
+					moveDown.setEnabled(false);
+				}else {
+					delete.setEnabled(true);
+					moveUp.setEnabled(true);
+					moveDown.setEnabled(true);
+				}				
 				this.setVisible(true);
 				this.repaint();
 				connected.repaint();
@@ -477,6 +485,9 @@ public class ScenarioCreatorGUI {
 				}else if (e.getSource().equals(moveDown)) {
 					if (connected.getIndex() < nodes.size()-1)
 						connected.swapWith(nodes.get(connected.getIndex()+1));					
+				}else if (e.getSource().equals(delete)) {
+					nodes.remove(connected);
+					refreshEditor();
 				}
 
 			}
