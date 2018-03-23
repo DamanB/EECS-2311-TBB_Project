@@ -250,15 +250,11 @@ public class ScenarioCreatorGUI {
 
 			File file;	
 			File original = null;
+			boolean allGood = true;
+			int index = 0;
 
 			while (true) {
 				// CREATE FILE
-				if ((int) controlGUI.scenarioIndex.getValue() <= 0) {
-					JOptionPane.showMessageDialog(MainFrame.getMainPanel(),
-							"Please select an index greater than 0 for the Scenario name", "Invalid Index",
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				}
 				String fileName = "Scenario_" + (int) scenarioIndex.getValue() + ".txt";
 				Path path = Paths.get("./" + fileName);
 				if ((Files.exists(path))) {
@@ -285,12 +281,37 @@ public class ScenarioCreatorGUI {
 
 				ScenarioCreatorManager sm = new ScenarioCreatorManager(file);
 				// ADDING ACTIONS
-				sm.setTitle(ScenarioTitle);
 				sm.setButtonNum(numButtons);
 				sm.setCellNum(numCells);
 
-				//TODO BUILD
-
+				for (EditorGUI.JNode node :nodes) {
+					if (index == 0)	{
+						sm.setTitle(node.getCheckpointName());						
+					}else if (node.getClass() == nodes.get(0).getClass()){
+						sm.nextQuestion();
+						if (!(sm.addSkipPos(node.getCheckpointName()))) {
+							allGood = false;
+							break;
+						}
+					}else {
+						if (!(node.action.action.build(sm))) {
+							allGood = false;
+							break;
+						}
+					}					
+					index++;
+				}				
+				if (!allGood) {
+					JOptionPane.showMessageDialog(MainFrame.frame, "BUILD FAILED: You have an error at index - " + index);	
+					if (original == null) {
+						file.delete();
+					}
+				}else {
+					if (original != null) {
+						original.delete();
+					}
+					sm.saveToFile();
+				}
 				break;
 			}
 
@@ -402,7 +423,7 @@ public class ScenarioCreatorGUI {
 				editor.add(n);
 				count++;
 			}
-			
+
 			if (nodes.size() < 10) {
 				int amountToFill = 10 - nodes.size();
 				for (int i = 0; i<amountToFill; i++) {
@@ -411,7 +432,7 @@ public class ScenarioCreatorGUI {
 					editor.add(p);
 				}
 			}
-			
+
 			editor.validate();
 			editor.setVisible(true);
 			editor.repaint();
@@ -536,24 +557,24 @@ public class ScenarioCreatorGUI {
 			public void setIndex(int index) {}
 			public int getIndex() {return index;}
 			private void swapWith(JNode otherNode) {
-					editor.setVisible(false);
-					editor.remove(this);
-					editor.remove(otherNode);
-					int oldIndex = this.index;
-					int newIndex = otherNode.getIndex();
-					this.setIndex(newIndex);
-					otherNode.setIndex(oldIndex);
-					
-					nodes.set(newIndex, this);
-					nodes.set(oldIndex, otherNode);
-					
-					refreshEditor();					
-					editor.setVisible(true);
+				editor.setVisible(false);
+				editor.remove(this);
+				editor.remove(otherNode);
+				int oldIndex = this.index;
+				int newIndex = otherNode.getIndex();
+				this.setIndex(newIndex);
+				otherNode.setIndex(oldIndex);
+
+				nodes.set(newIndex, this);
+				nodes.set(oldIndex, otherNode);
+
+				refreshEditor();					
+				editor.setVisible(true);
 			}
 			public String getCheckpointName() {
-				return action.action.name;
+				return "Action";
 			}
-			
+
 		}
 
 		private class JCheckpointNode extends JNode implements ActionListener{
@@ -635,6 +656,11 @@ public class ScenarioCreatorGUI {
 		instance = new ScenarioCreatorGUI(file);
 		return instance.mainPanel;
 	}
+
+
+
+
+
 
 }
 
