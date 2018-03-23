@@ -142,6 +142,10 @@ public class JActionConfigure extends JPanel{
 			main.add(stringToDisp);
 		}
 		public boolean build(ScenarioCreatorManager sm) {
+			
+			if (stringToDisp.getText().length() > ScenarioCreatorGUI.numCells) {
+				return false;
+			}
 			return sm.addDispString(stringToDisp.getText());			
 		}		
 	}

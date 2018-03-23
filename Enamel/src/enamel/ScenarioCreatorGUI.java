@@ -11,6 +11,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -287,9 +289,13 @@ public class ScenarioCreatorGUI {
 				for (EditorGUI.JNode node :nodes) {
 					if (index == 0)	{
 						sm.setTitle(node.getCheckpointName());						
-					}else if (node.getClass() == nodes.get(0).getClass()){
+					}else if (node.getClass() == nodes.get(0).getClass()){						
+						if (!(node.getCheckpointName().matches("^[A-Za-z]+$"))) {
+							allGood = false;
+							break;
+						}						
 						sm.nextQuestion();
-						if (!(sm.addSkipPos(node.getCheckpointName()))) {
+						if (!(sm.addSkipPos(node.getCheckpointName().toUpperCase()))) {
 							allGood = false;
 							break;
 						}
@@ -577,13 +583,15 @@ public class ScenarioCreatorGUI {
 
 		}
 
-		private class JCheckpointNode extends JNode implements ActionListener{
+		private class JCheckpointNode extends JNode implements ActionListener, FocusListener{
 
 			private String checkpointInst;
 			private JTextField checkpointName;
+			private boolean isTitle;
 
 			private JCheckpointNode(int index, boolean isTitle) {
 				super(index);
+				this.isTitle = isTitle;
 				if (isTitle) {
 					checkpointInst = "Enter this Scenarios Title:";
 					super.action = new JActionConfigure(16);
@@ -594,6 +602,7 @@ public class ScenarioCreatorGUI {
 				checkpointName = new JTextField();
 				checkpointName.setSize(250,20);
 				checkpointName.setPreferredSize(checkpointName.getSize());
+				checkpointName.addFocusListener(this);
 				super.add(checkpointName);
 				super.add(super.configure);
 				super.add(super.add);
@@ -613,6 +622,21 @@ public class ScenarioCreatorGUI {
 			@Override
 			public String getCheckpointName() {
 				return this.checkpointName();
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (e.getSource().equals(checkpointName)) {	
+					if (!isTitle) {
+						if (!(checkpointName.getText().matches("^[A-Za-z]+$"))) {
+							JOptionPane.showMessageDialog(MainFrame.frame, "Checkpoint Name can not have any numbers or spaces", "Invalid Name", JOptionPane.OK_OPTION);
+							checkpointName.setText("");
+						}
+					}
+				}
 			}
 		}
 
