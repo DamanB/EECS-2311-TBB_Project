@@ -7,96 +7,276 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 class ScenarioCreatorManagerTest {
+    ScenarioCreatorManager s;
+    File f = new File("");
 
-	int cell;
-	int button;
-	List<Question> q;
 
-	class RobotThread extends Thread {
-		Robot r;
-		int delay;
+    @Test
+    void testSaveToFile() {
+        ScenarioCreatorManager s1, s4;
+        s1 = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
+        s1.parseFile();
 
-		RobotThread(int ms) throws AWTException {
-			r = new Robot();
-			delay = ms;
-			this.start();
-		}
 
-		public void run() {
-			r.delay(delay);
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.delay(100);
-			r.keyRelease(KeyEvent.VK_ENTER);
-		}
-	}
+        s4 = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_4.txt"));
+        s4.setCellNum(s1.getCellNum());
+        s4.setButtonNum(s1.getButtonNum());
+        s4.setTitle(s1.getTitle());
+        s4.setQuestions(s1.getQuestions());
 
-	void test(String path, int cell, int button, List<Question> q) {
-		ScenarioCreatorManager s = new ScenarioCreatorManager(new File(path));
-		s.parseFile();
-		assertEquals(cell, s.getCellNum());
-		assertEquals(button, s.getButtonNum());
-		assertEquals(q, s.getQuestions());
-	}
+        assertEquals(s1.toString(), s4.toString());
+    }
 
-	void test(String path, int cell, int button, String s) {
-		test(path, cell, button, toQuestion(s));
-	}
 
-	private List<Question> toQuestion(String s) {
-		q = new ArrayList<Question>();
-		return q;
-	}
+    @Test
+    void testCellButtonNum() {
+        s = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
+        s.parseFile();
+        assertEquals(1, s.getCellNum());
+        assertEquals(4, s.getButtonNum());
+    }
 
-	void test(String path1, String path2) {
-		ScenarioCreatorManager s = new ScenarioCreatorManager(new File(path2));
-		s.parseFile();
-		test(path1, s.getCellNum(), s.getButtonNum(), s.getQuestions());
-	}
 
-	void test(String path) {
-		test(path, cell, button, q);
-	}
+    @Test
+    void testAllCommands()
+    {
+        regenerateScenarioOne();
+    }
 
-	void test(String path, int cell, int button) {
-		test(path, cell, button, q);
-	}
+    @Test
+    void testParseFile()
+    {
+        regenerateScenarioOne();
 
-	@Test
-	void testSaveToFile() throws AWTException {
-		ScenarioCreatorManager s1 = new ScenarioCreatorManager(new File("FactoryScenarios/Scenario_1.txt"));
-		s1.parseFile();
-		ScenarioCreatorManager s2 = new ScenarioCreatorManager(new File("FactoryScenarios/Scenario_4.txt"));
-		s2.setCellNum(s1.getCellNum());
-		s2.setButtonNum(s1.getButtonNum());
-		s2.setTitle(s1.getTitle());
-		s2.setQuestions(s1.getQuestions());
-		new RobotThread(2000);
-		s2.saveToFile();
-		test("FactoryScenarios/Scenario_4.txt", "FactoryScenarios/Scenario_1.txt");
-	}
+        ScenarioCreatorManager s = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_65.txt"));
 
-	@Test
-	void testFile1() {
-		q = new ArrayList<Question>();
-		test("FactoryScenarios/Scenario_1.txt", 1, 4);
-	}
+        s.parseFile();
+    }
 
-	@Test
-	void testFile2() {
-		cell = 1;
-		button = 4;
-		q = new ArrayList<Question>();
-		test("FactoryScenarios/Scenario_2.txt");
-	}
+    // TODO test for false input on all commands
+    @Test
+    void testFalseInputCommands()
+    {
 
-	@Test
-	void testFile3() {
-		test("FactoryScenarios/Scenario_3.txt", 1, 4, new ArrayList<Question>());
-	}
+    }
 
+    // TODO add all commands to the method
+    private void regenerateScenarioOne() {
+        s = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_65.txt"));
+        s.setButtonNum(5);
+        s.setCellNum(5);
+        s.setTitle("Scenario 65 File");
+
+        if (!(s.addDispCellPins("0", "11100000"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addText(Arrays.asList("These are pins 1, 2 and 3, the 3 pins on the left side. ", "Press button 1 to continue.")))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addSkipButton("0", "ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addUserInput())) {
+            fail(s.getErrorMessage());
+        }
+
+        // Use next question to increment the question index and put a space in the ScenarioFile for the next question
+        s.nextQuestion();
+
+        if (!(s.addSkipPos("ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellClear("0"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addPause("1"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addResetButtons())) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellPins("0", "00011100"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addText(Arrays.asList("These are pins 4, 5 and 6, the 3 pins on the right side. ", "Press button 1 to continue.")))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addSkipButton("0", "ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addUserInput())) {
+            fail(s.getErrorMessage());
+        }
+
+        s.nextQuestion();
+
+        if (!(s.addSkipPos("ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellClear("0"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addPause("1"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addResetButtons())) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellPins("0", "11000000"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addText(Arrays.asList("These are pins 4, 5 and 6, the 3 pins on the right side.", "Press button 1 to continue.")))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addSkipButton("0", "ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addUserInput())) {
+            fail(s.getErrorMessage());
+        }
+
+
+        s.nextQuestion();
+
+        if (!(s.addSkipPos("ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellClear("0"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addPause("1"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addResetButtons())) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellPins("0", "00011000"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addText(Arrays.asList("These are pins 4 and 5, the top two pins on the right side. Press button 1 to continue.")))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addSkipButton("0", "ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addUserInput())) {
+            fail(s.getErrorMessage());
+        }
+
+        s.nextQuestion();
+
+        if (!(s.addSkipPos("ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellClear("0"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addPause("1"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addResetButtons())) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellPins("0", "10010000"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addText(Arrays.asList("These are pins 1 and 4, the two pins on the top. Press button 1 to continue.")))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addSkipButton("0", "ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addUserInput())) {
+            fail(s.getErrorMessage());
+        }
+
+        s.nextQuestion();
+
+        if (!(s.addSkipPos("ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellClear("0"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addPause("1"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addResetButtons())) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellPins("0", "10010000"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addText(Arrays.asList("These are pins 3 and 6, the two pins on the bottom. Press button 1 to continue.")))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addSkipButton("0", "ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addUserInput())) {
+            fail(s.getErrorMessage());
+        }
+
+        s.nextQuestion();
+
+        if (!(s.addSkipPos("ONEE"))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addText(Arrays.asList("That's the end of directional orientation")))) {
+            fail(s.getErrorMessage());
+        }
+
+        if (!(s.addDispCellClear("0"))) {
+            fail(s.getErrorMessage());
+        }
+
+
+        // After all the commands have been added saveFile()
+        s.saveToFile();
+    }
 }

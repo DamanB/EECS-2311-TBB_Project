@@ -423,7 +423,7 @@ public class ScenarioCreatorManager {
         return this.errorMessage;
     }
 
-    //
+    // Adds a Space to the scenario file and increments question index
     public void nextQuestion() {
         this.questions.get(this.questionIndex).getCommands().add(new Space());
         this.questionIndex++;
@@ -442,7 +442,7 @@ public class ScenarioCreatorManager {
         return true;
     }
 
-    //
+    // Adds pause functionality in seconds to scenario file
     public boolean addPause(String pauseTime) {
         try {
             this.questions.get(this.questionIndex).getCommands().add(new Pause("/~pause:", pauseTime));
@@ -641,13 +641,13 @@ public class ScenarioCreatorManager {
 
     //////////////////////////////////////// TESTING /////////////////////////////////////
     // The following main method is used to test
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         ScenarioCreatorManager scenarioCreatorManager = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
 
         scenarioCreatorManager.parseFile();
 
         System.out.println(scenarioCreatorManager.toString());
-    }
+    }*/
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
     // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
     /*public static void main(String[] args) {
@@ -869,9 +869,9 @@ public class ScenarioCreatorManager {
         }
 
 
-        // After all the commands have been added saveFile() 
+        // After all the commands have been added saveFile()
         scenarioCreatorManager.saveToFile();
-    }*/
+    }
     //////////////////////////////////////// TESTING /////////////////////////////////////
-
+*/
 }
