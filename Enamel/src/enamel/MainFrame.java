@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 
 public class MainFrame{
@@ -23,31 +24,22 @@ public class MainFrame{
 	public static Color primColor = new Color(153,197,217);
 	public static boolean runScen = false;
 
+	//private static JScrollPane scroll;
 
 	public MainFrame() {		
 		
 		frame = new JFrame("SDP-16 Treasure Box Braille");		
-		//frame.setSize(dimension);
-		//frame.setPreferredSize(dimension);
 		frame.setSize(dimension);
-		//frame.setLayout(null);
-		//frame.setResizable(false);
 		frame.setMinimumSize(new Dimension(200,200));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new GridLayout(1,0));
 		
-		mainPanel = new JPanel();
-		//mainPanel.setBackground(primColor);
-		/*frame.addComponentListener(new ComponentAdapter() {				
-			public void componentResized(ComponentEvent e) {			
-				dimension = frame.getSize();
-			}
-								
-	});*/
-		//mainPanel.setSize(dimension);
-		//mainPanel.setPreferredSize(dimension);
-		//mainPanel.setLayout(null);
+		mainPanel = new JPanel();		
 		
+		//scroll = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		
+		//frame.add(scroll);
 		frame.add(mainPanel);
 		frame.setVisible(true);
 		frame.repaint();
