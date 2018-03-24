@@ -90,13 +90,6 @@ public class ScenarioCreatorManager {
 
             // Erases the contents of the file
             PrintWriter printWriter = new PrintWriter(this.scenarioFile);
-            /*
-            printWriter.println("Cell " + this.cellNum);
-            printWriter.println("Button " + this.buttonNum);
-            if (!title.equals("")) {
-                printWriter.println(this.title);
-            }
-            printWriter.println();*/
             printWriter.println(result);
             printWriter.close();
 
