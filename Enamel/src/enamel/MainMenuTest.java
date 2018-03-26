@@ -46,7 +46,7 @@ class MainMenuTest {
 		file = new File("1.txt");
 		file.createNewFile();
 		r.moveMouse(MainMenu.instance.getPlayer());
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		r.pressKey(KeyEvent.VK_DOWN);
 		r.pressKey(KeyEvent.VK_ENTER);
 		assertEquals("Error: Invalid file name\n", b.toString());
@@ -58,7 +58,7 @@ class MainMenuTest {
 		file.createNewFile();
 		file.setReadable(false, false);
 		r.moveMouse(MainMenu.instance.getPlayer());
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		r.pressKey(KeyEvent.VK_DOWN, 5);
 		r.pressKey(KeyEvent.VK_ENTER);
 		assertEquals("File error\n", b.toString());
@@ -69,7 +69,7 @@ class MainMenuTest {
 		file = new File("Scenario_1.txt");
 		file.createNewFile();
 		r.moveMouse(MainMenu.instance.getPlayer());
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		r.pressKey(KeyEvent.VK_DOWN, 5);
 		r.pressKey(KeyEvent.VK_ENTER);
 		assertEquals("Error: Invalid file format. Cell and Button numbers not found\n", b.toString());
@@ -78,7 +78,7 @@ class MainMenuTest {
 	@Test
 	void testPlayCorrect() throws AWTException {
 		r.moveMouse(MainMenu.instance.getPlayer());
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		r.pressKey(KeyEvent.VK_DOWN, 2);
 		r.pressKey(KeyEvent.VK_ENTER);
 		r.pressKey(KeyEvent.VK_DOWN, 2);
@@ -89,16 +89,16 @@ class MainMenuTest {
 	@Test
 	void testEdit() throws AWTException {
 		r.moveMouse(MainMenu.instance.getEditor());
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		assertEquals(ScenarioEditorMenu.pane, MainFrame.getMainPanel().getComponent(0));
 	}
 
 	@Test
 	void testBack() throws AWTException {
 		r.moveMouse(MainMenu.instance.getEditor());
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		r.moveMouse(ScenarioEditorMenu.back);
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		assertEquals(MainMenu.getPanel(), MainFrame.getMainPanel().getComponent(0));
 	}
 

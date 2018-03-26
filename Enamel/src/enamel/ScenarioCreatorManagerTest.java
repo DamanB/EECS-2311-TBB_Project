@@ -259,4 +259,10 @@ class ScenarioCreatorManagerTest {
             fail("Error on command " + s.getErrorMessage());
         }
     }
+
+
+	public static void test(String string, String string2) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -21,10 +21,10 @@ class ScenarioEditorMenuTest {
 	@Test
 	void test() {
 		r.moveMouse(ScenarioEditorMenu.create);
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		assertEquals(ScenarioCreatorGUI.getMainPanel(), MainFrame.getMainPanel().getComponent(0));
 		r.moveMouse(ScenarioCreatorGUI.getBack());
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		r.pressKey(KeyEvent.VK_ENTER);
 		assertEquals(ScenarioEditorMenu.pane, MainFrame.getMainPanel().getComponent(0));
 	}
@@ -32,7 +32,7 @@ class ScenarioEditorMenuTest {
 	@Test
 	void testEdit() {
 		r.moveMouse(ScenarioEditorMenu.modify);
-		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressMouse();
 		r.pressKey(KeyEvent.VK_ENTER);
 		fail("Undo");
 	}

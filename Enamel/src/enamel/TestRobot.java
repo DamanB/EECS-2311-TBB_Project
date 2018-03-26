@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 public class TestRobot {
 	public Robot r;
@@ -31,6 +32,10 @@ public class TestRobot {
 		for (int i = 0; i < s.length(); i++) {
 			pressKey(s.charAt(i));
 		}
+	}
+
+	public void pressMouse() {
+		pressMouse(KeyEvent.BUTTON1_MASK);
 	}
 
 	public void pressMouse(int key) {
@@ -63,19 +68,5 @@ public class TestRobot {
 
 	public void delay(int ms) {
 		r.delay(ms);
-	}
-
-	public void click(Point p, int key, int times) {
-		for (int i = 0; i < times; i++) {
-			moveMouse(p);
-			pressMouse(key);
-		}
-	}
-
-	public void click(Component comp, int key, int times) {
-		for (int i = 0; i < times; i++) {
-			moveMouse(comp);
-			pressMouse(key);
-		}
 	}
 }
