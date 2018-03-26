@@ -12,10 +12,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ToyAuthoring {
 
-	// this this the origin version
+    // this this the origin version
 
-	public static void main(String[] args) {
-		UsageLogger.initialise();
-		MainFrame main = new MainFrame();
-	}
+    public static void main(String[] args) {
+        UsageLogger.initialise();
+        UsageLogger.usageIncrement(UsageLogger.UsageElements.Launch);
+        MainFrame main = new MainFrame();
+    }
 }

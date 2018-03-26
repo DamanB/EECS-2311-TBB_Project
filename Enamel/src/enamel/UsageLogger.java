@@ -3,7 +3,9 @@ package enamel;
 import org.junit.internal.ExactComparisonCriteria;
 import org.omg.CORBA.DynAnyPackage.Invalid;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,9 +22,10 @@ public class UsageLogger {
     private static File fileName;
 
     // TODO Add more options for each UI element
-    private static enum UsageElements {
+    public static enum UsageElements {
         Player,
-        Editor
+        Editor,
+        Launch
     }
 
     public static void initialise() {
@@ -33,7 +36,6 @@ public class UsageLogger {
         // Add file verifier
 
         fileName = new File(logFile);
-        Scanner scanner = new Scanner(logFile);
 
         initialiseMap();
 
@@ -43,20 +45,18 @@ public class UsageLogger {
             String line = "";
             String[] temp;
 
-            while (scanner.hasNextLine()) {
-                line = scanner.nextLine();
+            try (BufferedReader br = new BufferedReader(new FileReader(logFile))) {
+                while ((line = br.readLine()) != null) {
+                    if (line.contains(",")) {
+                        String[] lineSplit = line.split(",");
 
-                if (line.contains(",")) {
-                    temp = line.split(",");
-
-                    for (UsageElements i : UsageElements.values()) {
-                        if (i.toString().equals(temp[0])) {
-                            addElement(i, Integer.parseInt(temp[1]));
-                        }
+                        addElement(UsageElements.valueOf(lineSplit[0]), Integer.parseInt(lineSplit[1]));
                     }
-
                 }
+            } catch (Exception e) {
+                System.out.println("Usage Log File Error");
             }
+            saveMap();
         }
     }
 
@@ -77,10 +77,6 @@ public class UsageLogger {
         } else {
             usageMap.put(element.toString(), value);
         }
-        if (!fileName.exists()) {
-            createFile();
-        }
-        saveMap();
     }
 
     public static boolean usageIncrement(UsageElements element) {
@@ -94,10 +90,14 @@ public class UsageLogger {
         }
 
         usageMap.put(element.toString(), usageMap.get(element.toString()) + value);
+        saveMap();
         return true;
     }
 
     private static void saveMap() {
+        if (!fileName.exists()) {
+            createFile();
+        }
         try {
             printWriter = new PrintWriter(fileName);
             printWriter.println(mapToString());
@@ -119,7 +119,7 @@ public class UsageLogger {
         String result = "";
 
         for (UsageElements i : UsageElements.values()) {
-            result += i + "," + usageMap.get(i);
+            result += i.toString() + "," + usageMap.get(i.toString()) + "\n";
         }
 
         return result;
