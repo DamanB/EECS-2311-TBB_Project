@@ -26,7 +26,7 @@ class ScenarioEditorMenuTest {
 		Robot r = new Robot();
 		r.delay(100);
 		r.mouseMove(MainFrame.frame.getX() + ScenarioEditorMenu.create.getX() + 20,
-				MainFrame.frame.getY() + ScenarioEditorMenu.create.getY() + 40);
+					MainFrame.frame.getY() + ScenarioEditorMenu.create.getY() + 40);
 		r.delay(100);
 		r.mousePress(KeyEvent.BUTTON1_MASK);
 		r.delay(100);

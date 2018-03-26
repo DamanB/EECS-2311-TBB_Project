@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class ScenarioCreatorManagerTest {
 
-    // MAKE SURE THE PATH Enamel/FactoryScenarios/* IS AVAILABLE IN YOUR PROJECT PATH.
+    // MAKE SURE THE PATH "Enamel/FactoryScenarios/*" IS AVAILABLE IN YOUR PROJECT PATH.
     // IF NOT REOPEN THE PROJECT WITH THE VALID PATH
 
     private ScenarioCreatorManager s;
