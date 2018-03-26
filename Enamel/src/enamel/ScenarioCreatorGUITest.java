@@ -1,7 +1,5 @@
 package enamel;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
 
@@ -20,7 +18,7 @@ class ScenarioCreatorGUITest {
 			"These are pins 3 and 6, the two pins on the bottom. Press button 1 to continue.",
 			"That's the end of directional orientation!" };
 
-	int[][] cell = { { 1, 2, 3 }, {} };
+	int[][] cell = { { 0, 1, 2 }, { 4, 5, 6 }, { 0, 1 }, { 4, 5 }, { 0, 4 }, { 2, 6 } };
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -111,9 +109,12 @@ class ScenarioCreatorGUITest {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 1).getConfigure());
 			r.pressMouse();
 			for (int j = 0; j < 6; j++) {
-				r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().x + 5,
-						ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().y + 5);
-				r.pressMouse();
+				for (int k : cell[j]) {
+					r.moveMouse(
+							ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().x + k / 4 * 25 + 5,
+							ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().y + k % 4 * 25 + 5);
+					r.pressMouse();
+				}
 			}
 		}
 		for (int i = 0; i < 6; i++) {
