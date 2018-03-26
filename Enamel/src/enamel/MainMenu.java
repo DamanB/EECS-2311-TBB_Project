@@ -183,6 +183,7 @@ public class MainMenu {
 			if (e.getButton() == MouseEvent.BUTTON1) {
 				if (e.getSource().equals(player)) {
 					player();
+					UsageLogger.usageIncrement(UsageLogger.UsageElements.Player);
 				} else if (e.getSource().equals(editor)) {
 					editor();
 				}
