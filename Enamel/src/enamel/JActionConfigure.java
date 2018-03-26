@@ -100,6 +100,10 @@ public class JActionConfigure extends JPanel{
 			super.name = "Checkpoint: ";
 			instruction.setText("Checkpoint: Give this checkpoint a name (One word consiting of only letters and no duplicates)");
 		}
+		
+		private Checkpoint(String name) {
+			this();
+		}
 
 		public boolean build(ScenarioCreatorManager sm) {
 			return false;
@@ -120,10 +124,15 @@ public class JActionConfigure extends JPanel{
 			main.add(pauseTime);
 		}	
 
+		private JPauseButton(int time) {
+			this();
+			pauseTime.setValue((int)time);
+		}
+		
 		public boolean build(ScenarioCreatorManager sm) {
 			return sm.addPause(Integer.toString((int)pauseTime.getValue()));
 		}
-
+		
 		public void stateChanged(ChangeEvent e) {
 			if (e.getSource().equals(pauseTime)) {
 				setAboveMin(pauseTime);				
@@ -141,6 +150,12 @@ public class JActionConfigure extends JPanel{
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/5,20));
 			main.add(stringToDisp);
 		}
+		
+		private JDisplayWordInBraille(String word) {
+			this();
+			stringToDisp.setText(word);
+		}
+		
 		public boolean build(ScenarioCreatorManager sm) {
 			
 			if (stringToDisp.getText().length() > ScenarioCreatorGUI.numCells) {
@@ -152,7 +167,6 @@ public class JActionConfigure extends JPanel{
 
 	private class JRepeat extends Action{		
 		private JTextField stringToDisp;
-		private JLabel selectButton;
 		private ResponseButtonSpinner buttons;
 
 		private JRepeat() {
@@ -161,11 +175,16 @@ public class JActionConfigure extends JPanel{
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/2,20));
 			main.add(stringToDisp);		
-			selectButton = new JLabel("Select Repeat Button: ");
 			buttons = new ResponseButtonSpinner();
-			main.add(selectButton);
+			main.add(new JLabel("Select Repeat Button: "));
 			main.add(buttons);
 		}	
+		
+		private JRepeat(String toRepeat, int buttonIndex) {
+			this();
+			stringToDisp.setText(toRepeat);
+			buttons.setValue((int)buttonIndex);
+		}
 
 		public boolean build(ScenarioCreatorManager sm) {
 
@@ -188,25 +207,27 @@ public class JActionConfigure extends JPanel{
 	}
 
 	private class GoToCheckpointButtonClick extends Action{
-		private JLabel goToEvent;
-		private JLabel when;
 		private ResponseButtonSpinner buttons;
 		private ActionSpinner nodeIndex;
 
 		private GoToCheckpointButtonClick(){
 			super.name = "Button: Go To Checkpoint";
 			instruction.setText("Go To Checkpoint: Select the index of the checkpoint you would like to travel to when a specfifc button is clicked. The checkpoint must occur after this one");	
-			goToEvent = new JLabel("Go To Checkpoint Indexed: "); 
-			when = new JLabel("When This Button is Clicked: ");
 			nodeIndex = new ActionSpinner();
 			buttons = new ResponseButtonSpinner();
-			main.add(goToEvent);
+			main.add(new JLabel("Go To Checkpoint Indexed: "));
 			main.add(nodeIndex);
-			main.add(when);
+			main.add(new JLabel("When This Button is Clicked: "));
 			main.add(buttons);
 
 		}
 
+		private GoToCheckpointButtonClick(int checkpointIndex,int buttonIndex) {
+			this();
+			buttons.setValue((int)buttonIndex);
+			nodeIndex.setValue((int)checkpointIndex);
+		}
+		
 		public boolean build(ScenarioCreatorManager sm) {	
 			if (buttons.value() >= ScenarioCreatorGUI.numButtons) {
 				return false;
@@ -243,6 +264,11 @@ public class JActionConfigure extends JPanel{
 			main.add(cells);
 		}	
 
+		private JClearSpecificCell(int cellIndex) {
+			this();
+			cells.setValue(cellIndex);
+		}
+		
 		public boolean build(ScenarioCreatorManager sm) {
 			if (cells.value() >= ScenarioCreatorGUI.numCells) {
 				return false;
@@ -263,6 +289,12 @@ public class JActionConfigure extends JPanel{
 			main.add(new JLabel("Braille Cell: "));
 			cells = new BrailleCellSpinner();
 			main.add(cells);
+		}
+		
+		private JDisplayChar(char character,int cellIndex) {
+			this();
+			stringToDisp.setText(String.valueOf(character));
+			cells.setValue(cellIndex);
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
@@ -290,6 +322,12 @@ public class JActionConfigure extends JPanel{
 			main.add(cells);
 			edit = new JBrailleCell();
 			main.add(edit);
+		}
+		
+		private JDisplayPins(String cellConfig, int cellIndex) {
+			this();
+			edit.setCellConfig(cellConfig);
+			cells.setValue(cellIndex);			
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {

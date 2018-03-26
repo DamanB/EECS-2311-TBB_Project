@@ -75,5 +75,17 @@ public class JBrailleCell extends JPanel{
 		return toReturn;		
 	}
 
-	
+	public void setCellConfig(String configuration) {
+		int index = 0;
+		for (char c : configuration.toCharArray()) {
+			if (c == '1') {
+				pins.get(index).setSelected(true);
+			}else {
+				pins.get(index).setSelected(false);
+			}
+			index++;	
+		}
+	}
+
+
 }

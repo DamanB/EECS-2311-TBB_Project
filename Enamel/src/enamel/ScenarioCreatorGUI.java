@@ -59,7 +59,7 @@ public class ScenarioCreatorGUI {
 	public static LinkedList<EditorGUI.JNode> nodes = new LinkedList<EditorGUI.JNode>();
 
 	private static controlGUI controlClass;
-	private static EditorGUI editorClass;
+	public static EditorGUI editorClass;
 
 	//public static List<> eventsList;
 
@@ -226,6 +226,7 @@ public class ScenarioCreatorGUI {
 						"Exit", JOptionPane.OK_CANCEL_OPTION);
 
 				if (k == JOptionPane.OK_OPTION) {
+					nodes.clear();
 					MainFrame.changeScreen(ScenarioEditorMenu.getScreen());
 				}
 			} else if (e.getSource().equals(buildButton)) {
