@@ -39,10 +39,18 @@ public class UsageLogger {
         if (!fileName.exists()) {
             createFile();
         } else {
+            String line = "";
+            String[] temp;
+
             while (scanner.hasNextLine()) {
-                String[] temp = scanner.nextLine().split(",");
-                // get key and value from string
-                addElement(temp[0], Integer.parseInt(temp[1]));
+                line = scanner.nextLine();
+
+                if (line.contains(",")) {
+                    temp = line.split(",");
+                    // get key and value from string
+                    addElement(temp[0], Integer.parseInt(temp[1]));
+                }
+
             }
         }
     }
