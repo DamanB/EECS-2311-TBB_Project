@@ -64,8 +64,6 @@ public class ScenarioCreatorManager {
             "Display Cell Clear",
             "Display Cell Lower Pins",
             "User Input"
-
-
     };
 
 
@@ -83,7 +81,7 @@ public class ScenarioCreatorManager {
     }
 
     // Saves the list of questions, cell number and button numbers to the file.
-    public void saveToFile() {
+    public boolean saveToFile() {
         String result = "";
         try {
             result = this.toString();
@@ -93,12 +91,12 @@ public class ScenarioCreatorManager {
             printWriter.println(result);
             printWriter.close();
 
-            JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "BUILD SUCCESSFUL", "Builder", JOptionPane.INFORMATION_MESSAGE);
-
         } catch (Exception e) {
             System.out.println(e.toString());
             this.errorMessage = e.toString();
+            return false;
         }
+        return true;
     }
 
     // Will parse an existing scenario file and create a list of questions from it and the cell/button numbers
@@ -208,7 +206,7 @@ public class ScenarioCreatorManager {
 
                         try {
                             // TODO figure out how to pass through button number from GUI
-                            temp = new RepeatButton(lines.get(i).substring(0, 8), lines.get(i).substring(8), this.buttonNum);
+                            temp = new RepeatButton(lines.get(i).substring(0, 16), lines.get(i).substring(16), this.buttonNum);
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
                             return false;
@@ -497,7 +495,7 @@ public class ScenarioCreatorManager {
 
     public boolean addEndRepeat() {
         try {
-            this.questions.get(this.questionIndex).getCommands().add(new EndRepeat("/~end-repeat", ""));
+            this.questions.get(this.questionIndex).getCommands().add(new EndRepeat("/~endrepeat", ""));
         } catch (IllegalArgumentException e) {
             this.errorMessage = e.toString();
             return false;
@@ -578,6 +576,16 @@ public class ScenarioCreatorManager {
     public boolean addDispCellLower(String cellPos, String pinNum) {
         try {
             this.questions.get(this.questionIndex).getCommands().add(new DispCellLower("/~disp-cell-lower:", cellPos + " " + pinNum, this.cellNum));
+        } catch (IllegalArgumentException e) {
+            this.errorMessage = e.toString();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean addDispCellLowerPins() {
+        try {
+            this.questions.get(this.questionIndex).getCommands().add(new DispCellLowerPins("/~disp-cell-lowerPins", ""));
         } catch (IllegalArgumentException e) {
             this.errorMessage = e.toString();
             return false;

@@ -316,7 +316,14 @@ public class ScenarioCreatorGUI {
 					if (original != null) {
 						original.delete();
 					}
-					sm.saveToFile();
+
+					if (sm.saveToFile())
+					{
+						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "BUILD SUCCESSFUL", "Builder", JOptionPane.INFORMATION_MESSAGE);
+					}
+					else {
+						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "!!!BUILD UNSUCCESSFUL!!!", "Builder", JOptionPane.INFORMATION_MESSAGE);
+					}
 				}
 				break;
 			}

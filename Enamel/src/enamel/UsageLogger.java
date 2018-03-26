@@ -90,11 +90,7 @@ public class UsageLogger {
     }
 
     private static void saveMap() {
-        createFile();
-
-        for (String i : usageList) {
-            printWriter.println(i + "," + usageMap.get(i));
-        }
+        printWriter.println(mapToString());
         printWriter.close();
     }
 

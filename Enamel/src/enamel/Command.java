@@ -47,7 +47,7 @@ public abstract class Command {
 
     @Override
     public String toString() {
-        return (!input.equals("")) ? (this.command + this.input) : (this.command);
+        return (this.command + this.input);
     }
 }
 // Used for adding Text into the Scenario file for TTS
