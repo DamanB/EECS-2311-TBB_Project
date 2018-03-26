@@ -2,13 +2,9 @@ package enamel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -18,14 +14,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -33,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -127,10 +118,6 @@ public class ScenarioCreatorGUI {
 		mainPanel.add(northBorder, BorderLayout.NORTH);
 		controlClass = new controlGUI();
 		editorClass = new EditorGUI();
-	}
-
-	private ScenarioCreatorGUI(File file) {
-		this();	
 	}
 
 	private static class controlGUI implements ActionListener, ChangeListener, ListSelectionListener {
@@ -337,16 +324,15 @@ public class ScenarioCreatorGUI {
 
 	}
 
-	private static class EditorGUI implements ChangeListener{
+	public static class EditorGUI implements ChangeListener{
 
 		private static JNodeConfig config;
 		private static JScrollPane scroll;
 
 		private static JPanel button;
 		private static JPanel braille;
-		private static JSpinner numberOfBraille;
-		private static JSpinner numberOfButtons;
-		private static JTextField scenarioTitle;
+		public static JSpinner numberOfBraille;
+		public static JSpinner numberOfButtons;
 
 		private EditorGUI(){
 
@@ -415,6 +401,24 @@ public class ScenarioCreatorGUI {
 			}else {
 				nodes.add(index,n);
 			}
+		}
+
+		public static void addCheckpointNode(JActionConfigure config, String name, boolean isTitle) {
+			JCheckpointNode n = editorClass.new JCheckpointNode(config, name, isTitle);
+			
+			if (isTitle) {
+				nodes.removeFirst();
+				nodes.addFirst(n);
+			}else {
+				nodes.addLast(n);
+			}
+			refreshEditor();
+		}
+
+		public static void addActionNode(JActionConfigure config) {
+			JActionNode n = editorClass.new JActionNode(config);
+			nodes.addLast(n);
+			refreshEditor();
 		}
 
 		private static void createNode(int index) {
@@ -539,6 +543,18 @@ public class ScenarioCreatorGUI {
 			private JActionConfigure action;
 
 			private JNode(int index) {	
+				this.index = index;
+				createJNodeGUI();	
+				action = new JActionConfigure(controlGUI.getSelectedAction());
+			}
+
+			private JNode(JActionConfigure config) {
+				this.index = nodes.size()-1;
+				createJNodeGUI();	
+				this.action = config;
+			}
+
+			private void createJNodeGUI() {
 				this.setSize(editor.getSize().width,60);
 				this.setPreferredSize(this.getSize());
 				this.setBackground(Color.WHITE);
@@ -548,12 +564,10 @@ public class ScenarioCreatorGUI {
 				header.setBackground(null);
 				header.setHorizontalAlignment(JLabel.LEFT);
 				this.add(header, BorderLayout.CENTER);				
-				action = new JActionConfigure(controlGUI.getSelectedAction());
-				this.index = index;
 				configure = new JButton("Configure");
 				configure.addActionListener(this);
-				add = new JButton("Add Below");
-				add.addActionListener(this);								
+				add = new JButton("Add Selected Below");
+				add.addActionListener(this);
 			}
 
 			public void actionPerformed(ActionEvent e) {
@@ -567,7 +581,6 @@ public class ScenarioCreatorGUI {
 					EditorGUI.createNode(this.index+1);
 				}
 			}
-
 			public void setIndex(int index) {}
 			public int getIndex() {return index;}
 			private void swapWith(JNode otherNode) {
@@ -599,13 +612,17 @@ public class ScenarioCreatorGUI {
 
 			private JCheckpointNode(int index, boolean isTitle) {
 				super(index);
-				this.isTitle = isTitle;
+				createCheckpointNode(isTitle);
+			}
+
+			private void createCheckpointNode(boolean isTitle) {
 				if (isTitle) {
 					checkpointInst = "Enter this Scenarios Title:";
 					super.action = new JActionConfigure(16);
 				}else {
 					checkpointInst = "Enter a Checkpoint Name";
 				}
+				this.isTitle = isTitle;
 				super.header.setText(super.index + " - " + checkpointInst);
 				checkpointName = new JTextField();
 				checkpointName.setSize(250,20);
@@ -614,7 +631,12 @@ public class ScenarioCreatorGUI {
 				super.add(checkpointName);
 				super.add(super.configure);
 				super.add(super.add);
+			}
 
+			private JCheckpointNode(JActionConfigure config, String name, boolean isTitle) {
+				super(config);
+				createCheckpointNode(isTitle);
+				this.checkpointName.setText(name);
 			}
 
 			public String checkpointName() {
@@ -654,13 +676,22 @@ public class ScenarioCreatorGUI {
 
 			private JActionNode(int index) {
 				super(index);				
+				createJActionGUI();
+			}
+
+			private JActionNode(JActionConfigure config) {
+				super(config);
+				createJActionGUI();
+			}
+
+			private void createJActionGUI() {
 				actionName = super.action.action.toString();
 				super.header.setText("\t" + super.index + " - " + actionName);
 				super.header.setSize(260,60);
 				super.header.setPreferredSize(super.header.getSize());
 				super.add(super.configure);
 				super.add(super.add);
-			}			
+			}
 
 			@Override
 			public void setIndex(int index) {
@@ -683,16 +714,6 @@ public class ScenarioCreatorGUI {
 		instance = new ScenarioCreatorGUI();
 		return instance.mainPanel;
 	}
-
-	public static JPanel getPreBuiltScreen(File file) {
-		instance = new ScenarioCreatorGUI(file);
-		return instance.mainPanel;
-	}
-
-
-
-
-
 
 }
 

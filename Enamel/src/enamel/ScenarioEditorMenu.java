@@ -117,8 +117,28 @@ public class ScenarioEditorMenu implements MouseListener {
 		if (e.getSource().equals(create)) {
 			MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
 		} else if (e.getSource().equals(modify)) {
-			JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Sorry This Is Under Construction", "Sorry",
-					JOptionPane.PLAIN_MESSAGE, null);
+			
+			//TODO Sanjay Add a call for retrieving the Filename and parsing here
+			MainFrame.changeScreen(ScenarioCreatorGUI.getScreen()); //ENSURE THIS IS THE FIRST CALL
+			
+			//DELETE FROM HERE
+			GUIBuilder.setNumCells(3);
+			GUIBuilder.setNumButtons(2);
+			GUIBuilder.setTitle("This is a test");
+			GUIBuilder.createTextToSpeech("What does the braille cell say? Click one for Dog Two for Cat");
+			GUIBuilder.createDisplayWordInBraille("Dog");
+			GUIBuilder.createCheckpointTravelButtonClick(6, 0);
+			GUIBuilder.createCheckpointTravelButtonClick(8, 1);
+			GUIBuilder.createUserInput();
+			GUIBuilder.createCheckpoint("AnswerCorrect");
+			GUIBuilder.createTextToSpeech("YOU ARE CORRECT!");
+			GUIBuilder.createCheckpoint("AnswerWrong");
+			GUIBuilder.createTextToSpeech("YOU ARE WRONG!");
+
+			
+			//TEST: DELETE ABOVE 
+			
+			
 		} else if (e.getSource().equals(back)) {
 			MainFrame.changeScreen(MainMenu.getScreen());
 		}
@@ -141,143 +161,5 @@ public class ScenarioEditorMenu implements MouseListener {
 	public void mouseReleased(MouseEvent arg0) {
 	}
 
-
-/*
- * 	private class EditorInfo extends JPanel implements ActionListener, ChangeListener {
-
-		private JLabel infoTitle;
-		private JLabel cellNumberInst;
-		private JLabel responseButtonInst;
-		private JLabel titleInst;
-
-		private JSpinner cellNumber;
-		private JSpinner responseButtonNumber;
-		private JTextField title;
-
-		private JButton begin;
-		private JButton back;
-
-		private EditorInfo() {
-			this.setBackground(MainFrame.primColor);
-			GridBagLayout l = new GridBagLayout();
-			GridBagConstraints c = new GridBagConstraints();
-			this.setLayout(l);
-
-			cellNumber = new JSpinner(new SpinnerNumberModel());
-			responseButtonNumber = new JSpinner(new SpinnerNumberModel());
-			cellNumber.setPreferredSize(new Dimension(40, 20));
-			responseButtonNumber.setPreferredSize(new Dimension(40, 20));
-			cellNumber.addChangeListener(this);
-			responseButtonNumber.addChangeListener(this);
-			cellNumber.setValue((int) 1);
-			responseButtonNumber.setValue((int) 1);
-
-			title = new JTextField();
-			title.setSize(MainFrame.getSizeX() / 10, 20);
-			title.setPreferredSize(title.getSize());
-			begin = new JButton("Begin!");
-			modifyButton(begin);
-			back = new JButton("Back");
-			modifyButton(back);
-
-			infoTitle = new JLabel("Configure Scenario Settings");
-			cellNumberInst = new JLabel("Number of Braille Cells: ");
-			responseButtonInst = new JLabel("Number of Response Buttons: ");
-			titleInst = new JLabel("Title of Scenario: ");
-			setSize(infoTitle);
-			infoTitle.setFont(new Font("calibri", Font.PLAIN, 30));
-			setSize(cellNumberInst);
-			setSize(responseButtonInst);
-			setSize(titleInst);
-			infoTitle.setHorizontalAlignment(JLabel.CENTER);
-
-			c.insets = new Insets(10, 20, 10, 20);
-			c.anchor = c.CENTER;
-			c.fill = c.HORIZONTAL;
-			c.gridwidth = 2;
-			c.gridx = 0;
-			c.gridy = 0;
-			this.add(infoTitle, c);
-
-			c.anchor = c.FIRST_LINE_START;
-			c.gridwidth = 1;
-			c.gridx = 0;
-			c.gridy = 1;
-			this.add(cellNumberInst, c);
-			c.gridx = 1;
-			c.gridy = 1;
-			this.add(cellNumber, c);
-			c.gridx = 0;
-			c.gridy = 2;
-			this.add(responseButtonInst, c);
-			c.gridx = 1;
-			c.gridy = 2;
-			this.add(responseButtonNumber, c);
-			c.gridx = 0;
-			c.gridy = 3;
-			this.add(titleInst, c);
-			c.gridx = 1;
-			c.gridy = 3;
-			this.add(title, c);
-
-			// BUTTONS
-			c.fill = c.NONE;
-			c.anchor = c.CENTER;
-			c.gridx = 0;
-			c.gridy = 4;
-			c.gridwidth = 3;
-			this.add(begin, c);
-			c.gridx = 0;
-			c.gridy = 5;
-			this.add(back, c);
-			MainFrame.changeScreen(this);
-		}
-
-		private void setSize(JLabel label) {
-			// label.setSize(MainFrame.getSizeX(), 20);
-			// label.setPreferredSize(label.getSize());
-			label.setFont(new Font("calibri", Font.PLAIN, 20));
-			label.setForeground(Color.BLACK);
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource().equals(begin)) {
-				ScenarioCreatorGUI.numCells = (int) cellNumber.getValue();
-				ScenarioCreatorGUI.numButtons = (int) responseButtonNumber.getValue();
-				ScenarioCreatorGUI.ScenarioTitle = title.getText();
-				MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
-			} else if (e.getSource().equals(back)) {
-				MainFrame.changeScreen(getScreen());
-			}
-
-		}
-
-		private void modifyButton(JButton button) {
-			Dimension size = new Dimension(190, 55);
-			button.setPreferredSize(size);
-			button.setMinimumSize(size);
-			button.addActionListener(this);
-			button.setFont(new Font("Calibri", Font.PLAIN, 20));
-			MainFrame.editJButton(button);
-			button.setVerticalAlignment(JButton.CENTER);
-		}
-
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			if (e.getSource().equals(cellNumber)) {
-				if ((int) cellNumber.getValue() < 1) {
-					cellNumber.setValue((int) 1);
-				}
-			} else if (e.getSource().equals(responseButtonNumber)) {
-				if ((int) responseButtonNumber.getValue() < 1) {
-					responseButtonNumber.setValue((int) 1);
-				}
-			}
-		}
-	}
-
- * 
- * 
- */
 
 }

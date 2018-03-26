@@ -33,6 +33,15 @@ public class JActionConfigure extends JPanel{
 	public Action action;
 
 	public JActionConfigure(int index) {		
+		createGUI();		
+		getOptions(index);
+	}
+	
+	public JActionConfigure() {
+		createGUI();		
+	}
+
+	private void createGUI() {
 		JActionConfigure.panelSize = new Dimension((int)(ScenarioCreatorGUI.configuration.getSize().width * 0.9), (int)(ScenarioCreatorGUI.configuration.getSize().height * 0.9));
 		configScroll = new JScrollPane(main, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		this.setPreferredSize(panelSize);
@@ -48,8 +57,7 @@ public class JActionConfigure extends JPanel{
 		config.setSize(panelSize.width,30);
 		config.setPreferredSize(config.getSize());
 		this.add(config);
-		this.add(instruction);		
-		getOptions(index);
+		this.add(instruction);
 	}
 
 	private void getOptions(int index) {
@@ -94,15 +102,11 @@ public class JActionConfigure extends JPanel{
 	}
 
 	//ACTIONS	
-	private class Checkpoint extends Action{
+	public class Checkpoint extends Action{
 
-		private Checkpoint() {
+		public Checkpoint() {
 			super.name = "Checkpoint: ";
 			instruction.setText("Checkpoint: Give this checkpoint a name (One word consiting of only letters and no duplicates)");
-		}
-		
-		private Checkpoint(String name) {
-			this();
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
@@ -111,7 +115,7 @@ public class JActionConfigure extends JPanel{
 
 	}
 
-	private class JPauseButton extends Action implements ChangeListener{		
+	public class JPauseButton extends Action implements ChangeListener{		
 		private JSpinner pauseTime;
 		private JPauseButton() {
 			super.name = "Pause";
@@ -124,7 +128,7 @@ public class JActionConfigure extends JPanel{
 			main.add(pauseTime);
 		}	
 
-		private JPauseButton(int time) {
+		public JPauseButton(int time) {
 			this();
 			pauseTime.setValue((int)time);
 		}
@@ -140,7 +144,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JDisplayWordInBraille extends Action{	
+	public class JDisplayWordInBraille extends Action{	
 
 		private JTextField stringToDisp;
 		private JDisplayWordInBraille() {
@@ -151,7 +155,7 @@ public class JActionConfigure extends JPanel{
 			main.add(stringToDisp);
 		}
 		
-		private JDisplayWordInBraille(String word) {
+		public JDisplayWordInBraille(String word) {
 			this();
 			stringToDisp.setText(word);
 		}
@@ -165,7 +169,7 @@ public class JActionConfigure extends JPanel{
 		}		
 	}
 
-	private class JRepeat extends Action{		
+	public class JRepeat extends Action{		
 		private JTextField stringToDisp;
 		private ResponseButtonSpinner buttons;
 
@@ -180,7 +184,7 @@ public class JActionConfigure extends JPanel{
 			main.add(buttons);
 		}	
 		
-		private JRepeat(String toRepeat, int buttonIndex) {
+		public JRepeat(String toRepeat, int buttonIndex) {
 			this();
 			stringToDisp.setText(toRepeat);
 			buttons.setValue((int)buttonIndex);
@@ -206,7 +210,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class GoToCheckpointButtonClick extends Action{
+	public class GoToCheckpointButtonClick extends Action{
 		private ResponseButtonSpinner buttons;
 		private ActionSpinner nodeIndex;
 
@@ -222,7 +226,7 @@ public class JActionConfigure extends JPanel{
 
 		}
 
-		private GoToCheckpointButtonClick(int checkpointIndex,int buttonIndex) {
+		public GoToCheckpointButtonClick(int checkpointIndex,int buttonIndex) {
 			this();
 			buttons.setValue((int)buttonIndex);
 			nodeIndex.setValue((int)checkpointIndex);
@@ -240,8 +244,8 @@ public class JActionConfigure extends JPanel{
 
 	}
 
-	private class JClearCells extends Action{
-		private JClearCells() {
+	public class JClearCells extends Action{
+		public JClearCells() {
 			instruction.setText("Clear Cells: This command will clear all of the Braille Cells");
 			super.name = "Braille: Clear All Braille Cells";
 		}		
@@ -253,7 +257,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JClearSpecificCell extends Action{	
+	public class JClearSpecificCell extends Action{	
 
 		private BrailleCellSpinner cells;
 
@@ -264,7 +268,7 @@ public class JActionConfigure extends JPanel{
 			main.add(cells);
 		}	
 
-		private JClearSpecificCell(int cellIndex) {
+		public JClearSpecificCell(int cellIndex) {
 			this();
 			cells.setValue(cellIndex);
 		}
@@ -277,7 +281,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JDisplayChar extends Action{		
+	public class JDisplayChar extends Action{		
 		private JTextField stringToDisp;
 		private BrailleCellSpinner cells;
 		private JDisplayChar() {
@@ -291,7 +295,7 @@ public class JActionConfigure extends JPanel{
 			main.add(cells);
 		}
 		
-		private JDisplayChar(char character,int cellIndex) {
+		public JDisplayChar(char character,int cellIndex) {
 			this();
 			stringToDisp.setText(String.valueOf(character));
 			cells.setValue(cellIndex);
@@ -309,7 +313,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JDisplayPins extends Action{	
+	public class JDisplayPins extends Action{	
 
 		BrailleCellSpinner cells;
 		JBrailleCell edit;
@@ -324,7 +328,7 @@ public class JActionConfigure extends JPanel{
 			main.add(edit);
 		}
 		
-		private JDisplayPins(String cellConfig, int cellIndex) {
+		public JDisplayPins(String cellConfig, int cellIndex) {
 			this();
 			edit.setCellConfig(cellConfig);
 			cells.setValue(cellIndex);			
@@ -339,7 +343,7 @@ public class JActionConfigure extends JPanel{
 
 	}
 
-	private class JTextToSpeech extends Action{		
+	public class JTextToSpeech extends Action{		
 		private JTextField stringToDisp;
 		private JTextToSpeech() {
 			super.name = "Text To Speech";
@@ -347,7 +351,12 @@ public class JActionConfigure extends JPanel{
 			stringToDisp = new JTextField(); 
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/2,20));
 			main.add(stringToDisp);
-		}	
+		}
+		
+		public JTextToSpeech(String text) {
+			this();
+			stringToDisp.setText(text);
+		}
 
 		public boolean build(ScenarioCreatorManager sm) {
 			List string = new ArrayList<String>();
@@ -356,8 +365,8 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JUserInput extends Action{		
-		private JUserInput() {
+	public class JUserInput extends Action{		
+		public JUserInput() {
 			super.name = "Wait For User Input";
 			instruction.setText("User Input: The program will wait for a user input");
 		}
@@ -367,7 +376,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class GoToEvent extends Action{
+	public class GoToEvent extends Action{
 		private ActionSpinner events;
 		private GoToEvent(){
 			super.name = "Traverse to a Checkpoint";
@@ -377,6 +386,11 @@ public class JActionConfigure extends JPanel{
 			main.add(events);
 		}
 
+		public GoToEvent(int eventIndex) {
+			this();
+			events.setValue(eventIndex);
+		}
+		
 		public boolean build(ScenarioCreatorManager sm) {
 			if (events.value() >= ScenarioCreatorGUI.nodes.size()) {
 				return false;
@@ -386,8 +400,8 @@ public class JActionConfigure extends JPanel{
 
 	}
 
-	private class JResetButtons extends Action{		
-		private JResetButtons() {
+	public class JResetButtons extends Action{		
+		public JResetButtons() {
 			super.name = "Reset Button Configurations";
 			instruction.setText("Reset Buttons: Resets the commands implemented with each button. Recommended to use at the beggining of each event");
 		}	
@@ -397,7 +411,7 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class JLowerPins extends Action{	
+	public class JLowerPins extends Action{	
 
 		BrailleCellSpinner cells;
 		JBrailleCell edit;
@@ -416,6 +430,12 @@ public class JActionConfigure extends JPanel{
 			main.add(new JLabel("Lower Pin: "));
 			main.add(pins);
 		}
+		
+		public JLowerPins(int cellIndex, int pinToLower) {
+			this();
+			cells.setValue(cellIndex);
+			pins.setSelectedIndex(pinToLower);
+		}
 
 		public boolean build(ScenarioCreatorManager sm) {
 			if (cells.value() >= ScenarioCreatorGUI.numCells) {
@@ -425,7 +445,7 @@ public class JActionConfigure extends JPanel{
 		}		
 	}
 
-	private class JRaisePins extends Action{	
+	public class JRaisePins extends Action{	
 
 		BrailleCellSpinner cells;
 		JBrailleCell edit;
@@ -444,6 +464,13 @@ public class JActionConfigure extends JPanel{
 			main.add(new JLabel("Raise Pin: "));
 			main.add(pins);
 		}
+		
+		public JRaisePins(int cellIndex, int pinToLower) {
+			this();
+			cells.setValue(cellIndex);
+			pins.setSelectedIndex(pinToLower);
+		}
+
 
 		public boolean build(ScenarioCreatorManager sm) {
 			if (cells.value() >= ScenarioCreatorGUI.numCells) {
@@ -453,11 +480,10 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class PlayAudio extends Action implements ActionListener{
+	public class PlayAudio extends Action implements ActionListener{
 		private JLabel playAudio;
 		private JButton browse;
 		private JLabel audioName;
-
 		private String fileName;
 
 		private PlayAudio(){
@@ -473,6 +499,11 @@ public class JActionConfigure extends JPanel{
 			main.add(playAudio);
 			main.add(browse);
 			main.add(audioName);
+		}
+		
+		public PlayAudio(String filename) {
+			this();
+			this.fileName = filename;
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
@@ -500,8 +531,8 @@ public class JActionConfigure extends JPanel{
 		}
 	}
 
-	private class Title extends Action{
-		private Title() {
+	public class Title extends Action{
+		public Title() {
 			super.name = "Title: ";
 			instruction.setText("Title: Give this scenario a title");
 		}
@@ -591,6 +622,5 @@ public class JActionConfigure extends JPanel{
 			spinner.setValue(1);
 		}
 	}
-
 
 }
