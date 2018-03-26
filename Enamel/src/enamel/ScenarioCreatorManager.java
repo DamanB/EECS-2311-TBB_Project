@@ -64,8 +64,6 @@ public class ScenarioCreatorManager {
             "Display Cell Clear",
             "Display Cell Lower Pins",
             "User Input"
-
-
     };
 
 
@@ -83,29 +81,22 @@ public class ScenarioCreatorManager {
     }
 
     // Saves the list of questions, cell number and button numbers to the file.
-    public void saveToFile() {
+    public boolean saveToFile() {
         String result = "";
         try {
             result = this.toString();
 
             // Erases the contents of the file
             PrintWriter printWriter = new PrintWriter(this.scenarioFile);
-            /*
-            printWriter.println("Cell " + this.cellNum);
-            printWriter.println("Button " + this.buttonNum);
-            if (!title.equals("")) {
-                printWriter.println(this.title);
-            }
-            printWriter.println();*/
             printWriter.println(result);
             printWriter.close();
-
-            JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "BUILD SUCCESSFUL", "Builder", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (Exception e) {
             System.out.println(e.toString());
             this.errorMessage = e.toString();
+            return false;
         }
+        return true;
     }
 
     // Will parse an existing scenario file and create a list of questions from it and the cell/button numbers
@@ -215,7 +206,7 @@ public class ScenarioCreatorManager {
 
                         try {
                             // TODO figure out how to pass through button number from GUI
-                            temp = new RepeatButton(lines.get(i).substring(0, 8), lines.get(i).substring(8), this.buttonNum);
+                            temp = new RepeatButton(lines.get(i).substring(0, 16), lines.get(i).substring(16), this.buttonNum);
                         } catch (IllegalArgumentException e) {
                             this.errorMessage = e.toString();
                             return false;
@@ -430,7 +421,7 @@ public class ScenarioCreatorManager {
         return this.errorMessage;
     }
 
-    //
+    // Adds a Space to the scenario file and increments question index
     public void nextQuestion() {
         this.questions.get(this.questionIndex).getCommands().add(new Space());
         this.questionIndex++;
@@ -449,7 +440,7 @@ public class ScenarioCreatorManager {
         return true;
     }
 
-    //
+    // Adds pause functionality in seconds to scenario file
     public boolean addPause(String pauseTime) {
         try {
             this.questions.get(this.questionIndex).getCommands().add(new Pause("/~pause:", pauseTime));
@@ -504,7 +495,7 @@ public class ScenarioCreatorManager {
 
     public boolean addEndRepeat() {
         try {
-            this.questions.get(this.questionIndex).getCommands().add(new EndRepeat("/~end-repeat", ""));
+            this.questions.get(this.questionIndex).getCommands().add(new EndRepeat("/~endrepeat", ""));
         } catch (IllegalArgumentException e) {
             this.errorMessage = e.toString();
             return false;
@@ -592,6 +583,16 @@ public class ScenarioCreatorManager {
         return true;
     }
 
+    public boolean addDispCellLowerPins() {
+        try {
+            this.questions.get(this.questionIndex).getCommands().add(new DispCellLowerPins("/~disp-cell-lowerPins", ""));
+        } catch (IllegalArgumentException e) {
+            this.errorMessage = e.toString();
+            return false;
+        }
+        return true;
+    }
+
     public boolean addDispCellClear(String cellPos) {
         try {
             this.questions.get(this.questionIndex).getCommands().add(new DispCellClear("/~disp-cell-clear:", cellPos, this.cellNum));
@@ -648,13 +649,13 @@ public class ScenarioCreatorManager {
 
     //////////////////////////////////////// TESTING /////////////////////////////////////
     // The following main method is used to test
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         ScenarioCreatorManager scenarioCreatorManager = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
 
         scenarioCreatorManager.parseFile();
 
         System.out.println(scenarioCreatorManager.toString());
-    }
+    }*/
     // The following example recreated the Scenario_1.txt under the file name Scenario_10.txt
     // Tunning this main method will create a Scenario_10.txt which will be exactly the same as Scenario_1.txt
     /*public static void main(String[] args) {
@@ -876,9 +877,9 @@ public class ScenarioCreatorManager {
         }
 
 
-        // After all the commands have been added saveFile() 
+        // After all the commands have been added saveFile()
         scenarioCreatorManager.saveToFile();
-    }*/
+    }
     //////////////////////////////////////// TESTING /////////////////////////////////////
-
+*/
 }
