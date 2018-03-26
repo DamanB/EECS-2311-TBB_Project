@@ -7,6 +7,8 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
 public class TestRobot {
+
+	public static int DEFAULTDELAY = 100;
 	public Robot r;
 
 	public TestRobot() throws AWTException {
@@ -19,12 +21,12 @@ public class TestRobot {
 
 	public void pressKey(int key, int times) {
 		for (int i = 0; i < times; i++) {
-			r.delay(100);
+			delay();
 			r.keyPress(key);
-			r.delay(100);
+			delay();
 			r.keyRelease(key);
 		}
-		r.delay(100);
+		delay();
 	}
 
 	public void enterText(String s) {
@@ -44,18 +46,18 @@ public class TestRobot {
 
 	public void pressMouse(int key, int times) {
 		for (int i = 0; i < times; i++) {
-			r.delay(100);
+			delay();
 			r.mousePress(key);
-			r.delay(100);
+			delay();
 			r.mouseRelease(key);
 		}
-		r.delay(100);
+		delay();
 	}
 
 	public void moveMouse(int x, int y) {
-		r.delay(100);
+		delay();
 		r.mouseMove(x, y);
-		r.delay(100);
+		delay();
 	}
 
 	public void moveMouse(Point p) {
@@ -64,6 +66,10 @@ public class TestRobot {
 
 	public void moveMouse(Component comp) {
 		moveMouse(comp.getLocationOnScreen().x + 5, comp.getLocationOnScreen().y + 5);
+	}
+
+	public void delay() {
+		r.delay(DEFAULTDELAY);
 	}
 
 	public void delay(int ms) {
