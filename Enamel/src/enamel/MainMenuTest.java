@@ -59,11 +59,7 @@ class MainMenuTest {
 		file.setReadable(false, false);
 		r.moveMouse(MainMenu.instance.getPlayer());
 		r.pressMouse(KeyEvent.BUTTON1_MASK);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
+		r.pressKey(KeyEvent.VK_DOWN, 5);
 		r.pressKey(KeyEvent.VK_ENTER);
 		assertEquals("File error\n", b.toString());
 	}
@@ -74,11 +70,7 @@ class MainMenuTest {
 		file.createNewFile();
 		r.moveMouse(MainMenu.instance.getPlayer());
 		r.pressMouse(KeyEvent.BUTTON1_MASK);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
+		r.pressKey(KeyEvent.VK_DOWN, 5);
 		r.pressKey(KeyEvent.VK_ENTER);
 		assertEquals("Error: Invalid file format. Cell and Button numbers not found\n", b.toString());
 	}
@@ -87,11 +79,9 @@ class MainMenuTest {
 	void testPlayCorrect() throws AWTException {
 		r.moveMouse(MainMenu.instance.getPlayer());
 		r.pressMouse(KeyEvent.BUTTON1_MASK);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
+		r.pressKey(KeyEvent.VK_DOWN, 2);
 		r.pressKey(KeyEvent.VK_ENTER);
-		r.pressKey(KeyEvent.VK_DOWN);
-		r.pressKey(KeyEvent.VK_DOWN);
+		r.pressKey(KeyEvent.VK_DOWN, 2);
 		r.pressKey(KeyEvent.VK_ENTER);
 		assertEquals("", b.toString());
 	}

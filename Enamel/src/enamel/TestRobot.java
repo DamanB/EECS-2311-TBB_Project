@@ -13,18 +13,37 @@ public class TestRobot {
 	}
 
 	public void pressKey(int key) {
-		r.delay(100);
-		r.keyPress(key);
-		r.delay(100);
-		r.keyRelease(key);
+		pressKey(key, 1);
+	}
+
+	public void pressKey(int key, int times) {
+		for (int i = 0; i < times; i++) {
+			r.delay(100);
+			r.keyPress(key);
+			r.delay(100);
+			r.keyRelease(key);
+		}
 		r.delay(100);
 	}
 
+	public void enterText(String s) {
+		s = s.toUpperCase();
+		for (int i = 0; i < s.length(); i++) {
+			pressKey(s.charAt(i));
+		}
+	}
+
 	public void pressMouse(int key) {
-		r.delay(100);
-		r.mousePress(key);
-		r.delay(100);
-		r.mouseRelease(key);
+		pressMouse(key, 1);
+	}
+
+	public void pressMouse(int key, int times) {
+		for (int i = 0; i < times; i++) {
+			r.delay(100);
+			r.mousePress(key);
+			r.delay(100);
+			r.mouseRelease(key);
+		}
 		r.delay(100);
 	}
 
@@ -39,17 +58,24 @@ public class TestRobot {
 	}
 
 	public void moveMouse(Component comp) {
-		int x = comp.getLocation().x;
-		int y = comp.getLocation().y;
-		while (comp.getParent() != null) {
-			comp = comp.getParent();
-			x += comp.getX();
-			y += comp.getY();
-		}
-		moveMouse(x + 5, y + 5);
+		moveMouse(comp.getLocationOnScreen().x + 5, comp.getLocationOnScreen().y + 5);
 	}
 
 	public void delay(int ms) {
 		r.delay(ms);
+	}
+
+	public void click(Point p, int key, int times) {
+		for (int i = 0; i < times; i++) {
+			moveMouse(p);
+			pressMouse(key);
+		}
+	}
+
+	public void click(Component comp, int key, int times) {
+		for (int i = 0; i < times; i++) {
+			moveMouse(comp);
+			pressMouse(key);
+		}
 	}
 }

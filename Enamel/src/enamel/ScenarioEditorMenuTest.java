@@ -23,7 +23,7 @@ class ScenarioEditorMenuTest {
 		r.moveMouse(ScenarioEditorMenu.create);
 		r.pressMouse(KeyEvent.BUTTON1_MASK);
 		assertEquals(ScenarioCreatorGUI.getMainPanel(), MainFrame.getMainPanel().getComponent(0));
-		//r.moveMouse(ScenarioCreatorGUI.getBack());
+		r.moveMouse(ScenarioCreatorGUI.getBack());
 		r.pressMouse(KeyEvent.BUTTON1_MASK);
 		r.pressKey(KeyEvent.VK_ENTER);
 		assertEquals(ScenarioEditorMenu.pane, MainFrame.getMainPanel().getComponent(0));
