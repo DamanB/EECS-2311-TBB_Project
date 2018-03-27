@@ -40,9 +40,9 @@ import javax.swing.SwingUtilities;
  * @author Team 4: Yassin Mohamed, Qassim Allauddin, Derek Li, Artem Solovey.
  * @author ENAMEL team: Sunjik Lee, Li Yin, Vassilios Tzerpos.
  */
-
 /**
  * @author Yassin
+ *
  */
 public class VisualPlayer extends Player {
 
@@ -63,9 +63,12 @@ public class VisualPlayer extends Player {
      * cells and <code>jbuttonNumber</code> buttons. The two parameters must be
      * positive integers.
      *
-     * @param brailleCellNumber the number of braille cells the Simulator should have
-     * @param buttonNumber      the number of buttons the Simulator should have
-     * @throws IllegalArgumentException if one or both of the two parameters is negative or 0
+     * @param brailleCellNumber
+     *            the number of braille cells the Simulator should have
+     * @param buttonNumber
+     *            the number of buttons the Simulator should have
+     * @throws IllegalArgumentException
+     *             if one or both of the two parameters is negative or 0
      */
     public VisualPlayer(int brailleCellNumber, int buttonNumber) {
 
@@ -124,6 +127,10 @@ public class VisualPlayer extends Player {
     }
 
 
+
+
+
+
     /**
      * This method is meant for the ScenarioParser class to use to update the
      * parameters based on the input. To set the number of cells and buttons on
@@ -132,7 +139,8 @@ public class VisualPlayer extends Player {
      *
      * @param buttonNumber
      */
-    public void setButton(int buttonNumber) {
+    public void setButton(int buttonNumber)
+    {
 
         if (!displayed) {
             if (buttonNumber > 0)
@@ -151,7 +159,8 @@ public class VisualPlayer extends Player {
      *
      * @param cellNumber
      */
-    public void setCell(int cellNumber) {
+    public void setCell(int cellNumber)
+    {
         if (!displayed) {
             if (cellNumber > 0)
                 this.brailleCellNumber = cellNumber;
@@ -162,6 +171,7 @@ public class VisualPlayer extends Player {
     }
 
 
+
     /**
      * Returns a reference to the button at the index passed as argument. The
      * main purpose of providing this method is so the client can add
@@ -169,10 +179,12 @@ public class VisualPlayer extends Player {
      * they appear in the frame, from 0 to (bbuttonNumber-1), bbuttonNumber
      * being the number of buttons initialized by the constructor.
      *
-     * @param index the index of the button to be returned
+     * @param index
+     *            the index of the button to be returned
      * @return reference to the JButton object at the index passed as argument
-     * @throws IllegalArgumentException if the index is negative or equal to or bigger than
-     *                                  buttonNumber (the number of buttons initialized)
+     * @throws IllegalArgumentException
+     *             if the index is negative or equal to or bigger than
+     *             buttonNumber (the number of buttons initialized)
      */
     public JButton getButton(int index) {
         if (index >= this.buttonNumber || index < 0) {
@@ -207,10 +219,13 @@ public class VisualPlayer extends Player {
      * access to the userInput field. Pressing this key will skip to the
      * specified area in the scenario file.
      *
-     * @param index the index of the KeyListener to be added.
-     * @param param the String in ScenarioParser to skip to, needed for ScenarioParser's <code>skip(String indicator)</code>
-     *              method
-     * @param sp    the reference to the current ScenarioParser object
+     * @param index
+     *            the index of the KeyListener to be added.
+     * @param param
+     * 			the String in ScenarioParser to skip to, needed for ScenarioParser's <code>skip(String indicator)</code>
+     * 			method
+     * @param sp
+     * 			the reference to the current ScenarioParser object
      */
     @Override
     public void addSkipButtonListener(int index, String param, ScenarioParser sp) {
@@ -235,8 +250,10 @@ public class VisualPlayer extends Player {
      * access to the userInput field. Pressing this key will repeat the
      * speech of the text specified in the scenario file.
      *
-     * @param index the index of the button to add the KeyListener to
-     * @param sp    the reference to the current ScenarioParser object
+     * @param index
+     * 			the index of the button to add the KeyListener to
+     * @param sp
+     * 			the reference to the current ScenarioParser object
      */
     @Override
     public void addRepeatButtonListener(int index, ScenarioParser sp) {
@@ -263,9 +280,11 @@ public class VisualPlayer extends Player {
      * Removes the ActionListener from the button at specified index of buttonList passed as argument.
      * The index must be between 0 and buttonNumber.
      *
-     * @param index the index of the KeyListener to be removed.
-     * @throws IllegalArgumentException if the index is negative or equal to or bigger than
-     *                                  buttonNumber (the number of buttons initialized)
+     * @param index
+     *            the index of the KeyListener to be removed.
+     * @throws IllegalArgumentException
+     *             if the index is negative or equal to or bigger than
+     *             buttonNumber (the number of buttons initialized)
      */
     @Override
     public void removeButtonListener(int index) {
