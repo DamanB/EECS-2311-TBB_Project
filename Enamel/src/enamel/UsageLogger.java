@@ -5,6 +5,7 @@ import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,10 +20,10 @@ public class UsageLogger {
     private static File fileName;
 
     // TODO Add more options for each UI element
-    private static String[] usageList = {
-            "Player",
-            "Editor"
-    };
+    private static enum UsageElements {
+        Player,
+        Editor
+    }
 
     public static void initialise() {
         // Initialise text file
@@ -47,11 +48,62 @@ public class UsageLogger {
 
                 if (line.contains(",")) {
                     temp = line.split(",");
-                    // get key and value from string
-                    addElement(temp[0], Integer.parseInt(temp[1]));
-                }
 
+                    for (UsageElements i : UsageElements.values()) {
+                        if (i.toString().equals(temp[0])) {
+                            addElement(i, Integer.parseInt(temp[1]));
+                        }
+                    }
+
+                }
             }
+        }
+    }
+
+
+    private static void initialiseMap() {
+        usageMap = new HashMap<>();
+
+        usageMap.clear();
+
+        for (UsageElements i : UsageElements.values()) {
+            usageMap.put(i.toString(), 0);
+        }
+    }
+
+    private static void addElement(UsageElements element, int value) {
+        if (usageMap.containsKey(element.toString())) {
+            usageIncrement(element, value);
+        } else {
+            usageMap.put(element.toString(), value);
+        }
+        if (!fileName.exists()) {
+            createFile();
+        }
+        saveMap();
+    }
+
+    public static boolean usageIncrement(UsageElements element) {
+        usageIncrement(element, 1);
+        return true;
+    }
+
+    private static boolean usageIncrement(UsageElements element, Integer value) {
+        if (!usageMap.containsKey(element.toString())) {
+            return false;
+        }
+
+        usageMap.put(element.toString(), usageMap.get(element.toString()) + value);
+        return true;
+    }
+
+    private static void saveMap() {
+        try {
+            printWriter = new PrintWriter(fileName);
+            printWriter.println(mapToString());
+            printWriter.close();
+        } catch (Exception e) {
+            System.out.print("File writing error");
         }
     }
 
@@ -63,49 +115,10 @@ public class UsageLogger {
         }
     }
 
-    private static void initialiseMap() {
-        usageMap = new HashMap<>();
-
-        usageMap.clear();
-
-        for (String i : usageList) {
-            usageMap.put(i, 0);
-        }
-    }
-
-    private static void addElement(String usageItem, int value) {
-        if (usageMap.containsKey(usageItem)) {
-            usageIncrement(usageItem, value);
-        } else {
-            usageMap.put(usageItem, value);
-        }
-
-
-    }
-
-    public static boolean usageIncrement(String usageItem) {
-        usageIncrement(usageItem, 1);
-        return true;
-    }
-
-    private static boolean usageIncrement(String usageItem, Integer value) {
-        if (!usageMap.containsKey(usageItem)) {
-            return false;
-        }
-
-        usageMap.put(usageItem, usageMap.get(usageItem) + value);
-        return true;
-    }
-
-    private static void saveMap() {
-        printWriter.println(mapToString());
-        printWriter.close();
-    }
-
     private static String mapToString() {
         String result = "";
 
-        for (String i : usageList) {
+        for (UsageElements i : UsageElements.values()) {
             result += i + "," + usageMap.get(i);
         }
 
