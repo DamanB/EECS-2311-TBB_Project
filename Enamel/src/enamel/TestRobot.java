@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 
 public class TestRobot {
 
-	public static int DEFAULTDELAY = 100;
+	public static int DEFAULTDELAY = 500;
 	public Robot r;
 
 	public TestRobot() throws AWTException {
