@@ -278,7 +278,7 @@ public class ScenarioCreatorGUI {
 					if (index == 0)	{
 						sm.setTitle(node.getCheckpointName());						
 					}else if (node.getClass() == nodes.get(0).getClass()){						
-						if (!(node.getCheckpointName().matches("^[A-Za-z]+$"))) {
+						if ((!(node.getCheckpointName().matches("^[A-Za-z]+$")))) {
 							allGood = false;
 							break;
 						}						
@@ -405,7 +405,8 @@ public class ScenarioCreatorGUI {
 
 		public static void addCheckpointNode(JActionConfigure config, String name, boolean isTitle) {
 			JCheckpointNode n = editorClass.new JCheckpointNode(config, name, isTitle);
-			
+
+
 			if (isTitle) {
 				nodes.removeFirst();
 				nodes.addFirst(n);
@@ -639,9 +640,7 @@ public class ScenarioCreatorGUI {
 				this.checkpointName.setText(name);
 			}
 
-			public String checkpointName() {
-				return this.checkpointName.getText();
-			}
+
 
 			@Override 
 			public void setIndex(int index) {
@@ -651,7 +650,7 @@ public class ScenarioCreatorGUI {
 
 			@Override
 			public String getCheckpointName() {
-				return this.checkpointName();
+				return this.checkpointName.getText();
 			}
 
 			@Override
@@ -697,6 +696,11 @@ public class ScenarioCreatorGUI {
 			public void setIndex(int index) {
 				super.index = index;
 				super.header.setText("\t             " + super.index + " - " + actionName);
+			}
+			
+			@Override
+			public String getCheckpointName() {
+				return "Action";
 			}
 		}
 

@@ -237,7 +237,9 @@ public class JActionConfigure extends JPanel{
 				return false;
 			}else if (nodeIndex.value() >= ScenarioCreatorGUI.nodes.size()) {
 				return false;
-			}		
+			}else if (ScenarioCreatorGUI.nodes.get(nodeIndex.value()).getCheckpointName().equals("Action")) {		
+				return false;
+			}
 			return sm.addSkipButton(Integer.toString(buttons.value()), ScenarioCreatorGUI.nodes.get(nodeIndex.value()).getCheckpointName().toUpperCase()); 		
 		}
 
@@ -393,6 +395,8 @@ public class JActionConfigure extends JPanel{
 		
 		public boolean build(ScenarioCreatorManager sm) {
 			if (events.value() >= ScenarioCreatorGUI.nodes.size()) {
+				return false;
+			}else if (ScenarioCreatorGUI.nodes.get(events.value()).getCheckpointName().equals("Action")) {		
 				return false;
 			}
 			return sm.addSkip(ScenarioCreatorGUI.nodes.get(events.value()).getCheckpointName().toUpperCase());
@@ -605,9 +609,9 @@ public class JActionConfigure extends JPanel{
 			this.removeChangeListener(this);
 			if ((int)getValue() < 0) {
 				this.setValue(0);
-			}else if ((int)getValue() > ScenarioCreatorGUI.nodes.size()-1) {
+			}/*else if ((int)getValue() > ScenarioCreatorGUI.nodes.size()-1) {
 				this.setValue((int)(ScenarioCreatorGUI.nodes.size()-1));
-			}
+			}*/
 			this.addChangeListener(this);
 		}		
 
