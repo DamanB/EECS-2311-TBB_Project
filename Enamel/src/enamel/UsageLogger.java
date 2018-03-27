@@ -1,9 +1,8 @@
 package enamel;
 
-import org.junit.internal.ExactComparisonCriteria;
-import org.omg.CORBA.DynAnyPackage.Invalid;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,9 +19,10 @@ public class UsageLogger {
     private static File fileName;
 
     // TODO Add more options for each UI element
-    private static enum UsageElements {
+    public static enum UsageElements {
         Player,
-        Editor
+        Editor,
+        Launch
     }
 
     public static void initialise() {
@@ -40,23 +40,24 @@ public class UsageLogger {
         if (!fileName.exists()) {
             createFile();
         } else {
+
             String line = "";
             String[] temp;
 
-            while (scanner.hasNextLine()) {
-                line = scanner.nextLine();
+            try (BufferedReader br = new BufferedReader(new FileReader(logFile))) {
+                while ((line = br.readLine()) != null) {
+                    if (line.contains(",")) {
+                        temp = line.split(",");
 
-                if (line.contains(",")) {
-                    temp = line.split(",");
+                        addElement(UsageElements.valueOf(temp[0]), Integer.parseInt(temp[1]));
 
-                    for (UsageElements i : UsageElements.values()) {
-                        if (i.toString().equals(temp[0])) {
-                            addElement(i, Integer.parseInt(temp[1]));
-                        }
                     }
-
                 }
+            } catch (Exception e) {
+                System.out.println("File Error: " + e.toString());
             }
+
+            saveMap();
         }
     }
 
@@ -94,6 +95,7 @@ public class UsageLogger {
         }
 
         usageMap.put(element.toString(), usageMap.get(element.toString()) + value);
+        saveMap();
         return true;
     }
 
@@ -119,7 +121,7 @@ public class UsageLogger {
         String result = "";
 
         for (UsageElements i : UsageElements.values()) {
-            result += i + "," + usageMap.get(i);
+            result += i.toString() + "," + usageMap.get(i.toString()) + "\n";
         }
 
         return result;
