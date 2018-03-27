@@ -20,6 +20,8 @@ class ScenarioCreatorGUITest {
 
 	int[][] cell = { { 0, 1, 2 }, { 4, 5, 6 }, { 0, 1 }, { 4, 5 }, { 0, 4 }, { 2, 6 } };
 
+	int height = 75;
+
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 		new MainFrame();
@@ -30,12 +32,15 @@ class ScenarioCreatorGUITest {
 	@Test
 	void testCopyOf1() throws AWTException {
 		TestRobot r = new TestRobot();
+		int k = 0;
+		int scenario1 = 7;
 		r.moveMouse(ScenarioCreatorGUI.getTextBox());
 		r.pressMouse();
 		r.pressKey(KeyEvent.VK_TAB);
 		r.pressKey(KeyEvent.VK_UP, 3);
 		r.pressKey(KeyEvent.VK_TAB);
 		r.enterText("Directional orientation");
+		k++;
 		for (int i = 0; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(0).getAdd());
 			r.pressMouse();
@@ -49,10 +54,13 @@ class ScenarioCreatorGUITest {
 		}
 		r.pressKey(KeyEvent.VK_TAB, 4);
 		r.pressKey(KeyEvent.VK_DOWN, 8);
+		k++;
 		for (int i = 1; i < 7; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 2 - 1).getAdd());
 			r.pressMouse();
+			r.rollMouseDown();
 		}
+		r.rollMouseUp(scenario1 * k * height);
 		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
 		r.pressMouse();
 		r.pressKey(KeyEvent.VK_TAB);
@@ -60,66 +68,85 @@ class ScenarioCreatorGUITest {
 		for (int i = 1; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 3 - 1).getAdd());
 			r.pressMouse();
+			r.rollMouseDown(k * height);
 		}
+		r.rollMouseUp(scenario1 * k * height);
 		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
 		r.pressMouse();
 		r.pressKey(KeyEvent.VK_TAB);
 		r.pressKey(KeyEvent.VK_DOWN, 11);
+		k++;
 		for (int i = 1; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 4 - 1).getAdd());
 			r.pressMouse();
+			r.rollMouseDown(k * height);
 		}
+		r.rollMouseUp(scenario1 * k * height);
 		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
 		r.pressMouse();
 		r.pressKey(KeyEvent.VK_TAB);
 		r.pressKey(KeyEvent.VK_UP, 10);
+		k++;
 		r.moveMouse(ScenarioCreatorGUI.nodes.get(0).getAdd());
 		r.pressMouse();
+		r.rollMouseDown(k * height);
 		for (int i = 1; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 5).getAdd());
 			r.pressMouse();
+			r.rollMouseDown(k * height);
 		}
+		r.rollMouseUp(scenario1 * k * height);
 		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
 		r.pressMouse();
 		r.pressKey(KeyEvent.VK_TAB);
 		r.pressKey(KeyEvent.VK_UP, 3);
+		k++;
 		for (int i = 0; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 6 + 1).getAdd());
 			r.pressMouse();
+			r.rollMouseDown(k * height);
 		}
 		r.moveMouse(ScenarioCreatorGUI.nodes.get(33).getAdd());
 		r.pressMouse();
+		r.rollMouseUp(scenario1 * k * height);
 		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
 		r.pressMouse();
 		r.pressKey(KeyEvent.VK_TAB);
 		r.pressKey(KeyEvent.VK_DOWN, 12);
+		k++;
 		for (int i = 0; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 7 + 2).getAdd());
 			r.pressMouse();
+			r.rollMouseDown(k * height);
 		}
+		r.rollMouseUp(scenario1 * k * height);
 		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
 		r.pressMouse();
 		r.pressKey(KeyEvent.VK_TAB);
 		r.pressKey(KeyEvent.VK_DOWN, 2);
+		k++;
 		for (int i = 0; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 3).getAdd());
 			r.pressMouse();
+			r.rollMouseDown(k * height);
 		}
+		r.rollMouseUp(scenario1 * k * height);
 		for (int i = 0; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 1).getConfigure());
 			r.pressMouse();
-			for (int j = 0; j < 6; j++) {
-				for (int k : cell[j]) {
-					r.moveMouse(
-							ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().x + k / 4 * 25 + 5,
-							ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().y + k % 4 * 25 + 5);
-					r.pressMouse();
-				}
+			r.delay(10000);
+			r.rollMouseDown(k * height);
+			for (int j : cell[i]) {
+				r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().x + j / 4 * 25 + 5,
+						ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().y + j % 4 * 25 + 5);
+				r.pressMouse();
 			}
 		}
+		r.rollMouseUp(scenario1 * k * height);
 		for (int i = 0; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 2).getConfigure());
 			r.pressMouse();
+			r.rollMouseDown(k * height);
 			r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(2));
 			r.pressMouse();
 			r.enterText(text[i]);
@@ -129,9 +156,11 @@ class ScenarioCreatorGUITest {
 		r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(2));
 		r.pressMouse();
 		r.enterText(text[6]);
+		r.rollMouseUp(scenario1 * k * height);
 		for (int i = 0; i < 6; i++) {
 			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 3).getConfigure());
 			r.pressMouse();
+			r.rollMouseDown(k * height);
 			r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(4));
 			r.pressMouse();
 			r.pressKey(KeyEvent.VK_UP, i * 8 + 4);

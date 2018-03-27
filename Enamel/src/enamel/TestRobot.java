@@ -16,24 +16,30 @@ public class TestRobot {
 	}
 
 	public void pressKey(int key) {
-		pressKey(key, 1);
+		pressKey(key, 1, true);
 	}
 
 	public void pressKey(int key, int times) {
+		pressKey(key, times, true);
+	}
+
+	private void pressKey(int key, int times, boolean f) {
 		for (int i = 0; i < times; i++) {
 			delay();
 			r.keyPress(key);
 			delay();
 			r.keyRelease(key);
 		}
-		delay();
+		if (f)
+			delay();
 	}
 
 	public void enterText(String s) {
 		s = s.toUpperCase();
 		for (int i = 0; i < s.length(); i++) {
-			pressKey(s.charAt(i));
+			pressKey(s.charAt(i), 1, false);
 		}
+		delay();
 	}
 
 	public void pressMouse() {
@@ -66,6 +72,28 @@ public class TestRobot {
 
 	public void moveMouse(Component comp) {
 		moveMouse(comp.getLocationOnScreen().x + 5, comp.getLocationOnScreen().y + 5);
+	}
+
+	public void rollMouse(int roll) {
+		delay();
+		r.mouseWheel(roll);
+		delay(DEFAULTDELAY / 15 * Math.abs(roll));
+	}
+
+	public void rollMouseUp() {
+		rollMouse(100);
+	}
+
+	public void rollMouseUp(int i) {
+		rollMouse(i);
+	}
+
+	public void rollMouseDown() {
+		rollMouse(-100);
+	}
+
+	public void rollMouseDown(int i) {
+		rollMouse(-i);
 	}
 
 	public void delay() {
