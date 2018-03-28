@@ -6,8 +6,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class MainMenu {
+public class MainMenu implements ActionListener{
 	// private JFrame frame;
 	private int sizeX;
 	private int sizeY;
@@ -98,7 +98,7 @@ public class MainMenu {
 
 	private void customizeButton(JButton button) {
 		Dimension d = new Dimension(sizeX / 6, sizeY / 12);
-		button.addMouseListener(new Click());
+		button.addActionListener(this);
 		button.setPreferredSize(d);
 		button.setMinimumSize(d);
 		button.setFont(new Font("calibri", Font.PLAIN, 22));
@@ -113,8 +113,7 @@ public class MainMenu {
 		return player;
 	}
 
-	class Click implements MouseListener {
-		private void player() {
+	public static void player() {
 			// Initialising objects for file explorer and the ScenarioParser
 			JButton openfile = new JButton();
 			JFileChooser fileChooser = new JFileChooser();
@@ -179,32 +178,13 @@ public class MainMenu {
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON1) {
+		public void actionPerformed(ActionEvent e) {
 				if (e.getSource().equals(player)) {
 					player();
 				} else if (e.getSource().equals(editor)) {
 					editor();
 				}
-			}
 		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
-	}
 
 	public static JPanel getPanel() {
 		return panel;

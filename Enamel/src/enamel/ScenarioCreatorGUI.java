@@ -228,7 +228,7 @@ public class ScenarioCreatorGUI {
 			} else if (e.getSource().equals(buildButton)) {
 				build();
 			} else if (e.getSource().equals(openPlayer)) {
-				
+				MainMenu.player();
 			}
 
 		}
