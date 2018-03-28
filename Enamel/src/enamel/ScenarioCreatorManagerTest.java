@@ -22,7 +22,7 @@ class ScenarioCreatorManagerTest {
 
 
     @Test
-    void testSaveToFile() {
+    void testParseFile() {
         ScenarioCreatorManager s1, s4;
         s1 = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
         s1.parseFile();
@@ -60,7 +60,7 @@ class ScenarioCreatorManagerTest {
 
         s.parseFile();
 
-        System.out.println(s.toString());
+        System.out.println(s.toString()); // TODO fix this idk what its supposed to do
     }
 
     @Test
@@ -108,7 +108,6 @@ class ScenarioCreatorManagerTest {
         assertEquals(s.getErrorMessage(), "Nothing");
     }
 
-    // TODO test for false input on all commands
     @Test
     void testFalseInputCommands() {
         s = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_65.txt"));
@@ -160,7 +159,7 @@ class ScenarioCreatorManagerTest {
         assertFalse(s.addSkipButton("#", "O#"));
     }
 
-    // TODO add all commands to the method
+    // TODO change checkResult to assertTrue
     private void generateAllCommands() {
         s = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_65.txt"));
         s.setButtonNum(5);
@@ -259,10 +258,4 @@ class ScenarioCreatorManagerTest {
             fail("Error on command " + s.getErrorMessage());
         }
     }
-
-
-	public static void test(String string, String string2) {
-		// TODO Auto-generated method stub
-		
-	}
 }
