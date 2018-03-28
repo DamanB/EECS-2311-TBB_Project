@@ -14,18 +14,20 @@ import org.junit.jupiter.api.Test;
 
 class ScenarioCreatorManagerTest {
 
-	// MAKE SURE THE PATH "Enamel/FactoryScenarios/*" IS AVAILABLE IN YOUR PROJECT
-	// PATH.
+	// MAKE SURE THE PATH "Enamel/FactoryScenarios/*" IS AVAILABLE IN YOUR PROJECT PATH.
 	// IF NOT REOPEN THE PROJECT WITH THE VALID PATH
+	// Newest Version
 
 	private ScenarioCreatorManager s;
 	private File f = new File("");
 
+
 	@Test
-	void testSaveToFile() {
+	void testParseFile() {
 		ScenarioCreatorManager s1, s4;
 		s1 = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
 		s1.parseFile();
+
 
 		s4 = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_4.txt"));
 		s4.setCellNum(s1.getCellNum());
@@ -36,6 +38,7 @@ class ScenarioCreatorManagerTest {
 		assertEquals(s1.toString(), s4.toString());
 	}
 
+
 	@Test
 	void testCellButtonNum() {
 		s = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
@@ -43,6 +46,7 @@ class ScenarioCreatorManagerTest {
 		assertEquals(1, s.getCellNum());
 		assertEquals(4, s.getButtonNum());
 	}
+
 
 	@Test
 	void testAllCommands() {
@@ -57,7 +61,7 @@ class ScenarioCreatorManagerTest {
 
 		s.parseFile();
 
-		System.out.println(s.toString());
+		System.out.println(s.toString()); // TODO fix this idk what its supposed to do
 	}
 
 	@Test
@@ -105,7 +109,6 @@ class ScenarioCreatorManagerTest {
 		assertEquals(s.getErrorMessage(), "Nothing");
 	}
 
-	// TODO test for false input on all commands
 	@Test
 	void testFalseInputCommands() {
 		s = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_65.txt"));
@@ -114,6 +117,7 @@ class ScenarioCreatorManagerTest {
 		s.setTitle("Scenario 65 File");
 
 		assertFalse(s.addRepeatButton("d"));
+
 
 		assertFalse(s.addDispCellPins("d", "d"));
 		assertFalse(s.addSound("file.pdf"));
@@ -156,7 +160,7 @@ class ScenarioCreatorManagerTest {
 		assertFalse(s.addSkipButton("#", "O#"));
 	}
 
-	// TODO add all commands to the method
+	// TODO change checkResult to assertTrue
 	private void generateAllCommands() {
 		s = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_65.txt"));
 		s.setButtonNum(5);
@@ -165,9 +169,9 @@ class ScenarioCreatorManagerTest {
 
 		checkResult(s.addRepeatButton("0"));
 
+
 		checkResult(s.addDispCellPins("0", "11100000"));
-		checkResult(s.addText(Arrays.asList("These are pins 1, 2 and 3, the 3 pins on the left side. ",
-				"Press button 1 to continue.")));
+		checkResult(s.addText(Arrays.asList("These are pins 1, 2 and 3, the 3 pins on the left side. ", "Press button 1 to continue.")));
 		checkResult(s.addSkipButton("0", "ONEE"));
 		checkResult(s.addUserInput());
 		checkResult(s.addSound("file.wav"));
@@ -185,8 +189,7 @@ class ScenarioCreatorManagerTest {
 		checkResult(s.addPause("13"));
 		checkResult(s.addPause("13"));
 		checkResult(s.addDispCellPins("0", "00011100"));
-		checkResult(s.addText(Arrays.asList("These are pins 4, 5 and 6, the 3 pins on the right side. ",
-				"Press button 1 to continue.")));
+		checkResult(s.addText(Arrays.asList("These are pins 4, 5 and 6, the 3 pins on the right side. ", "Press button 1 to continue.")));
 		checkResult(s.addSkipButton("0", "ONEE"));
 		checkResult(s.addUserInput());
 		checkResult(s.addRepeatButton("0"));
@@ -203,8 +206,7 @@ class ScenarioCreatorManagerTest {
 		checkResult(s.addPause("1"));
 		checkResult(s.addResetButtons());
 		checkResult(s.addDispCellPins("0", "11000000"));
-		checkResult(s.addText(Arrays.asList("These are pins 4, 5 and 6, the 3 pins on the right side.",
-				"Press button 1 to continue.")));
+		checkResult(s.addText(Arrays.asList("These are pins 4, 5 and 6, the 3 pins on the right side.", "Press button 1 to continue.")));
 		checkResult(s.addSkipButton("0", "ONEE"));
 		checkResult(s.addUserInput());
 
@@ -215,8 +217,7 @@ class ScenarioCreatorManagerTest {
 		checkResult(s.addPause("1"));
 		checkResult(s.addResetButtons());
 		checkResult(s.addDispCellPins("0", "00011000"));
-		checkResult(s.addText(Arrays
-				.asList("These are pins 4 and 5, the top two pins on the right side. Press button 1 to continue.")));
+		checkResult(s.addText(Arrays.asList("These are pins 4 and 5, the top two pins on the right side. Press button 1 to continue.")));
 		checkResult(s.addSkipButton("0", "ONEE"));
 		checkResult(s.addUserInput());
 
@@ -227,8 +228,7 @@ class ScenarioCreatorManagerTest {
 		checkResult(s.addPause("1"));
 		checkResult(s.addResetButtons());
 		checkResult(s.addDispCellPins("0", "10010000"));
-		checkResult(s.addText(
-				Arrays.asList("These are pins 1 and 4, the two pins on the top. Press button 1 to continue.")));
+		checkResult(s.addText(Arrays.asList("These are pins 1 and 4, the two pins on the top. Press button 1 to continue.")));
 		checkResult(s.addSkipButton("0", "ONEE"));
 		checkResult(s.addUserInput());
 
@@ -239,8 +239,7 @@ class ScenarioCreatorManagerTest {
 		checkResult(s.addPause("1"));
 		checkResult(s.addResetButtons());
 		checkResult(s.addDispCellPins("0", "10010000"));
-		checkResult(s.addText(
-				Arrays.asList("These are pins 3 and 6, the two pins on the bottom. Press button 1 to continue.")));
+		checkResult(s.addText(Arrays.asList("These are pins 3 and 6, the two pins on the bottom. Press button 1 to continue.")));
 		checkResult(s.addSkipButton("0", "ONEE"));
 		checkResult(s.addUserInput());
 
@@ -249,6 +248,7 @@ class ScenarioCreatorManagerTest {
 		checkResult(s.addSkipPos("ONEE"));
 		checkResult(s.addText(Arrays.asList("That's the end of directional orientation")));
 		checkResult(s.addDispCellClear("0"));
+
 
 		// After all the commands have been added saveFile()
 		assertTrue(s.saveToFile());
