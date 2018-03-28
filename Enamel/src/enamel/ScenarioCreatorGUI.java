@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -274,10 +275,10 @@ public class ScenarioCreatorGUI {
 				sm.setButtonNum(numButtons);
 				sm.setCellNum(numCells);
 
-				for (EditorGUI.JNode node :nodes) {
-					if (index == 0)	{
-						sm.setTitle(node.getCheckpointName());						
-					}else if (node.getClass() == nodes.get(0).getClass()){						
+				for (EditorGUI.JNode node : nodes) {
+					if (index == 0) {
+						sm.setTitle(node.getCheckpointName());
+					} else if (node.getClass() == nodes.get(0).getClass()) {
 						if ((!(node.getCheckpointName().matches("^[A-Za-z]+$")))) {
 							allGood = false;
 							break;
@@ -325,7 +326,7 @@ public class ScenarioCreatorGUI {
 
 	}
 
-	public static class EditorGUI implements ChangeListener{
+	public static class EditorGUI implements ChangeListener {
 
 		private static JNodeConfig config;
 		private static JScrollPane scroll;
@@ -408,11 +409,10 @@ public class ScenarioCreatorGUI {
 		public static void addCheckpointNode(JActionConfigure config, String name, boolean isTitle) {
 			JCheckpointNode n = editorClass.new JCheckpointNode(config, name, isTitle);
 
-
 			if (isTitle) {
 				nodes.removeFirst();
 				nodes.addFirst(n);
-			}else {
+			} else {
 				nodes.addLast(n);
 			}
 			refreshEditor();
@@ -545,20 +545,20 @@ public class ScenarioCreatorGUI {
 			public int index;
 			private JActionConfigure action;
 
-			private JNode(int index) {	
+			private JNode(int index) {
 				this.index = index;
-				createJNodeGUI();	
+				createJNodeGUI();
 				action = new JActionConfigure(controlGUI.getSelectedAction());
 			}
 
 			private JNode(JActionConfigure config) {
-				this.index = nodes.size()-1;
-				createJNodeGUI();	
+				this.index = nodes.size() - 1;
+				createJNodeGUI();
 				this.action = config;
 			}
 
 			private void createJNodeGUI() {
-				this.setSize(editor.getSize().width,60);
+				this.setSize(editor.getSize().width, 60);
 				this.setPreferredSize(this.getSize());
 				this.setBackground(Color.WHITE);
 				this.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -566,7 +566,7 @@ public class ScenarioCreatorGUI {
 				header = new JLabel();
 				header.setBackground(null);
 				header.setHorizontalAlignment(JLabel.LEFT);
-				this.add(header, BorderLayout.CENTER);				
+				this.add(header, BorderLayout.CENTER);
 				configure = new JButton("Configure");
 				configure.addActionListener(this);
 				add = new JButton("Add Selected Below");
@@ -584,8 +584,14 @@ public class ScenarioCreatorGUI {
 					EditorGUI.createNode(this.index + 1);
 				}
 			}
-			public void setIndex(int index) {}
-			public int getIndex() {return index;}
+
+			public void setIndex(int index) {
+			}
+
+			public int getIndex() {
+				return index;
+			}
+
 			private void swapWith(JNode otherNode) {
 				editor.setVisible(false);
 				editor.remove(this);
@@ -651,9 +657,7 @@ public class ScenarioCreatorGUI {
 				this.checkpointName.setText(name);
 			}
 
-
-
-			@Override 
+			@Override
 			public void setIndex(int index) {
 				super.index = index;
 				super.header.setText(super.index + " - " + checkpointInst);
@@ -688,7 +692,7 @@ public class ScenarioCreatorGUI {
 			private String actionName;
 
 			private JActionNode(int index) {
-				super(index);				
+				super(index);
 				createJActionGUI();
 			}
 
@@ -711,7 +715,7 @@ public class ScenarioCreatorGUI {
 				super.index = index;
 				super.header.setText("\t             " + super.index + " - " + actionName);
 			}
-			
+
 			@Override
 			public String getCheckpointName() {
 				return "Action";
@@ -731,4 +735,15 @@ public class ScenarioCreatorGUI {
 		return instance.mainPanel;
 	}
 
+	public static Component getBuild() {
+		return controls.getComponent(4);
+	}
+
+	public static Component getBack() {
+		return controls.getComponent(5);
+	}
+
+	public static Component getTextBox() {
+		return EditorGUI.numberOfBraille;
+	}
 }

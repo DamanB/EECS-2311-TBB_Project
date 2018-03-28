@@ -4,8 +4,11 @@ import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 public class TestRobot {
+
+	public static int DEFAULTDELAY = 200;
 	public Robot r;
 
 	public TestRobot() throws AWTException {
@@ -13,25 +16,54 @@ public class TestRobot {
 	}
 
 	public void pressKey(int key) {
-		r.delay(100);
-		r.keyPress(key);
-		r.delay(100);
-		r.keyRelease(key);
-		r.delay(100);
+		pressKey(key, 1, true);
+	}
+
+	public void pressKey(int key, int times) {
+		pressKey(key, times, true);
+	}
+
+	private void pressKey(int key, int times, boolean f) {
+		for (int i = 0; i < times; i++) {
+			delay();
+			r.keyPress(key);
+			delay();
+			r.keyRelease(key);
+		}
+		if (f)
+			delay();
+	}
+
+	public void enterText(String s) {
+		s = s.toUpperCase();
+		for (int i = 0; i < s.length(); i++) {
+			pressKey(s.charAt(i), 1, false);
+		}
+		delay();
+	}
+
+	public void pressMouse() {
+		pressMouse(KeyEvent.BUTTON1_MASK);
 	}
 
 	public void pressMouse(int key) {
-		r.delay(100);
-		r.mousePress(key);
-		r.delay(100);
-		r.mouseRelease(key);
-		r.delay(100);
+		pressMouse(key, 1);
+	}
+
+	public void pressMouse(int key, int times) {
+		for (int i = 0; i < times; i++) {
+			delay();
+			r.mousePress(key);
+			delay();
+			r.mouseRelease(key);
+		}
+		delay();
 	}
 
 	public void moveMouse(int x, int y) {
-		r.delay(100);
+		delay();
 		r.mouseMove(x, y);
-		r.delay(100);
+		delay();
 	}
 
 	public void moveMouse(Point p) {
@@ -39,14 +71,33 @@ public class TestRobot {
 	}
 
 	public void moveMouse(Component comp) {
-		int x = comp.getLocation().x;
-		int y = comp.getLocation().y;
-		while (comp.getParent() != null) {
-			comp = comp.getParent();
-			x += comp.getX();
-			y += comp.getY();
-		}
-		moveMouse(x + 5, y + 5);
+		moveMouse(comp.getLocationOnScreen().x + 5, comp.getLocationOnScreen().y + 5);
+	}
+
+	public void rollMouse(int roll) {
+		delay();
+		r.mouseWheel(roll);
+		delay(DEFAULTDELAY / 15 * Math.abs(roll));
+	}
+
+	public void rollMouseUp() {
+		rollMouse(100);
+	}
+
+	public void rollMouseUp(int i) {
+		rollMouse(i);
+	}
+
+	public void rollMouseDown() {
+		rollMouse(-100);
+	}
+
+	public void rollMouseDown(int i) {
+		rollMouse(-i);
+	}
+
+	public void delay() {
+		r.delay(DEFAULTDELAY);
 	}
 
 	public void delay(int ms) {
