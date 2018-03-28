@@ -58,7 +58,9 @@ public class ScenarioCreatorGUI {
 
 	private static ScenarioCreatorGUI instance;
 
-	public static String[] userCommandList = { "Checkpoint", "Text to Speech", // DONE
+	public static String[] userCommandList = { 
+			"Checkpoint", 
+			"Text to Speech", // DONE
 			"Play Audio", // DONE
 			"Pause", // DONE
 			"Display Pins on Braille Cell", // DONE
@@ -164,7 +166,7 @@ public class ScenarioCreatorGUI {
 			backButton = new JButton("Back to Menu");
 			backButton.setSize(150, 40);
 			backButton.setPreferredSize(backButton.getSize());
-			buildButton = new JButton("Build Project!");
+			buildButton = new JButton("Save Scenario");
 			buildButton.setSize(200, 40);
 			buildButton.setPreferredSize(buildButton.getSize());
 			Font buttonFont = new Font("cailibri", Font.PLAIN, 14);
@@ -174,7 +176,7 @@ public class ScenarioCreatorGUI {
 			buildButton.addActionListener(this);
 			
 			openPlayer = new JButton("Open Player");
-			openPlayer.setSize(200, 40);
+			openPlayer.setSize(180, 40);
 			openPlayer.setPreferredSize(openPlayer.getSize());
 			openPlayer.addActionListener(this);
 			openPlayer.setFont(buttonFont);
@@ -511,7 +513,9 @@ public class ScenarioCreatorGUI {
 			public void setConnected(JNode node) {
 				this.setVisible(false);
 				connected.remove(this);
+				connected.setBackground(Color.white);
 				connected = node;
+				connected.setBackground(new Color(200,197,217));
 				connected.add(this);
 				connected.validate();
 				if (connected.index == 0) {
@@ -594,6 +598,7 @@ public class ScenarioCreatorGUI {
 					configuration.repaint();
 				} else if (e.getSource().equals(add)) {
 					EditorGUI.createNode(this.index + 1);
+					UsageLogger.usageIncrement(UsageLogger.UsageElements.values()[controlGUI.getSelectedAction()]);
 				}
 			}
 
