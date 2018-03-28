@@ -68,8 +68,8 @@ public class ScenarioCreatorGUI {
 			"Display Character on Braille Cell", // DONE
 			"Clear All Braille Cells", // DONE
 			"Clear Specific Braille Cell", // DONE
-			"Lower Pins on Cell", // DONE
-			"Raise Pins on Cell", // DONE
+			"Lower Pin on Cell", // DONE
+			"Raise Pin on Cell", // DONE
 			"Repeat Text with Button Click", // DONE
 			"Go to Checkpoint", // DONE
 			"Go to Checkpoint with Button Click", // DONE

@@ -20,9 +20,22 @@ public class UsageLogger {
 
     // TODO Add more options for each UI element
     public static enum UsageElements {
-        Player,
-        Editor,
-        Launch
+    	Checkpoint, 
+		TexttoSpeech, // DONE
+		PlayAudio, // DONE
+		Pause, // DONE
+		DisplayPinsonBrailleCell, // DONE
+		DisplayWordwithBrailleCells, // DONE
+		DisplayCharacteronBrailleCell, // DONE
+		ClearAllBrailleCells, // DONE
+		ClearSpecificBrailleCell, // DONE
+		LowerPinonCell, // DONE
+		RaisePinonCell, // DONE
+		RepeatTextwithButtonClick, // DONE
+		GotoCheckpoint, // DONE
+		GotoCheckpointwithButtonClick, // DONE
+		ResetButtonConfigurations, // DONE
+		UserInput // DONE
     }
 
     public static void initialise() {
