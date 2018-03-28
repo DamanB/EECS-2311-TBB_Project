@@ -30,12 +30,12 @@ public class JBrailleCell extends JPanel{
 		}	
 
 		this.add(pins.get(0));
-		this.add(pins.get(4));
-		this.add(pins.get(1));
-		this.add(pins.get(5));
-		this.add(pins.get(2));
-		this.add(pins.get(6));
 		this.add(pins.get(3));
+		this.add(pins.get(1));
+		this.add(pins.get(4));
+		this.add(pins.get(2));
+		this.add(pins.get(5));
+		this.add(pins.get(6));
 		this.add(pins.get(7));			
 
 	}
@@ -54,12 +54,12 @@ public class JBrailleCell extends JPanel{
 		}	
 
 		this.add(indexList.get(0));
-		this.add(indexList.get(4));
-		this.add(indexList.get(1));
-		this.add(indexList.get(5));
-		this.add(indexList.get(2));
-		this.add(indexList.get(6));
 		this.add(indexList.get(3));
+		this.add(indexList.get(1));
+		this.add(indexList.get(4));
+		this.add(indexList.get(2));
+		this.add(indexList.get(5));
+		this.add(indexList.get(6));
 		this.add(indexList.get(7));	
 	}
 
