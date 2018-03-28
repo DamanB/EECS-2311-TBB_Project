@@ -129,6 +129,7 @@ public class ScenarioCreatorGUI {
 		private static JLabel optionsTitle;
 		private static JButton backButton;
 		private static JButton buildButton;
+		private static JButton openPlayer;
 		public static JSpinner scenarioIndex;
 		private static JLabel indexText;
 
@@ -171,8 +172,16 @@ public class ScenarioCreatorGUI {
 			buildButton.setFont(buttonFont);
 			backButton.addActionListener(this);
 			buildButton.addActionListener(this);
+			
+			openPlayer = new JButton("Open Player");
+			openPlayer.setSize(200, 40);
+			openPlayer.setPreferredSize(openPlayer.getSize());
+			openPlayer.addActionListener(this);
+			openPlayer.setFont(buttonFont);
+
 			MainFrame.editJButton(backButton);
 			MainFrame.editJButton(buildButton);
+			MainFrame.editJButton(openPlayer);
 
 			JPanel indexer = new JPanel();
 			indexer.setBackground(MainFrame.primColor);
@@ -190,6 +199,7 @@ public class ScenarioCreatorGUI {
 			controls.add(optionsTitle);
 			controls.add(indexer);
 			controls.add(buildButton);
+			controls.add(openPlayer);
 			controls.add(backButton);
 		}
 
@@ -217,6 +227,8 @@ public class ScenarioCreatorGUI {
 				}
 			} else if (e.getSource().equals(buildButton)) {
 				build();
+			} else if (e.getSource().equals(openPlayer)) {
+				
 			}
 
 		}
