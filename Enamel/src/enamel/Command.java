@@ -102,7 +102,7 @@ class SkipButton extends Command {
     }
 }
 
-// Adds a skip position to the scenario file
+// Adds a skip position to the scenario file: /~skip:NAME
 class Skip extends Command {
     public Skip(String command, String input) {
         super(command);
@@ -193,7 +193,7 @@ class DispString extends Command {
 class DispCellChar extends Command {
     public DispCellChar(String command, String input, Integer brailleCellSize) {
         super(command);
-        this.regexPattern = "^[0-9]*\\s[a-zA-Z]$";
+        this.regexPattern = "^[0-9]*\\s[a-zA-Z0-9]$";
         setInput(input, brailleCellSize);
     }
 

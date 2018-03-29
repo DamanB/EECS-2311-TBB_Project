@@ -6,6 +6,7 @@ public class ToyAuthoring {
 
 	public static void main(String[] args) {
 		UsageLogger.initialise();
+		UsageLogger.usageIncrement(UsageLogger.UsageElements.Launch);
 		new MainFrame();
 	}
 }

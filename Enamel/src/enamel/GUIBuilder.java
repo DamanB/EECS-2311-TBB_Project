@@ -70,7 +70,7 @@ public class GUIBuilder {
 		ScenarioCreatorGUI.EditorGUI.addActionNode(config);		
 	}
 	
-	public static void createDisplayCharacter(String configuration, int cellIndex) {		
+	public static void createDisplayCellPins(String configuration, int cellIndex) {
 		JActionConfigure config = new JActionConfigure();
 		JActionConfigure.JDisplayPins action = config.new JDisplayPins(configuration, cellIndex);		
 		config.action = action;

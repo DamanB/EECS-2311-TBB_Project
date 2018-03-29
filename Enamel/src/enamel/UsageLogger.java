@@ -126,5 +126,10 @@ public class UsageLogger {
 
         return result;
     }
+
+    public static String popularUsageList()
+    {
+        return "";
+    }
 }
 
