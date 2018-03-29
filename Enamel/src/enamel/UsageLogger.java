@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Sanjay on 3/21/2018.
@@ -127,9 +124,51 @@ public class UsageLogger {
         return result;
     }
 
-    public static String popularUsageList()
-    {
-        return "";
+    public static String popularUsageList() {
+        String result = "";
+
+        if (usageMap.size() !=0) {
+            List<String> names = new ArrayList<>();
+            List<Integer> values = new ArrayList<>();
+
+            int index = 0;
+
+            for (UsageElements i : UsageElements.values()) {
+                names.add(index, i.toString());
+                values.add(index, usageMap.get(i.toString()));
+                index++;
+            }
+
+            for (int i = 0; i < values.size() - 1; i++) {
+                for (int j = 0; j < values.size() - i - 1; j++) {
+                    if (values.get(j) < values.get(j + 1)) {
+
+                        String name = names.get(j);
+                        names.set(j, names.get(j+1));
+                        names.set(j+1, name);
+
+                        Integer value = values.get(j);
+                        values.set(j, values.get(j+1));
+                        values.set(j+1, value);
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < names.size(); i++) {
+                result += (names.get(i) + "," + values.get(i) + "\n");
+
+            }
+        }
+
+        return result;
     }
+
+    // TEST CODE
+    /*public static void main(String[] args) {
+        UsageLogger.initialise();
+
+        System.out.println(UsageLogger.mapToString() + "\n\n" + UsageLogger.popularUsageList());
+    }*/
 }
 
