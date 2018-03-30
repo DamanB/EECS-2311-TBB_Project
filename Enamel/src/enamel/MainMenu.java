@@ -154,14 +154,17 @@ public class MainMenu implements ActionListener{
 								starterCodeThread.start();
 							} else {
 								// exit
+								
 								System.out.println("Error: Invalid file format. Cell and Button numbers not found");
 							}
 						} catch (IOException e) {
+							JOptionPane.showMessageDialog(MainFrame.frame, "The file you selected does not meet the Scenario requirements", "Invalid File", JOptionPane.OK_OPTION);
 							System.out.println("File error");
 							return;
 						}
 					} else {
 						// exit
+						JOptionPane.showMessageDialog(MainFrame.frame, "The file you selected does not meet the Scenario_# name format", "Invalid File", JOptionPane.OK_OPTION);
 						System.out.println("Error: Invalid file name");
 						return;
 					}
