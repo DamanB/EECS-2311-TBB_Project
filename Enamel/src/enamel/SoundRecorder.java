@@ -2,6 +2,7 @@ package enamel;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.util.Scanner;
 
 /**
  * A sample program is to demonstrate how to record sound in Java
@@ -13,13 +14,17 @@ public class SoundRecorder {
     private static final long RECORD_TIME = 60000;  // 1 minute
 
     // path of the wav file
-    private File wavFile = new File("RecordAudio.wav");
+    private File wavFile = new File("RecordAudio9.wav");
 
     // format of audio file
     private AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
 
     // the line from which audio data is captured
     private TargetDataLine line;
+
+    public SoundRecorder(File wavFile) {
+        this.wavFile = wavFile;
+    }
 
     /**
      * Defines an audio format
@@ -36,7 +41,7 @@ public class SoundRecorder {
     /**
      * Captures the sound and record into a WAV file
      */
-    void start() {
+    public void start() {
         try {
             AudioFormat format = getAudioFormat();
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -59,9 +64,7 @@ public class SoundRecorder {
             // start recording
             AudioSystem.write(ais, fileType, wavFile);
 
-        } catch (LineUnavailableException ex) {
-            ex.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -69,7 +72,7 @@ public class SoundRecorder {
     /**
      * Closes the target data line to finish capturing and recording
      */
-    void finish() {
+    public void finish() {
         line.stop();
         line.close();
         System.out.println("Finished");
@@ -79,11 +82,11 @@ public class SoundRecorder {
      * Entry to run the program
      */
     public static void main(String[] args) {
-        final SoundRecorder recorder = new SoundRecorder();
+        final SoundRecorder recorder = new SoundRecorder(new File("Testing2.wav"));
 
         // creates a new thread that waits for a specified
         // of time before stopping
-        Thread stopper = new Thread(new Runnable() {
+        /*Thread stopper = new Thread(new Runnable() {
             public void run() {
                 try {
                     Thread.sleep(RECORD_TIME);
@@ -94,9 +97,20 @@ public class SoundRecorder {
             }
         });
 
-        stopper.start();
+        stopper.start();*/
 
-        // start recording
-        recorder.start();
+
+        /*Scanner scanner = new Scanner(System.in);
+
+        if (scanner.nextLine().equals("s")) ;
+        {
+            System.out.println("Started");
+
+            // start recording
+            recorder.start();
+        }
+
+        System.out.println("Finished");
+        recorder.finish();*/
     }
 }
