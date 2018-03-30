@@ -123,7 +123,7 @@ public class ScenarioEditorMenu implements MouseListener {
             //TODO Sanjay Add a call for retrieving the Filename and parsing here
             MainFrame.changeScreen(ScenarioCreatorGUI.getScreen()); //ENSURE THIS IS THE FIRST CALL
 
-            // TODO Get file from JFilChooser and store in ctor below
+            // TODO Daman Get file from JFileChooser and store in ctor below
 
             ScenarioCreatorManager scm = new ScenarioCreatorManager(new File("ADD_FILE"));
 
@@ -216,6 +216,7 @@ public class ScenarioEditorMenu implements MouseListener {
 
                             case "Space":
                                 // TODO figure out how to start a new block
+                                //GUIBuilder.
                                 break;
 
                             case "Text":
