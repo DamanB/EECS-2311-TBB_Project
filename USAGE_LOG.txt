@@ -1,0 +1,17 @@
+Checkpoint,2
+TexttoSpeech,3
+PlayAudio,0
+Pause,0
+DisplayPinsonBrailleCell,0
+DisplayWordwithBrailleCells,0
+DisplayCharacteronBrailleCell,0
+ClearAllBrailleCells,0
+ClearSpecificBrailleCell,0
+LowerPinonCell,0
+RaisePinonCell,0
+RepeatTextwithButtonClick,0
+GotoCheckpoint,1
+GotoCheckpointwithButtonClick,1
+ResetButtonConfigurations,0
+UserInput,0
+

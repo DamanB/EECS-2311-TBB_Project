@@ -198,6 +198,10 @@ public class ScenarioEditorMenu implements MouseListener {
 								break;
 							case "RepeatButton":
 								// TODO Daman create a repeat button method
+								if (!repeat)
+								{
+									GUIBuilder.createRepeat(repeatText, Integer.parseInt(tempCommand.getInput()));
+								}
 								break;
 							case "ResetButtons":
 								GUIBuilder.createResetButtons();
