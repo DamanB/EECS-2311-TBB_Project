@@ -485,24 +485,28 @@ public class JActionConfigure extends JPanel{
 	}
 
 	public class PlayAudio extends Action implements ActionListener{
-		private JLabel playAudio;
 		private JButton browse;
-		private JLabel audioName;
+		private JButton record;
+		public JLabel audioName;
 		private String fileName;
 
 		private PlayAudio(){
 			super.name = "Audio: Browse or Record Audio";
 			fileName = "";
 			instruction.setText("Play Audio: Select an audio file to play. The audio must a .WAV format!");	
-			playAudio = new JLabel("Browse Audio");
-			browse = new JButton("Browse");
+			browse = new JButton("Browse File");
 			audioName = new JLabel("Selected Audio: ");
-
+			record = new JButton("Record Audio");
+			
 			browse.addActionListener(this);
+			record.addActionListener(this);
 
-			main.add(playAudio);
+			main.add(new JLabel("Browse Audio"));
 			main.add(browse);
+			main.add(new JLabel(" or "));
+			main.add(record);
 			main.add(audioName);
+			
 		}
 		
 		public PlayAudio(String filename) {
@@ -530,8 +534,9 @@ public class JActionConfigure extends JPanel{
 						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Invalid Audio File!", "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
 					}				
 				}
-
-			}	
+			}else if(e.getSource().equals(record)) {					
+				JSoundRecorder rec = new JSoundRecorder(this);				
+			}
 		}
 	}
 

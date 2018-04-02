@@ -161,7 +161,6 @@ public class ScenarioEditorMenu implements MouseListener {
 
 							case "DispCellLower":
 								split = tempCommand.getInput().split("\\s");
-
 								GUIBuilder.createLowerPin(Integer.parseInt(split[1]), Integer.parseInt(split[0]));
 								break;
 
@@ -178,7 +177,6 @@ public class ScenarioEditorMenu implements MouseListener {
 
 							case "DispCellRaise":
 								split = tempCommand.getInput().split("\\s");
-
 								GUIBuilder.createRaisePin(Integer.parseInt(split[1]), Integer.parseInt(split[0]));
 								break;
 							case "DispClearAll":
