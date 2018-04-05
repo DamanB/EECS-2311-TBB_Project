@@ -120,27 +120,49 @@ public class ScenarioEditorMenu implements MouseListener {
     }
 
 
-    private int findNextOccurrence(int iIndex, int jIndex, List<Question> questionList, int index, String skipName) {
+    public static void main(String[] args) {
+        ScenarioCreatorManager scm = new ScenarioCreatorManager(new File("Enamel/FactoryScenarios/Scenario_1.txt"));
+
+        scm.parseFile();
+        /*
+        System.out.println("REE");
+        for (int i = 0; i < scm.getQuestions().size(); i++) {
+            for (int j = 0; j < scm.getQuestions().get(i).getCommands().size(); j++) {
+                System.out.println(scm.getQuestions().get(i).getCommands().get(j).getClass().getName() + "\t\t\t\t" + scm.getQuestions().get(i).getCommands().get(j).toString());
+            }
+        }
+        */
+
+
+        System.out.println(findNextOccurrence(0, 0, scm.getQuestions(), 0, "ONEE"));
+    }
+
+    // TODO remove static
+    private static int findNextOccurrence(int iIndex, int jIndex, List<Question> questionList, int index, String skipName) {
         Command temp;
         boolean repeat = false;
 
         for (int i = iIndex; i < questionList.size(); i++) {
             for (int j = jIndex; j < questionList.get(i).getCommands().size(); j++) {
 
+                iIndex = 0;
+                jIndex = 0;
+
                 temp = questionList.get(i).getCommands().get(j);
 
-                if (!temp.getClass().getName().equals("enamel.Repeat")) {
+                if (temp.getClass().getName().equals("enamel.Repeat")) {
                     if (repeat) {
                         return -1;
                     }
                     repeat = true;
-                } else if (!temp.getClass().getName().equals("enamel.EndRepeat")) {
+                } else if (temp.getClass().getName().equals("enamel.EndRepeat")) {
                     if (!repeat) {
                         return -1;
                     }
 
                     repeat = false;
-                } else if (!repeat) {
+                }
+                else if (!repeat && !temp.getClass().getName().equals("enamel.Space")) {
                     index++;
                 }
 
@@ -174,7 +196,7 @@ public class ScenarioEditorMenu implements MouseListener {
                     String[] split;
                     String repeatText;
                     boolean repeat = false;
-                    int index = 0;
+                    int index = 0, tempIndex = 0;
 
                     for (int i = 0; i < scm.getQuestions().size(); i++) {
 
@@ -232,6 +254,7 @@ public class ScenarioEditorMenu implements MouseListener {
                                 case "EndRepeat":
                                     if (!repeat) {
                                         // TODO throw file error
+                                        throw new IllegalArgumentException();
                                     }
 
                                     repeat = false;
@@ -245,6 +268,7 @@ public class ScenarioEditorMenu implements MouseListener {
                                 case "Repeat":
                                     if (repeat) {
                                         // TODO Throw error with file
+                                        throw new IllegalArgumentException();
                                     }
 
                                     repeat = true;
@@ -255,7 +279,11 @@ public class ScenarioEditorMenu implements MouseListener {
                                     if (!repeat) {
                                         GUIBuilder.createRepeat(repeatText, Integer.parseInt(tempCommand.getInput()));
                                         index++;
+                                    } else {
+                                        // TODO Throw file error
+                                        throw new IllegalArgumentException();
                                     }
+                                    index++;
                                     break;
 
                                 case "ResetButtons":
@@ -265,14 +293,27 @@ public class ScenarioEditorMenu implements MouseListener {
 
                                 case "Skip":
                                     // TODO figure out how to do skip to a name tag
-                                    GUIBuilder.createGoToCheckpoint(findNextOccurrence(i, j, scm.getQuestions(), index, tempCommand.getInput()));
+                                    tempIndex = findNextOccurrence(i, j, scm.getQuestions(), index, tempCommand.getInput());
 
+                                    if (tempIndex == -1) {
+                                        throw new IllegalArgumentException();
+                                    }
+
+                                    GUIBuilder.createGoToCheckpoint(tempIndex);
                                     index++;
                                     break;
 
                                 case "SkipButton":
                                     // TODO Daman add a skip button method
-                                    GUIBuilder.createCheckpointTravelButtonClick(findNextOccurrence(i,j,));
+                                    split = tempCommand.getInput().split("\\s");
+                                    tempIndex = findNextOccurrence(i, j, scm.getQuestions(), index, split[1]);
+
+                                    if (tempIndex == -1) {
+                                        throw new IllegalArgumentException();
+                                    }
+
+                                    GUIBuilder.createCheckpointTravelButtonClick(tempIndex, Integer.parseInt(split[0]));
+                                    index++;
                                     break;
 
                                 case "SkipPos":
@@ -309,6 +350,7 @@ public class ScenarioEditorMenu implements MouseListener {
 
                     if (repeat) {
                         // TODO Throw error with file
+                        throw new IllegalArgumentException();
                     }
 
                 } else {

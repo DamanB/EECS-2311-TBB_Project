@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.IllformedLocaleException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -124,6 +125,12 @@ public class ScenarioCreatorManager {
             return false;
         }
 
+        if (lines.size()<=2)
+        {
+            this.errorMessage = "Invalid Scenario File Format.";
+            System.out.println("Invalid Scenario File Format.");
+            return false;
+        }
 
         if (lines.get(0).matches("^Cell [1-9][0-9]*$") && lines.get(1).matches("^Button [1-9][0-9]*$")) {
             this.cellNum = Integer.parseInt(lines.get(0).substring(5));
@@ -341,6 +348,18 @@ public class ScenarioCreatorManager {
                         Command temp;
                         try {
                             temp = new UserInput(lines.get(i).substring(0, 12), lines.get(i).substring(12));
+                        } catch (Exception e) {
+                            this.errorMessage = e.toString();
+                            return false;
+                        }
+
+                        this.questions.get(questionIndex).getCommands().add(temp);
+                    }
+                    // Just for a skip tag: /~[a-zA-Z]
+                    else if (lines.get(i).substring(0, 2).equals("/~")) {
+                        Command temp;
+                        try {
+                            temp = new SkipPos(lines.get(i).substring(2));
                         } catch (Exception e) {
                             this.errorMessage = e.toString();
                             return false;
