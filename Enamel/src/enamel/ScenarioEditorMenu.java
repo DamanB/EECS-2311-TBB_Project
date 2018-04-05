@@ -120,9 +120,37 @@ public class ScenarioEditorMenu implements MouseListener {
     }
 
 
-    private int findNextOccurrence(int i, int j, List<Question> questionList)
-    {
+    private int findNextOccurrence(int iIndex, int jIndex, List<Question> questionList, int index, String skipName) {
+        Command temp;
+        boolean repeat = false;
 
+        for (int i = iIndex; i < questionList.size(); i++) {
+            for (int j = jIndex; j < questionList.get(i).getCommands().size(); j++) {
+
+                temp = questionList.get(i).getCommands().get(j);
+
+                if (!temp.getClass().getName().equals("enamel.Repeat")) {
+                    if (repeat) {
+                        return -1;
+                    }
+                    repeat = true;
+                } else if (!temp.getClass().getName().equals("enamel.EndRepeat")) {
+                    if (!repeat) {
+                        return -1;
+                    }
+
+                    repeat = false;
+                } else if (!repeat) {
+                    index++;
+                }
+
+                if (temp.getClass().getName().equals("enamel.SkipPos") &&
+                        (temp.getInput().equals(skipName))) {
+                    return index;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -190,24 +218,38 @@ public class ScenarioEditorMenu implements MouseListener {
                                     GUIBuilder.createRaisePin(Integer.parseInt(split[1]), Integer.parseInt(split[0]));
                                     index++;
                                     break;
+
                                 case "DispClearAll":
                                     GUIBuilder.createClearCells();
                                     index++;
                                     break;
+
                                 case "DispString":
                                     GUIBuilder.createDisplayWordInBraille(tempCommand.getInput());
                                     index++;
                                     break;
+
                                 case "EndRepeat":
+                                    if (!repeat) {
+                                        // TODO throw file error
+                                    }
+
                                     repeat = false;
                                     break;
+
                                 case "Pause":
                                     GUIBuilder.createPause(Integer.parseInt(tempCommand.getInput()));
                                     index++;
                                     break;
+
                                 case "Repeat":
+                                    if (repeat) {
+                                        // TODO Throw error with file
+                                    }
+
                                     repeat = true;
                                     break;
+
                                 case "RepeatButton":
                                     // TODO Daman create a repeat button method
                                     if (!repeat) {
@@ -215,6 +257,7 @@ public class ScenarioEditorMenu implements MouseListener {
                                         index++;
                                     }
                                     break;
+
                                 case "ResetButtons":
                                     GUIBuilder.createResetButtons();
                                     index++;
@@ -222,11 +265,14 @@ public class ScenarioEditorMenu implements MouseListener {
 
                                 case "Skip":
                                     // TODO figure out how to do skip to a name tag
-                                    GUIBuilder.createGoToCheckpoint();
+                                    GUIBuilder.createGoToCheckpoint(findNextOccurrence(i, j, scm.getQuestions(), index, tempCommand.getInput()));
+
+                                    index++;
                                     break;
 
                                 case "SkipButton":
                                     // TODO Daman add a skip button method
+                                    GUIBuilder.createCheckpointTravelButtonClick(findNextOccurrence(i,j,));
                                     break;
 
                                 case "SkipPos":
@@ -260,6 +306,11 @@ public class ScenarioEditorMenu implements MouseListener {
                             }
                         }
                     }
+
+                    if (repeat) {
+                        // TODO Throw error with file
+                    }
+
                 } else {
                     // Error when parsing file
                     System.out.println(scm.getErrorMessage());
@@ -267,8 +318,8 @@ public class ScenarioEditorMenu implements MouseListener {
 
 
                 //DELETE FROM HERE
-				/*GUIBuilder.setNumCells(3);
-			GUIBuilder.setNumButtons(2);
+                /*GUIBuilder.setNumCells(3);
+            GUIBuilder.setNumButtons(2);
 			GUIBuilder.setTitle("This is a test");
 			GUIBuilder.createTextToSpeech("What does the braille cell say? Click one for Dog Two for Cat");
 			GUIBuilder.createDisplayWordInBraille("Dog");
