@@ -137,7 +137,6 @@ public class ScenarioEditorMenu implements MouseListener {
         System.out.println(findNextOccurrence(0, 0, scm.getQuestions(), 0, "ONEE"));
     }
 
-    // TODO remove static
     private static int findNextOccurrence(int iIndex, int jIndex, List<Question> questionList, int index, String skipName) {
         Command temp;
         boolean repeat = false;
@@ -161,8 +160,7 @@ public class ScenarioEditorMenu implements MouseListener {
                     }
 
                     repeat = false;
-                }
-                else if (!repeat && !temp.getClass().getName().equals("enamel.Space")) {
+                } else if (!repeat && !temp.getClass().getName().equals("enamel.Space")) {
                     index++;
                 }
 
@@ -182,7 +180,6 @@ public class ScenarioEditorMenu implements MouseListener {
             MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
         } else if (e.getSource().equals(modify)) {
 
-            //TODO Sanjay Add a call for retrieving the Filename and parsing here
             File modify = getFile();
             if (modify != null) {
                 MainFrame.changeScreen(ScenarioCreatorGUI.getScreen()); //ENSURE THIS IS THE FIRST CALL
@@ -225,7 +222,7 @@ public class ScenarioEditorMenu implements MouseListener {
                                     break;
 
                                 case "DispCellLowerPins":
-                                    // TODO Daman Create a Lower pins command like the one in ScenarioParser at line 158
+                                    // TODO Figure out what lower pins does
                                     //GUIBuilder.createLowerPins
                                     break;
 
@@ -253,8 +250,7 @@ public class ScenarioEditorMenu implements MouseListener {
 
                                 case "EndRepeat":
                                     if (!repeat) {
-                                        // TODO throw file error
-                                        throw new IllegalArgumentException();
+                                        throw new IllegalArgumentException("Error on the following command: " + tempCommand.toString());
                                     }
 
                                     repeat = false;
@@ -267,21 +263,18 @@ public class ScenarioEditorMenu implements MouseListener {
 
                                 case "Repeat":
                                     if (repeat) {
-                                        // TODO Throw error with file
-                                        throw new IllegalArgumentException();
+                                        throw new IllegalArgumentException("Error on the following command: " + tempCommand.toString());
                                     }
 
                                     repeat = true;
                                     break;
 
                                 case "RepeatButton":
-                                    // TODO Daman create a repeat button method
                                     if (!repeat) {
                                         GUIBuilder.createRepeat(repeatText, Integer.parseInt(tempCommand.getInput()));
                                         index++;
                                     } else {
-                                        // TODO Throw file error
-                                        throw new IllegalArgumentException();
+                                        throw new IllegalArgumentException("Error on the following command: " + tempCommand.toString());
                                     }
                                     index++;
                                     break;
@@ -292,11 +285,11 @@ public class ScenarioEditorMenu implements MouseListener {
                                     break;
 
                                 case "Skip":
-                                    // TODO figure out how to do skip to a name tag
                                     tempIndex = findNextOccurrence(i, j, scm.getQuestions(), index, tempCommand.getInput());
 
                                     if (tempIndex == -1) {
-                                        throw new IllegalArgumentException();
+                                        throw new IllegalArgumentException("Error on the following command: " + tempCommand.toString());
+
                                     }
 
                                     GUIBuilder.createGoToCheckpoint(tempIndex);
@@ -304,12 +297,11 @@ public class ScenarioEditorMenu implements MouseListener {
                                     break;
 
                                 case "SkipButton":
-                                    // TODO Daman add a skip button method
                                     split = tempCommand.getInput().split("\\s");
                                     tempIndex = findNextOccurrence(i, j, scm.getQuestions(), index, split[1]);
 
                                     if (tempIndex == -1) {
-                                        throw new IllegalArgumentException();
+                                        throw new IllegalArgumentException("Error on the following command: " + tempCommand.toString());
                                     }
 
                                     GUIBuilder.createCheckpointTravelButtonClick(tempIndex, Integer.parseInt(split[0]));
