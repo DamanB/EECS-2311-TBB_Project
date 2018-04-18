@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -132,6 +131,7 @@ public class ScenarioCreatorGUI {
 		private static JButton backButton;
 		private static JButton buildButton;
 		private static JButton openPlayer;
+		private static JButton openSoundRecorder;
 		public static JSpinner scenarioIndex;
 		private static JLabel indexText;
 
@@ -169,14 +169,19 @@ public class ScenarioCreatorGUI {
 			buildButton = new JButton("Save Scenario");
 			buildButton.setSize(200, 40);
 			buildButton.setPreferredSize(buildButton.getSize());
+			openSoundRecorder = new JButton("Sound Recorder");
+			openSoundRecorder.setSize(180, 40);
+			openSoundRecorder.setPreferredSize(openSoundRecorder.getSize());
 			Font buttonFont = new Font("cailibri", Font.PLAIN, 14);
 			backButton.setFont(buttonFont);
 			buildButton.setFont(buttonFont);
+			openSoundRecorder.setFont(buttonFont);
 			backButton.addActionListener(this);
 			buildButton.addActionListener(this);
+			openSoundRecorder.addActionListener(this);
 			
 			openPlayer = new JButton("Open Player");
-			openPlayer.setSize(180, 40);
+			openPlayer.setSize(165, 40);
 			openPlayer.setPreferredSize(openPlayer.getSize());
 			openPlayer.addActionListener(this);
 			openPlayer.setFont(buttonFont);
@@ -184,6 +189,7 @@ public class ScenarioCreatorGUI {
 			MainFrame.editJButton(backButton);
 			MainFrame.editJButton(buildButton);
 			MainFrame.editJButton(openPlayer);
+			MainFrame.editJButton(openSoundRecorder);
 
 			JPanel indexer = new JPanel();
 			indexer.setBackground(MainFrame.primColor);
@@ -198,9 +204,9 @@ public class ScenarioCreatorGUI {
 			indexer.add(indexText);
 			indexer.add(scenarioIndex);
 
-			controls.add(optionsTitle);
 			controls.add(indexer);
 			controls.add(buildButton);
+			controls.add(openSoundRecorder);
 			controls.add(openPlayer);
 			controls.add(backButton);
 		}
@@ -231,6 +237,8 @@ public class ScenarioCreatorGUI {
 				build();
 			} else if (e.getSource().equals(openPlayer)) {
 				MainMenu.player();
+			} else if (e.getSource().equals(openSoundRecorder)) {
+				JSoundRecorder rec = new JSoundRecorder();				
 			}
 
 		}

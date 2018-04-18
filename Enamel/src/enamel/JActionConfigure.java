@@ -36,7 +36,7 @@ public class JActionConfigure extends JPanel{
 		createGUI();		
 		getOptions(index);
 	}
-	
+
 	public JActionConfigure() {
 		createGUI();		
 	}
@@ -132,11 +132,11 @@ public class JActionConfigure extends JPanel{
 			this();
 			pauseTime.setValue((int)time);
 		}
-		
+
 		public boolean build(ScenarioCreatorManager sm) {
 			return sm.addPause(Integer.toString((int)pauseTime.getValue()));
 		}
-		
+
 		public void stateChanged(ChangeEvent e) {
 			if (e.getSource().equals(pauseTime)) {
 				setAboveMin(pauseTime);				
@@ -154,14 +154,14 @@ public class JActionConfigure extends JPanel{
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/5,20));
 			main.add(stringToDisp);
 		}
-		
+
 		public JDisplayWordInBraille(String word) {
 			this();
 			stringToDisp.setText(word);
 		}
-		
+
 		public boolean build(ScenarioCreatorManager sm) {
-			
+
 			if (stringToDisp.getText().length() > ScenarioCreatorGUI.numCells) {
 				return false;
 			}
@@ -183,7 +183,7 @@ public class JActionConfigure extends JPanel{
 			main.add(new JLabel("Select Repeat Button: "));
 			main.add(buttons);
 		}	
-		
+
 		public JRepeat(String toRepeat, int buttonIndex) {
 			this();
 			stringToDisp.setText(toRepeat);
@@ -195,7 +195,7 @@ public class JActionConfigure extends JPanel{
 			if (buttons.value() >= ScenarioCreatorGUI.numButtons) {
 				return false;
 			}		
-			
+
 			sm.addRepeat();
 			List<String> string = new ArrayList<String>();
 			string.add(stringToDisp.getText());
@@ -231,7 +231,7 @@ public class JActionConfigure extends JPanel{
 			buttons.setValue((int)buttonIndex);
 			nodeIndex.setValue((int)checkpointIndex);
 		}
-		
+
 		public boolean build(ScenarioCreatorManager sm) {	
 			if (buttons.value() >= ScenarioCreatorGUI.numButtons) {
 				return false;
@@ -274,7 +274,7 @@ public class JActionConfigure extends JPanel{
 			this();
 			cells.setValue(cellIndex);
 		}
-		
+
 		public boolean build(ScenarioCreatorManager sm) {
 			if (cells.value() >= ScenarioCreatorGUI.numCells) {
 				return false;
@@ -296,7 +296,7 @@ public class JActionConfigure extends JPanel{
 			cells = new BrailleCellSpinner();
 			main.add(cells);
 		}
-		
+
 		public JDisplayChar(char character,int cellIndex) {
 			this();
 			stringToDisp.setText(String.valueOf(character));
@@ -329,7 +329,7 @@ public class JActionConfigure extends JPanel{
 			edit = new JBrailleCell();
 			main.add(edit);
 		}
-		
+
 		public JDisplayPins(String cellConfig, int cellIndex) {
 			this();
 			edit.setCellConfig(cellConfig);
@@ -354,7 +354,7 @@ public class JActionConfigure extends JPanel{
 			stringToDisp.setPreferredSize(new Dimension(panelSize.width/2,20));
 			main.add(stringToDisp);
 		}
-		
+
 		public JTextToSpeech(String text) {
 			this();
 			stringToDisp.setText(text);
@@ -392,7 +392,7 @@ public class JActionConfigure extends JPanel{
 			this();
 			events.setValue(eventIndex);
 		}
-		
+
 		public boolean build(ScenarioCreatorManager sm) {
 			if (events.value() >= ScenarioCreatorGUI.nodes.size()) {
 				return false;
@@ -434,7 +434,7 @@ public class JActionConfigure extends JPanel{
 			main.add(new JLabel("Lower Pin: "));
 			main.add(pins);
 		}
-		
+
 		public JLowerPins(int cellIndex, int pinToLower) {
 			this();
 			cells.setValue(cellIndex);
@@ -468,7 +468,7 @@ public class JActionConfigure extends JPanel{
 			main.add(new JLabel("Raise Pin: "));
 			main.add(pins);
 		}
-		
+
 		public JRaisePins(int cellIndex, int pinToLower) {
 			this();
 			cells.setValue(cellIndex);
@@ -486,7 +486,6 @@ public class JActionConfigure extends JPanel{
 
 	public class PlayAudio extends Action implements ActionListener{
 		private JButton browse;
-		private JButton record;
 		public JLabel audioName;
 		private String fileName;
 
@@ -496,19 +495,15 @@ public class JActionConfigure extends JPanel{
 			instruction.setText("Play Audio: Select an audio file to play. The audio must a .WAV format!");	
 			browse = new JButton("Browse File");
 			audioName = new JLabel("Selected Audio: ");
-			record = new JButton("Record Audio");
-			
+
 			browse.addActionListener(this);
-			record.addActionListener(this);
 
 			main.add(new JLabel("Browse Audio"));
 			main.add(browse);
-			main.add(new JLabel(" or "));
-			main.add(record);
 			main.add(audioName);
-			
+
 		}
-		
+
 		public PlayAudio(String filename) {
 			this();
 			this.fileName = filename;
@@ -534,8 +529,6 @@ public class JActionConfigure extends JPanel{
 						JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Invalid Audio File!", "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
 					}				
 				}
-			}else if(e.getSource().equals(record)) {					
-				JSoundRecorder rec = new JSoundRecorder(this);				
 			}
 		}
 	}
@@ -549,10 +542,10 @@ public class JActionConfigure extends JPanel{
 		public boolean build(ScenarioCreatorManager sm) {
 			return true;
 		}
-		
-		
+
+
 	}
-	
+
 	//SETTING CLASSES	
 	private class ResponseButtonSpinner extends JSpinner implements ChangeListener{
 		private Dimension size = new Dimension(80,20);

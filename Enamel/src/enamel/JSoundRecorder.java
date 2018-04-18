@@ -7,11 +7,15 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import java.nio.file.Paths;
 
 public class JSoundRecorder extends JFrame implements ActionListener{
 
@@ -19,18 +23,15 @@ public class JSoundRecorder extends JFrame implements ActionListener{
 	private JTextField fileName;
 	private JButton record;
 
+	private SoundRecorder rec;
+
 	private boolean isRecording;
-	
-	private File soundFile;
-	JActionConfigure.PlayAudio node;
 
 	private GridBagConstraints c = new GridBagConstraints();	
 
-	public JSoundRecorder(JActionConfigure.PlayAudio node) {
-		
-		MainFrame.frame.setEnabled(false);
+	public JSoundRecorder() {
+
 		isRecording = false;
-		this.node = node;
 		this.setTitle("SDP-16 Sound Recorder");		
 		this.setSize(500,300);
 		this.setMinimumSize(new Dimension(200,200));
@@ -48,14 +49,14 @@ public class JSoundRecorder extends JFrame implements ActionListener{
 		this.add(new JLabel("Enter File Name"), c);
 
 		fileName = new JTextField();
-		fileName.setSize(200,30);
+		fileName.setSize(300,20);
 		fileName.setPreferredSize(fileName.getSize());
 		c.gridy=2;
 		this.add(fileName, c);
 
 		c.gridy=3;
-		this.add(new JLabel("Click to create your .WAV file"), c);
-		
+		this.add(new JLabel("Click to create your .WAV audio file"), c);
+
 		record = new JButton("Record");
 		record.addActionListener(this);
 		c.gridy = 4;
@@ -69,23 +70,33 @@ public class JSoundRecorder extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(record)) {
 			if (!isRecording) {
-				record.setText("Stop Recording");
-				isRecording = true;
-			}else {
-				record.setText("Start Recording");
-				node.audioName.setText(fileName.getText() + ".wav");
-				MainFrame.frame.setEnabled(true);
-				this.setVisible(false);
-				this.dispose();
-			}
-			
-		}
-	}
-	
-	public File getSoundFile() {
-		return soundFile;
-	}
+				Path path = Paths.get("./" + fileName.getText());
+				if ((Files.exists(path))) { 
+					int user = JOptionPane.showConfirmDialog(this, "This sound file already exists. Overwrite?", "File Exists", JOptionPane.OK_CANCEL_OPTION);
+					if (user == JOptionPane.OK_OPTION) {
+						record();
+					}
+				}else {
+					record();
+				}
 
+			}
+
+			if (isRecording) {
+				isRecording = false;
+				rec.finish();
+				record.setText("Start Recording");
+			}
+		}
+	}	
+
+	private void record() {
+		isRecording = true;
+		record.setText("Stop Recording");
+		File file = new File(fileName.getText()+".wav");
+		rec = new SoundRecorder(file);
+		rec.start();
+	}
 
 
 }
