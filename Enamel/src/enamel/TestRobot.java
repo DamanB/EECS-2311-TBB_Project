@@ -35,9 +35,16 @@ public class TestRobot {
 	}
 
 	public void enterText(String s) {
-		s = s.toUpperCase();
 		for (int i = 0; i < s.length(); i++) {
-			pressKey(s.charAt(i), 1, false);
+			char c = s.charAt(i);
+			if (c >= 'A' && c <= 'Z') {
+				r.keyPress(KeyEvent.VK_SHIFT);
+				pressKey(c, 1, false);
+				r.keyRelease(KeyEvent.VK_SHIFT);
+			} else if (c >= 'a' && c <= 'z')
+				pressKey(c - 32, 1, false);
+			else
+				pressKey(c, 1, false);
 		}
 		delay();
 	}

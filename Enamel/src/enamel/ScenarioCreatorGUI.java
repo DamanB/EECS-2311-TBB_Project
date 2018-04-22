@@ -57,9 +57,7 @@ public class ScenarioCreatorGUI {
 
 	private static ScenarioCreatorGUI instance;
 
-	public static String[] userCommandList = { 
-			"Checkpoint", 
-			"Text to Speech", // DONE
+	public static String[] userCommandList = { "Checkpoint", "Text to Speech", // DONE
 			"Play Audio", // DONE
 			"Pause", // DONE
 			"Display Pins on Braille Cell", // DONE
@@ -179,7 +177,7 @@ public class ScenarioCreatorGUI {
 			backButton.addActionListener(this);
 			buildButton.addActionListener(this);
 			openSoundRecorder.addActionListener(this);
-			
+
 			openPlayer = new JButton("Open Player");
 			openPlayer.setSize(165, 40);
 			openPlayer.setPreferredSize(openPlayer.getSize());
@@ -238,7 +236,7 @@ public class ScenarioCreatorGUI {
 			} else if (e.getSource().equals(openPlayer)) {
 				MainMenu.player();
 			} else if (e.getSource().equals(openSoundRecorder)) {
-				JSoundRecorder rec = new JSoundRecorder();				
+				new JSoundRecorder();
 			}
 
 		}
@@ -523,7 +521,7 @@ public class ScenarioCreatorGUI {
 				connected.remove(this);
 				connected.setBackground(Color.white);
 				connected = node;
-				connected.setBackground(new Color(200,197,217));
+				connected.setBackground(new Color(200, 197, 217));
 				connected.add(this);
 				connected.validate();
 				if (connected.index == 0) {
@@ -757,15 +755,23 @@ public class ScenarioCreatorGUI {
 
 	public static JPanel getScreen() {
 		instance = new ScenarioCreatorGUI();
-		return instance.mainPanel;
+		return ScenarioCreatorGUI.mainPanel;
 	}
 
 	public static Component getBuild() {
+		return controls.getComponent(3);
+	}
+
+	public static Component getRecord() {
 		return controls.getComponent(4);
 	}
 
-	public static Component getBack() {
+	public static Component getPlayer() {
 		return controls.getComponent(5);
+	}
+
+	public static Component getBack() {
+		return controls.getComponent(6);
 	}
 
 	public static Component getTextBox() {
