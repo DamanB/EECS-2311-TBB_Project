@@ -1,10 +1,10 @@
-Checkpoint,5
+Checkpoint,27
 TexttoSpeech,4
-PlayAudio,16
+PlayAudio,22
 Pause,1
-DisplayPinsonBrailleCell,4
+DisplayPinsonBrailleCell,6
 DisplayWordwithBrailleCells,0
-DisplayCharacteronBrailleCell,0
+DisplayCharacteronBrailleCell,1
 ClearAllBrailleCells,0
 ClearSpecificBrailleCell,1
 LowerPinonCell,0

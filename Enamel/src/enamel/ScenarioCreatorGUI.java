@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -48,12 +50,12 @@ public class ScenarioCreatorGUI {
 	public static int numCells = 1;
 	public static int numButtons = 1;
 
+	public static boolean isActive = false;
+
 	public static LinkedList<EditorGUI.JNode> nodes = new LinkedList<EditorGUI.JNode>();
 
 	private static controlGUI controlClass;
 	public static EditorGUI editorClass;
-
-	// public static List<> eventsList;
 
 	private static ScenarioCreatorGUI instance;
 
@@ -78,13 +80,13 @@ public class ScenarioCreatorGUI {
 
 	private ScenarioCreatorGUI() {
 
-		// eventsList = new ArrayList<>();
-
 		BorderLayout layout = new BorderLayout();
 		FlowLayout flow = new FlowLayout(FlowLayout.LEFT);
 		flow.setHgap(15);
 
 		mainPanel = new JPanel(layout);
+		MainFrame.getMainPanel().setFocusable(true);
+		MainFrame.getMainPanel().addKeyListener(new Hotkeys());
 		editor = new JPanel();
 		controls = new JPanel();
 		leftBorder = new JPanel();
@@ -103,7 +105,7 @@ public class ScenarioCreatorGUI {
 		editor.setSize((int) (MainFrame.getSizeX() * 0.78), (int) (MainFrame.getSizeY() * 0.70));
 		controls.setSize((int) (MainFrame.getSizeX() * 0.2), (int) (MainFrame.getSizeY()));
 		leftBorder.setSize((int) (MainFrame.getSizeX() * 0.02), (int) (MainFrame.getSizeY() * 0.80));
-		northBorder.setSize(MainFrame.getSizeX(), (int) (MainFrame.getSizeY() * 0.02));
+		northBorder.setSize(MainFrame.getSizeX(), (int) (MainFrame.getSizeY() * 0.04));
 		configuration.setSize((int) (MainFrame.getSizeX() * 0.78), (int) (MainFrame.getSizeY() * 0.30));
 
 		controls.setPreferredSize(controls.getSize());
@@ -118,12 +120,15 @@ public class ScenarioCreatorGUI {
 		mainPanel.add(leftBorder, BorderLayout.WEST);
 		mainPanel.add(northBorder, BorderLayout.NORTH);
 		controlClass = new controlGUI();
-		editorClass = new EditorGUI();
+		editorClass = new EditorGUI();	
+		editor.setFocusable(true);
+		editor.addKeyListener(new Hotkeys());
+
+
 	}
 
 	private static class controlGUI implements ActionListener, ChangeListener, ListSelectionListener {
 
-		private static JLabel selectActionText;
 		private static JList<String> listOfCommands;
 		private static JTextField selected;
 
@@ -141,23 +146,19 @@ public class ScenarioCreatorGUI {
 			commands.setSize(controls.getSize().width, 200);
 			commands.setPreferredSize(commands.getSize());
 			commands.setBackground(MainFrame.primColor);
-			selectActionText = new JLabel("Select to Add");
-			selectActionText.setFont(new Font("Calibri", Font.BOLD, 20));
-			selectActionText.setHorizontalAlignment(JLabel.CENTER);
-			selectActionText.setForeground(Color.black);
 			listOfCommands = new JList<String>(userCommandList);
 			listOfCommands.setBorder(new LineBorder(MainFrame.primColor.darker(), 2));
 			listOfCommands.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			listOfCommands.setSelectedIndex(0);
 			listOfCommands.addListSelectionListener(this);
+			listOfCommands.setFocusable(true);
+			listOfCommands.addKeyListener(new Hotkeys());
 			JScrollPane scroll = new JScrollPane(listOfCommands);
 
 			createSelectedGUI();
 
-			commands.add(selectActionText);
 			commands.add(selected);
 			commands.add(scroll);
-			controls.add(selectActionText);
 			controls.add(commands);
 
 			optionsTitle = new JLabel("Build", JLabel.CENTER);
@@ -179,7 +180,7 @@ public class ScenarioCreatorGUI {
 			backButton.addActionListener(this);
 			buildButton.addActionListener(this);
 			openSoundRecorder.addActionListener(this);
-			
+
 			openPlayer = new JButton("Open Player");
 			openPlayer.setSize(165, 40);
 			openPlayer.setPreferredSize(openPlayer.getSize());
@@ -209,6 +210,20 @@ public class ScenarioCreatorGUI {
 			controls.add(openSoundRecorder);
 			controls.add(openPlayer);
 			controls.add(backButton);
+
+			northBorder.add(new JLabel("Hotkeys: Type Number to set Selected Action: "));
+			northBorder.add(new JLabel("1 - Checkpoint"));
+			northBorder.add(new JLabel("2 - Text To Speech"));
+			northBorder.add(new JLabel("3 - Play Audio"));
+			northBorder.add(new JLabel("4 - Display Pins on Braille Cell"));
+
+			setButtonHotkeys(backButton);
+			setButtonHotkeys(buildButton);
+			setButtonHotkeys(openPlayer);
+			setButtonHotkeys(openSoundRecorder);
+
+
+
 		}
 
 		private void createSelectedGUI() {
@@ -346,6 +361,10 @@ public class ScenarioCreatorGUI {
 			return listOfCommands.getSelectedIndex();
 		}
 
+		public static void setSelectedAction(int index) {
+			listOfCommands.setSelectedIndex(index);
+		}
+
 	}
 
 	public static class EditorGUI implements ChangeListener {
@@ -371,7 +390,10 @@ public class ScenarioCreatorGUI {
 			config.connected = n;
 			editor.add(n);
 			nodes.add(n);
+			scroll.setFocusable(true);
+			scroll.addKeyListener(new Hotkeys());
 			refreshEditor();
+
 		}
 
 		private void createBrailleGUI() {
@@ -493,7 +515,7 @@ public class ScenarioCreatorGUI {
 				}
 				numButtons = (int) numberOfButtons.getValue();
 			}
-		}
+		}	
 
 		// NODES
 		private class JNodeConfig extends JPanel implements ActionListener {
@@ -515,6 +537,7 @@ public class ScenarioCreatorGUI {
 				this.add(moveUp);
 				this.add(moveDown);
 				this.add(delete);
+				this.addKeyListener(new Hotkeys());
 
 			}
 
@@ -573,12 +596,19 @@ public class ScenarioCreatorGUI {
 				this.index = index;
 				createJNodeGUI();
 				action = new JActionConfigure(controlGUI.getSelectedAction());
+				this.setFocusable(true);
+				this.addKeyListener(new Hotkeys());
+				setButtonHotkeys(configure);
+
 			}
 
 			private JNode(JActionConfigure config) {
 				this.index = nodes.size() - 1;
 				createJNodeGUI();
 				this.action = config;
+				this.setFocusable(true);
+				this.addKeyListener(new Hotkeys());
+				setButtonHotkeys(configure);
 			}
 
 			private void createJNodeGUI() {
@@ -749,6 +779,36 @@ public class ScenarioCreatorGUI {
 
 	}
 
+	public static class Hotkeys implements KeyListener{
+
+		@Override
+		public void keyPressed(KeyEvent k) {
+			if (k.getKeyCode() == KeyEvent.VK_1) {	
+				System.out.println("Hotkey 1 Clicked");
+				controlGUI.setSelectedAction(0);
+			}else if (k.getKeyCode() == KeyEvent.VK_2) {
+				System.out.println("Hotkey 2 Clicked");
+				controlGUI.setSelectedAction(1);
+			}else if (k.getKeyCode() == KeyEvent.VK_3) {
+				System.out.println("Hotkey 3 Clicked");
+				controlGUI.setSelectedAction(2);
+			}else if (k.getKeyCode() == KeyEvent.VK_4) {
+				System.out.println("Hotkey 4 Clicked");
+				controlGUI.setSelectedAction(4);
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent k) {
+		}
+
+		@Override
+		public void keyTyped(KeyEvent k) {
+
+		}
+
+
+	}
 	/////////////////////////////////// METHODS///////////////////////////////////////////
 
 	public static JPanel getMainPanel() {
@@ -770,5 +830,10 @@ public class ScenarioCreatorGUI {
 
 	public static Component getTextBox() {
 		return EditorGUI.numberOfBraille;
+	}
+
+	private static void setButtonHotkeys(JButton button) {
+		button.setFocusable(true);
+		button.addKeyListener(new Hotkeys());
 	}
 }
