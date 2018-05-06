@@ -1,11 +1,11 @@
 package enamel;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
-
 import javax.swing.JPanel;
-
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ScenarioCreatorGUITest {
@@ -22,146 +22,218 @@ class ScenarioCreatorGUITest {
 
 	int height = 75;
 
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
+	int[] commandIndex = { 1, 2, 4, 6, 3, 9, 10, 3, 12, 0, 7, 3, 5, 11, 13, 15, 0, 14, 8 };
+
+	TestRobot r;
+	int index;
+	int scenario;
+	int k;
+
+	@BeforeEach
+	void setUpBeforeClass() throws Exception {
 		new MainFrame();
 		MainFrame.changeScreen(ScenarioCreatorGUI.getScreen());
+		r = new TestRobot();
+		index = 0;
+	}
+
+	@Test
+	void testBuild() {
+		add(0);
+		add(0);
+		r.pressKey(KeyEvent.VK_UP, 1);
+		r.pressKey(KeyEvent.VK_TAB);
+		r.pressKey(KeyEvent.VK_UP, 1);
+		r.pressKey(KeyEvent.VK_TAB);
+		r.enterText("Test");
+		r.pressKey(KeyEvent.VK_TAB, 3);
+		r.enterText("A");
+		r.pressKey(KeyEvent.VK_TAB, 6);
+		r.enterText("B");
+		for (int i = 0; i < commandIndex.length; i++) {
+			if (commandIndex[i] == 0)
+				continue;
+			command(commandIndex[i]);
+			add(i);
+			r.rollMouseDown();
+			configure(i + 1);
+			edit(commandIndex[i]);
+			defaultEdit(commandIndex[i]);
+		}
+		r.moveMouse(ScenarioCreatorGUI.getBuild());
+		r.pressMouse();
+		r.pressKey(KeyEvent.VK_ENTER);
+		r.delay(3000);
+		r.pressKey(KeyEvent.VK_ENTER);
+		assertTrue(ScenarioCreatorManagerTest.test("FactoryScenarios/Scenario_99.txt", "Scenario_1.txt"));
+	}
+
+	void defaultEdit(int i) {
+		switch (i) {
+		case 1:
+			r.enterText("1");
+			break;
+		case 2:
+			r.pressKey(KeyEvent.VK_DOWN, 2);
+			r.pressKey(KeyEvent.VK_ENTER);
+			r.pressKey(KeyEvent.VK_DOWN);
+			r.pressKey(KeyEvent.VK_ENTER);
+			r.pressKey(KeyEvent.VK_DOWN);
+			r.pressKey(KeyEvent.VK_ENTER);
+			break;
+		case 3:
+			r.pressKey(KeyEvent.VK_UP, 2);
+			break;
+		case 4:
+			setPin(0);
+			setPin(1);
+			setPin(2);
+			break;
+		case 5:
+			r.enterText("ab");
+			break;
+		case 6:
+			r.pressKey(KeyEvent.VK_X);
+			r.pressKey(KeyEvent.VK_TAB);
+			r.pressKey(KeyEvent.VK_UP);
+			break;
+		case 8:
+			r.pressKey(KeyEvent.VK_UP);
+			break;
+		case 9:
+			r.pressKey(KeyEvent.VK_TAB);
+			r.pressKey(KeyEvent.VK_DOWN, 3);
+			r.pressKey(KeyEvent.VK_ENTER);
+			break;
+		case 10:
+			r.pressKey(KeyEvent.VK_UP);
+			r.pressKey(KeyEvent.VK_TAB);
+			r.pressKey(KeyEvent.VK_DOWN, 5);
+			r.pressKey(KeyEvent.VK_ENTER);
+			break;
+		case 11:
+			r.enterText("ONEE");
+			break;
+		case 12:
+			r.pressKey(KeyEvent.VK_UP, 9);
+			break;
+		case 13:
+			r.pressKey(KeyEvent.VK_UP, 16);
+			r.pressKey(KeyEvent.VK_TAB);
+			r.pressKey(KeyEvent.VK_UP);
+			break;
+		}
+	}
+
+	@Test
+	void testRecord() {
+		fail("This does not work");
+	}
+
+	@Test
+	void testPlay() {
+		r.moveMouse(ScenarioCreatorGUI.getPlayer());
+		r.pressMouse(KeyEvent.BUTTON1_MASK);
+		r.pressKey(KeyEvent.VK_DOWN, 2);
+		r.pressKey(KeyEvent.VK_ENTER);
+		r.pressKey(KeyEvent.VK_DOWN, 2);
+		r.pressKey(KeyEvent.VK_ENTER);
 	}
 
 	// this test to copy Scenario_1.txt
 	@Test
 	void testCopyOf1() throws AWTException {
-		TestRobot r = new TestRobot();
-		int k = 0;
-		int scenario1 = 7;
-		r.moveMouse(ScenarioCreatorGUI.getTextBox());
-		r.pressMouse();
+		k = 0;
+		scenario = 7;
+		k++;
+		for (int i = 0; i < 6; i++) {
+			add(0);
+		}
 		r.pressKey(KeyEvent.VK_TAB);
 		r.pressKey(KeyEvent.VK_UP, 3);
 		r.pressKey(KeyEvent.VK_TAB);
 		r.enterText("Directional orientation");
-		k++;
-		for (int i = 0; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(0).getAdd());
-			r.pressMouse();
-		}
-		r.pressKey(KeyEvent.VK_TAB, 5);
-		r.enterText("ONEE");
-		r.pressKey(KeyEvent.VK_TAB, 3);
-		for (int i = 2; i < 7; i++) {
+		for (int i = 1; i < 7; i++) {
+			if (i == 2)
+				r.pressKey(KeyEvent.VK_TAB, 3);
 			r.pressKey(KeyEvent.VK_TAB, 3);
 			r.enterText("ONEE");
 		}
-		r.pressKey(KeyEvent.VK_TAB, 4);
-		r.pressKey(KeyEvent.VK_DOWN, 8);
+		command(8);
 		k++;
 		for (int i = 1; i < 7; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 2 - 1).getAdd());
-			r.pressMouse();
-			r.rollMouseDown();
+			add(i * 2 - 1);
+			down();
 		}
-		r.rollMouseUp(scenario1 * k * height);
-		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
-		r.pressMouse();
-		r.pressKey(KeyEvent.VK_TAB);
-		r.pressKey(KeyEvent.VK_UP, 5);
+		toTop();
+		command(3);
 		for (int i = 1; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 3 - 1).getAdd());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
+			add(i * 3 - 1);
+			down();
 		}
-		r.rollMouseUp(scenario1 * k * height);
-		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
-		r.pressMouse();
-		r.pressKey(KeyEvent.VK_TAB);
-		r.pressKey(KeyEvent.VK_DOWN, 11);
+		toTop();
+		command(14);
 		k++;
 		for (int i = 1; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 4 - 1).getAdd());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
+			add(i * 4 - 1);
+			down();
 		}
-		r.rollMouseUp(scenario1 * k * height);
-		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
-		r.pressMouse();
-		r.pressKey(KeyEvent.VK_TAB);
-		r.pressKey(KeyEvent.VK_UP, 10);
+		toTop();
+		command(4);
 		k++;
-		r.moveMouse(ScenarioCreatorGUI.nodes.get(0).getAdd());
-		r.pressMouse();
+		add(0);
 		r.rollMouseDown(k * height);
 		for (int i = 1; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 5).getAdd());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
+			add(i * 5);
+			down();
 		}
-		r.rollMouseUp(scenario1 * k * height);
-		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
-		r.pressMouse();
-		r.pressKey(KeyEvent.VK_TAB);
-		r.pressKey(KeyEvent.VK_UP, 3);
+		toTop();
+		command(1);
 		k++;
 		for (int i = 0; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 6 + 1).getAdd());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
+			add(i * 6 + 1);
+			down();
 		}
-		r.moveMouse(ScenarioCreatorGUI.nodes.get(33).getAdd());
-		r.pressMouse();
-		r.rollMouseUp(scenario1 * k * height);
-		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
-		r.pressMouse();
-		r.pressKey(KeyEvent.VK_TAB);
-		r.pressKey(KeyEvent.VK_DOWN, 12);
+		add(33);
+		toTop();
+		command(13);
 		k++;
 		for (int i = 0; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 7 + 2).getAdd());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
+			add(i * 7 + 2);
+			down();
 		}
-		r.rollMouseUp(scenario1 * k * height);
-		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
-		r.pressMouse();
-		r.pressKey(KeyEvent.VK_TAB);
-		r.pressKey(KeyEvent.VK_DOWN, 2);
+		toTop();
+		command(15);
 		k++;
 		for (int i = 0; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 3).getAdd());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
+			add(i * 8 + 3);
+			down();
 		}
-		r.rollMouseUp(scenario1 * k * height);
+		toTop();
 		for (int i = 0; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 1).getConfigure());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
+			configure(i * 8 + 1);
+			if (i == 5)
+				toTop();
+			else
+				down();
 			for (int j : cell[i]) {
-				r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().x + j / 4 * 25 + 5,
-						ScenarioCreatorGUI.configuration.getComponent(3).getLocationOnScreen().y + j % 4 * 25 + 5);
-				r.pressMouse();
+				setPin(j);
 			}
 		}
-		r.rollMouseUp(scenario1 * k * height);
 		for (int i = 0; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 2).getConfigure());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
-			r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(2));
-			r.pressMouse();
+			configure(i * 8 + 2);
+			down();
+			edit(1);
 			r.enterText(text[i]);
 		}
-		r.moveMouse(ScenarioCreatorGUI.nodes.get(46).getConfigure());
-		r.pressMouse();
-		r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(2));
-		r.pressMouse();
+		configure(46);
+		toTop();
+		edit(1);
 		r.enterText(text[6]);
-		r.rollMouseUp(scenario1 * k * height);
 		for (int i = 0; i < 6; i++) {
-			r.moveMouse(ScenarioCreatorGUI.nodes.get(i * 8 + 3).getConfigure());
-			r.pressMouse();
-			r.rollMouseDown(k * height);
-			r.moveMouse(ScenarioCreatorGUI.configuration.getComponent(4));
-			r.pressMouse();
+			configure(i * 8 + 3);
+			down();
+			edit(13);
 			r.pressKey(KeyEvent.VK_UP, i * 8 + 4);
 		}
 		r.moveMouse(ScenarioCreatorGUI.getBuild());
@@ -169,7 +241,71 @@ class ScenarioCreatorGUITest {
 		r.pressKey(KeyEvent.VK_ENTER);
 		r.delay(3000);
 		r.pressKey(KeyEvent.VK_ENTER);
-		ScenarioCreatorManagerTest.test("FactoryScenarios/Scenario_1.txt", "Scenario_1.txt");
+		assertTrue(ScenarioCreatorManagerTest.test("FactoryScenarios/Scenario_1.txt", "Scenario_1.txt"));
 	}
 
+	void add(int i) {
+		r.moveMouse(ScenarioCreatorGUI.nodes.get(i).getAdd());
+		r.pressMouse();
+	}
+
+	void configure(int i) {
+		r.moveMouse(ScenarioCreatorGUI.nodes.get(i).getConfigure());
+		r.pressMouse();
+	}
+
+	void command(int i) {
+		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
+		r.pressMouse();
+		if (i < index) {
+			r.pressKey(KeyEvent.VK_TAB);
+			r.pressKey(KeyEvent.VK_UP, index - i);
+		} else {
+			r.pressKey(KeyEvent.VK_TAB);
+			r.pressKey(KeyEvent.VK_DOWN, i - index);
+		}
+		index = i;
+	}
+
+	void edit(int i) {
+		switch (i) {
+		case 1:
+		case 3:
+		case 5:
+		case 6:
+		case 8:
+		case 11:
+			r.moveMouse(((JPanel) ScenarioCreatorGUI.configuration.getComponent(0)).getComponent(2));
+			break;
+		case 2:
+		case 4:
+		case 9:
+		case 10:
+		case 12:
+		case 13:
+			r.moveMouse(((JPanel) ScenarioCreatorGUI.configuration.getComponent(0)).getComponent(3));
+			break;
+		default:
+			r.moveMouse(((JPanel) ScenarioCreatorGUI.configuration.getComponent(0)).getComponent(0));
+			break;
+		}
+		r.pressMouse();
+	}
+
+	void setPin(int i) {
+		r.moveMouse(
+				((JPanel) ScenarioCreatorGUI.configuration.getComponent(0)).getComponent(4).getLocationOnScreen().x
+						+ i / 4 * 25 + 5,
+				((JPanel) ScenarioCreatorGUI.configuration.getComponent(0)).getComponent(4).getLocationOnScreen().y
+						+ i % 4 * 25 + 5);
+		r.pressMouse();
+	}
+
+	void toTop() {
+		r.rollMouseUp(scenario * k * height);
+	}
+
+	void down() {
+		r.rollMouseDown(k * height);
+	}
 }
