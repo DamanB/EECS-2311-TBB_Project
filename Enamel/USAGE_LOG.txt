@@ -1,17 +1,17 @@
-Checkpoint,28
-TexttoSpeech,4
+Checkpoint,31
+TexttoSpeech,7
 PlayAudio,25
 Pause,2
 DisplayPinsonBrailleCell,8
 DisplayWordwithBrailleCells,1
-DisplayCharacteronBrailleCell,2
+DisplayCharacteronBrailleCell,3
 ClearAllBrailleCells,0
 ClearSpecificBrailleCell,2
 LowerPinonCell,1
 RaisePinonCell,1
 RepeatTextwithButtonClick,1
 GotoCheckpoint,1
-GotoCheckpointwithButtonClick,0
+GotoCheckpointwithButtonClick,2
 ResetButtonConfigurations,0
-UserInput,2
+UserInput,3
 

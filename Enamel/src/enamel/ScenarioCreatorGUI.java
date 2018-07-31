@@ -38,7 +38,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class ScenarioCreatorGUI {
-
+	//Contains hotkeys
 	private static JPanel mainPanel;
 	private static JPanel leftBorder;
 	private static JPanel northBorder;
