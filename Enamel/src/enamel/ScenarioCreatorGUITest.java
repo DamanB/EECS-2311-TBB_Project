@@ -41,14 +41,16 @@ class ScenarioCreatorGUITest {
 	void testBuild() {
 		add(0);
 		add(0);
+		r.moveMouse(ScenarioCreatorGUI.getTextBox());
+		r.pressMouse();
 		r.pressKey(KeyEvent.VK_UP, 1);
 		r.pressKey(KeyEvent.VK_TAB);
 		r.pressKey(KeyEvent.VK_UP, 1);
-		r.pressKey(KeyEvent.VK_TAB);
+		r.pressKey(KeyEvent.VK_TAB, 2);
 		r.enterText("Test");
-		r.pressKey(KeyEvent.VK_TAB, 3);
+		r.pressKey(KeyEvent.VK_TAB, 4);
 		r.enterText("A");
-		r.pressKey(KeyEvent.VK_TAB, 6);
+		r.pressKey(KeyEvent.VK_TAB, 7);
 		r.enterText("B");
 		for (int i = 0; i < commandIndex.length; i++) {
 			if (commandIndex[i] == 0)
@@ -141,7 +143,7 @@ class ScenarioCreatorGUITest {
 	}
 
 	// this test to copy Scenario_1.txt
-	@Test
+	// @Test
 	void testCopyOf1() throws AWTException {
 		k = 0;
 		scenario = 7;
@@ -255,7 +257,7 @@ class ScenarioCreatorGUITest {
 	}
 
 	void command(int i) {
-		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(1));
+		r.moveMouse(((JPanel) ScenarioCreatorGUI.getMainPanel().getComponent(1)).getComponent(0));
 		r.pressMouse();
 		if (i < index) {
 			r.pressKey(KeyEvent.VK_TAB);

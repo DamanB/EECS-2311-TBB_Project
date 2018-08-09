@@ -819,19 +819,19 @@ public class ScenarioCreatorGUI {
 	}
 
 	public static Component getBuild() {
-		return controls.getComponent(3);
+		return controls.getComponent(2);
 	}
 
 	public static Component getRecord() {
-		return controls.getComponent(4);
+		return controls.getComponent(3);
 	}
 
 	public static Component getPlayer() {
-		return controls.getComponent(5);
+		return controls.getComponent(4);
 	}
 
 	public static Component getBack() {
-		return controls.getComponent(6);
+		return controls.getComponent(5);
 	}
 
 	public static Component getTextBox() {

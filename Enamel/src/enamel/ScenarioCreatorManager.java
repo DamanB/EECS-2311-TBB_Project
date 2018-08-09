@@ -3,14 +3,8 @@ package enamel;
 //import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.IllformedLocaleException;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 
 /**
  * @author Sanjay Paraboo, Damanveer Bharaj, Penguin Guo
@@ -392,7 +386,7 @@ public class ScenarioCreatorManager {
 
     public void setCellNum(int cellNum) {
         this.cellNum = cellNum;
-        this.numCells = cellNum;
+        ScenarioCreatorManager.numCells = cellNum;
     }
 
     public int getButtonNum() {
@@ -401,7 +395,7 @@ public class ScenarioCreatorManager {
 
     public void setButtonNum(int buttonNum) {
         this.buttonNum = buttonNum;
-        this.numButtons = buttonNum;
+        ScenarioCreatorManager.numButtons = buttonNum;
     }
 
     public String getTitle() {
