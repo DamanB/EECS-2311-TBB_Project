@@ -24,8 +24,8 @@ public class ScenarioParser {
 
 	public ScenarioParser(boolean isVisual) {
 
-		//String currDir = System.getProperty("user.dir");
-		//System.setProperty("mbrola.base", currDir + File.separator + "lib/mbrola.jar");
+		String currDir = System.getProperty("user.dir");
+		System.setProperty("mbrola.base", currDir + File.separator + "lib/mbrola.jar");
 		vm = VoiceManager.getInstance();
 		voice = vm.getVoice("kevin16");
 		voice.allocate();

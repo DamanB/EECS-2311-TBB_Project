@@ -488,10 +488,12 @@ public class JActionConfigure extends JPanel {
 		private JButton browse;
 		public JLabel audioName;
 		private String fileName;
+		private File file;
 
 		private PlayAudio() {
 			super.name = "Audio: Browse or Record Audio";
 			fileName = "";
+			file = new File("");
 			instruction.setText("Play Audio: Select an audio file to play. The audio must a .WAV format!");
 			browse = new JButton("Browse File");
 			audioName = new JLabel("Selected Audio: ");
@@ -501,13 +503,21 @@ public class JActionConfigure extends JPanel {
 			main.add(audioName);
 		}
 
-		public PlayAudio(String filename) {
+		public PlayAudio(String fileName) {
 			this();
-			this.fileName = filename;
+			this.fileName = fileName;
+		}
+
+		public void setFile(File file) {
+			this.file = file;
+		}
+
+		public File getFile() {
+			return this.file;
 		}
 
 		public boolean build(ScenarioCreatorManager sm) {
-			return sm.addSound(fileName);
+			return sm.addSound(file);
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -525,8 +535,8 @@ public class JActionConfigure extends JPanel {
 							continue;
 						} else {
 							if (fileChooser.getSelectedFile().getName().matches(".*.wav$")) {
-								fileName = fileChooser.getSelectedFile().getName();
-								audioName.setText("Selected Audio: " + fileName);
+								file = fileChooser.getSelectedFile();
+								audioName.setText("Selected Audio: " + file.getName());
 							} else {
 								JOptionPane.showMessageDialog(MainFrame.getMainPanel(), "Invalid Audio File!",
 										"Invalid Input", JOptionPane.INFORMATION_MESSAGE);

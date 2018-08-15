@@ -108,7 +108,7 @@ class ScenarioCreatorManagerTest {
 		assertFalse(s.addRepeatButton("d"));
 
 		assertFalse(s.addDispCellPins("d", "d"));
-		assertFalse(s.addSound("file.pdf"));
+		assertFalse(s.addSound(new File("file.pdf")));
 		assertFalse(s.addSkip("@@"));
 
 		s.nextQuestion();
@@ -162,7 +162,7 @@ class ScenarioCreatorManagerTest {
 				"Press button 1 to continue.")));
 		checkResult(s.addSkipButton("0", "ONEE"));
 		checkResult(s.addUserInput());
-		checkResult(s.addSound("file.wav"));
+		checkResult(s.addSound(new File("file.wav")));
 		checkResult(s.addSkip("button"));
 
 		s.nextQuestion();

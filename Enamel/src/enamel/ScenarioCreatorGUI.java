@@ -38,7 +38,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class ScenarioCreatorGUI {
-	//Contains hotkeys
+	// Contains hotkeys
 	private static JPanel mainPanel;
 	private static JPanel leftBorder;
 	private static JPanel northBorder;
@@ -118,10 +118,9 @@ public class ScenarioCreatorGUI {
 		mainPanel.add(leftBorder, BorderLayout.WEST);
 		mainPanel.add(northBorder, BorderLayout.NORTH);
 		controlClass = new controlGUI();
-		editorClass = new EditorGUI();	
+		editorClass = new EditorGUI();
 		editor.setFocusable(true);
 		editor.addKeyListener(new Hotkeys());
-
 
 	}
 
@@ -219,8 +218,6 @@ public class ScenarioCreatorGUI {
 			setButtonHotkeys(buildButton);
 			setButtonHotkeys(openPlayer);
 			setButtonHotkeys(openSoundRecorder);
-
-
 
 		}
 
@@ -513,7 +510,7 @@ public class ScenarioCreatorGUI {
 				}
 				numButtons = (int) numberOfButtons.getValue();
 			}
-		}	
+		}
 
 		// NODES
 		private class JNodeConfig extends JPanel implements ActionListener {
@@ -777,20 +774,20 @@ public class ScenarioCreatorGUI {
 
 	}
 
-	public static class Hotkeys implements KeyListener{
+	public static class Hotkeys implements KeyListener {
 
 		@Override
 		public void keyPressed(KeyEvent k) {
-			if (k.getKeyCode() == KeyEvent.VK_1) {	
+			if (k.getKeyCode() == KeyEvent.VK_1) {
 				System.out.println("Hotkey 1 Clicked");
 				controlGUI.setSelectedAction(0);
-			}else if (k.getKeyCode() == KeyEvent.VK_2) {
+			} else if (k.getKeyCode() == KeyEvent.VK_2) {
 				System.out.println("Hotkey 2 Clicked");
 				controlGUI.setSelectedAction(1);
-			}else if (k.getKeyCode() == KeyEvent.VK_3) {
+			} else if (k.getKeyCode() == KeyEvent.VK_3) {
 				System.out.println("Hotkey 3 Clicked");
 				controlGUI.setSelectedAction(2);
-			}else if (k.getKeyCode() == KeyEvent.VK_4) {
+			} else if (k.getKeyCode() == KeyEvent.VK_4) {
 				System.out.println("Hotkey 4 Clicked");
 				controlGUI.setSelectedAction(4);
 			}
@@ -804,7 +801,6 @@ public class ScenarioCreatorGUI {
 		public void keyTyped(KeyEvent k) {
 
 		}
-
 
 	}
 	/////////////////////////////////// METHODS///////////////////////////////////////////
