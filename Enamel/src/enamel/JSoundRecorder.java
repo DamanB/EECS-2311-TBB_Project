@@ -20,6 +20,10 @@ import java.nio.file.Paths;
 
 public class JSoundRecorder extends JFrame implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel title;
 	private JTextField fileName;
 	private JButton record;
@@ -39,39 +43,36 @@ public class JSoundRecorder extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLayout(new GridBagLayout());
 		this.setBackground(MainFrame.primColor);
-
 		c.gridx = 0;
 		c.gridy = 0;
 		title = new JLabel("Welcome To SDP-16's Sound Recorder");
 		title.setFont(new Font("calibri", Font.BOLD, 20));
 		this.add(title, c);
-
 		c.gridy = 1;
 		this.add(new JLabel("Enter File Name"), c);
-
 		fileName = new JTextField();
 		fileName.setSize(300, 20);
 		fileName.setPreferredSize(fileName.getSize());
 		c.gridy = 2;
 		this.add(fileName, c);
-
 		c.gridy = 3;
 		this.add(new JLabel("Click to create your .WAV audio file"), c);
-
 		record = new JButton("Record");
 		record.addActionListener(this);
 		c.gridy = 4;
 		this.add(record, c);
-
 		this.repaint();
 		this.setVisible(true);
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(record)) {
 			if (!isRecording) {
-				Path path = Paths.get("./" + fileName.getText());
+				Path path = Paths.get("./" + fileName.getText() + ".wav");
+				if (fileName.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(this, "Please input file name!", "Warning", JOptionPane.OK_OPTION);
+					return;
+				}
 				if ((Files.exists(path))) {
 					int user = JOptionPane.showConfirmDialog(this, "This sound file already exists. Overwrite?",
 							"File Exists", JOptionPane.OK_CANCEL_OPTION);
@@ -81,10 +82,7 @@ public class JSoundRecorder extends JFrame implements ActionListener {
 				} else {
 					record();
 				}
-
-			}
-
-			if (isRecording) {
+			} else {
 				isRecording = false;
 				rec.finish();
 				record.setText("Start Recording");
@@ -102,5 +100,15 @@ public class JSoundRecorder extends JFrame implements ActionListener {
 
 	public Component getRecord() {
 		return this.record;
+	}
+
+	/**
+	 * set file path
+	 * 
+	 * @param s
+	 *            - input file name
+	 */
+	public void setFile(String s) {
+		this.fileName.setText(s);
 	}
 }
