@@ -8,4 +8,4 @@ lessons interactive lessons created by instructors for their students to use. Th
 application instructors will have the ability to create, edit and run scenario files. Visually impaired users
 will also be able to make use of screen readers in order to perform UI functions.
 
-Authors: Sanjay Paraboo, Damanveer Bharaj, Pengyuan Guo
+Authors: Sanjay Paraboo (Dropped), Damanveer Bharaj, Pengyuan Guo
