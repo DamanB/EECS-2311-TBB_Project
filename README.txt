@@ -1,3 +1,6 @@
+*PLEASE REFER TO THE FINAL-DEVELOP BRANCH FOR THE COMPLETED PROJECT*
+*THANK YOU*
+
 # Treasure Box Braille (TBB) System - Created by SDP-16
 
 This version of the TBB System has been created by group 16 in EECS 2311.
@@ -8,4 +11,4 @@ lessons interactive lessons created by instructors for their students to use. Th
 application instructors will have the ability to create, edit and run scenario files. Visually impaired users
 will also be able to make use of screen readers in order to perform UI functions.
 
-Authors: Sanjay Paraboo, Damanveer Bharaj, Pengyuan Guo
+Authors: Sanjay Paraboo (Dropped), Damanveer Bharaj, Pengyuan Guo
